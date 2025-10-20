@@ -1,13 +1,11 @@
-package com.gestioneleves.apieleves.model;
+package com.gestioneleves.apieleves.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Data
 @Entity
 @Table(name = "utilisateur")
-@Component
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
