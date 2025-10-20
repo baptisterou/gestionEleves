@@ -25,6 +25,7 @@ public class Utilisateur {
     private String dateNaissance;
     @Column(name="NumTel")
     private String numTel;
+    @Enumerated(EnumType.ORDINAL)
     @Column(name="Role")
-    private String role;
+    private Role role;
 }
