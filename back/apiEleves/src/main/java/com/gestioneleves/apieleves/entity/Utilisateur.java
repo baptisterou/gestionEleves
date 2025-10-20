@@ -1,13 +1,11 @@
-package com.gestioneleves.apieleves.model;
+package com.gestioneleves.apieleves.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Data
 @Entity
 @Table(name = "utilisateur")
-@Component
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +23,7 @@ public class Utilisateur {
     private String dateNaissance;
     @Column(name="NumTel")
     private String numTel;
+    @Enumerated(EnumType.ORDINAL)
     @Column(name="Role")
-    private String role;
+    private Role role;
 }
