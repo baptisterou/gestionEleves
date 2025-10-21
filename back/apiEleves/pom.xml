@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.gestionEleves</groupId>
     <artifactId>apiEleves</artifactId>
