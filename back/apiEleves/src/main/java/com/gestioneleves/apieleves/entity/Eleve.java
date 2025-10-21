@@ -45,7 +45,7 @@ public class Eleve {
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
     @OneToMany(mappedBy = "eleve")
-    private List<Bulletin> bulletins = new ArrayList<>();
+    private List<Note> notes = new ArrayList<>();
 
     /**
      * Constructeur par défaut requis par JPA
