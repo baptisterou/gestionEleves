@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71c973b2-adcd-4615-a794-c6ba739b9c05" name="Changes" comment="reorganisation repo" />
+    <list default="true" id="71c973b2-adcd-4615-a794-c6ba739b9c05" name="Changes" comment="reorganisation repo">
+      <change beforePath="$PROJECT_DIR$/back/apiEleves/src/main/java/com/gestioneleves/apieleves/entity/Utilisateur.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/apiEleves/src/main/java/com/gestioneleves/apieleves/entity/Utilisateur.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,6 +23,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="developpement" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -50,7 +57,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "baptiste",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -78,6 +85,9 @@
         <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
       </set>
     </attachedChunks>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>$USER_HOME$/.subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -117,6 +127,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="reorganisation repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="reorganisation repo" />
+    <MESSAGE value="maj 21_10" />
+    <option name="LAST_COMMIT_MESSAGE" value="maj 21_10" />
   </component>
 </project>

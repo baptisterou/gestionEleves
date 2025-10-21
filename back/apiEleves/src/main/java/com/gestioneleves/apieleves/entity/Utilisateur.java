@@ -26,4 +26,14 @@ public class Utilisateur {
     @Enumerated(EnumType.ORDINAL)
     @Column(name="Role")
     private Role role;
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Eleve> eleves = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Classe> classesEnseignant = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Matiere> matieresEnseignant = new ArrayList<>();
+
 }
