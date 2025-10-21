@@ -40,4 +40,9 @@ public class BulletinController {
         // Délégation de la logique au service métier
         return bulletinService.getAllBulletins();
     }
+
+//    @GetMapping("/bulletin/create")
+//    public Bulletin createBulletin() {
+//
+//    }
 }
