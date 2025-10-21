@@ -1,6 +1,6 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.model.Note;
+import com.gestioneleves.apieleves.entity.Note;
 import com.gestioneleves.apieleves.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

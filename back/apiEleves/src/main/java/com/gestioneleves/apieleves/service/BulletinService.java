@@ -41,7 +41,7 @@ public class BulletinService {
         Bulletin bulletin = bulletinRepository.findById(id_bulletin).orElseThrow();
         bulletin.setTrimestre_bulletin(trimestre_bulletin);
         bulletin.setAnnee_bulletin(annee_bulletin);
-        r&&eturn bulletinRepository.save(bulletin);
+        return bulletinRepository.save(bulletin);
     }
 
     public void deleteBulletin(Long id_bulletin) {

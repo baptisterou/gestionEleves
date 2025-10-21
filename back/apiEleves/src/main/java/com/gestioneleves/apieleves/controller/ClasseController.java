@@ -1,6 +1,6 @@
 package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.model.Classe;
+import com.gestioneleves.apieleves.entity.Classe;
 import com.gestioneleves.apieleves.service.ClasseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

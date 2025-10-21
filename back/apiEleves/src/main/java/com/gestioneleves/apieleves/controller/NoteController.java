@@ -1,6 +1,6 @@
 package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.model.Note;
+import com.gestioneleves.apieleves.entity.Note;
 import com.gestioneleves.apieleves.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
