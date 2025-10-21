@@ -30,14 +30,7 @@ public class Bulletin {
      */
     private int annee_bulletin;
 
-    /**
-     * Relation Many-to-One avec l'entité Eleve
-     * Plusieurs bulletins peuvent appartenir à un même élève
-     * nullable=false : un bulletin doit toujours être associé à un élève
-     */
-    @ManyToOne
-    @JoinColumn(name = "id_eleve", nullable = false) // Clé étrangère vers la table eleve
-    private Eleve eleve;
+    private String commentaire;
 
     /**
      * Constructeur par défaut requis par JPA
@@ -47,15 +40,19 @@ public class Bulletin {
         // Constructeur vide requis par JPA
     }
 
+    @OneToMany(mappedBy="note")
+    private List<Note> = new ArrayList<>();
+
     /**
      * Constructeur avec paramètres pour créer un nouveau bulletin
      * @param trimestre_bulletin Le numéro du trimestre
      * @param annee_bulletin L'année scolaire
      * @param eleve L'élève auquel ce bulletin est associé
      */
-    public Bulletin(int trimestre_bulletin, int annee_bulletin, Eleve eleve) {
+    public Bulletin(int trimestre_bulletin, int annee_bulletin, Eleve eleve, String commentaire) {
         this.trimestre_bulletin = trimestre_bulletin;
         this.annee_bulletin = annee_bulletin;
         this.eleve = eleve;
+        this.commentaire = commentaire;
     }
 }

@@ -25,7 +25,6 @@
     <!-- CORRECTION : Modules directs vers apiEleves -->
     <modules>
         <module>back/apiEleves</module>
-        <module>front</module>
     </modules>
 
     <dependencyManagement>

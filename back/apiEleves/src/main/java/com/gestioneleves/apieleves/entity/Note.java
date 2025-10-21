@@ -19,6 +19,7 @@ public class Note {
     @Temporal(TemporalType.DATE)
     private Date date_note;
     private float coef_note;
+    private float valeur_note;
 
     @ManyToOne
     @JoinColumn(name = "id_eleve")
@@ -27,4 +28,8 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "id_matiere")
     private Matiere matiere;
+
+    @ManyToOne
+    @JoinColumn(name = "id_bulletin")
+    private Bulletin bulletin;
 }

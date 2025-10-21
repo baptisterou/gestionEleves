@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class UtilisateurService {
 
         public void ajouterUtilisateur(UtilisateurDto dto, String password){
-            System.out.println("ajouter un utilisateur");
+
         }
 
         public void modifierUtilisateur(UtilisateurDto dto){

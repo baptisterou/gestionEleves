@@ -25,9 +25,9 @@ public class BulletinService {
      * Récupère la liste de tous les bulletins
      * @return Liste des objets Bulletin contenant tous les bulletins en base de données
      */
-    public Bulletin createBulletin(int trimestre_bulletin, int annee_bulletin, Eleve eleve) {
+    public Bulletin createBulletin(int trimestre_bulletin, int annee_bulletin, Eleve eleve, String commentaire) {
         return bulletinRepository.save(
-                new Bulletin(trimestre_bulletin, annee_bulletin, eleve)
+                new Bulletin(trimestre_bulletin, annee_bulletin, eleve, commentaire)
         );
     }
 
@@ -37,10 +37,11 @@ public class BulletinService {
         return (List<Bulletin>) bulletinRepository.findAll();
     }
 
-    public Bulletin editBulletin(Long id_bulletin, int trimestre_bulletin, int annee_bulletin) {
+    public Bulletin editBulletin(Long id_bulletin, int trimestre_bulletin, int annee_bulletin, String commentaire) {
         Bulletin bulletin = bulletinRepository.findById(id_bulletin).orElseThrow();
         bulletin.setTrimestre_bulletin(trimestre_bulletin);
         bulletin.setAnnee_bulletin(annee_bulletin);
+        bulletin.setCommentaire(commentaire);
         return bulletinRepository.save(bulletin);
     }
 

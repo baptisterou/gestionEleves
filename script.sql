@@ -56,7 +56,7 @@ CREATE TABLE UTILISATEUR
     MotDePasse    VARCHAR(25),
     NumTel        VARCHAR(15),
     Mail          VARCHAR(50),
-    IdRole        INTEGER NOT NULL,
+    IdRole        INTEGER NOT NULL,git merge developpement
     FOREIGN KEY (IdRole) REFERENCES ROLE (IdRole)
 );
 
