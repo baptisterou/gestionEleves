@@ -16,23 +16,23 @@ public class UtilisateurController {
     final UtilisateurService service;
 
     @PostMapping("/add")
-    public UtilisateurDto ajouter (@RequestBody UtilisateurDto dto, @RequestParam String password){
-        return service.ajouterUtilisateur(dto, password);
+    public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
+        return service.ajouterUtilisateur(utilisateur);
     };
 
     @GetMapping()
-    public List<UtilisateurDto> getAll(){
-        return service.getAll();
+    public List<Utilisateur> getAllUtilisateurs(){
+        return service.getAllUtilisateurs();
     }
 
     @PutMapping("/put/{id}")
     public UtilisateurDto post (){
-
+        return null;
     };
 
     @DeleteMapping("/{id}")
-    public void delete (){
-
+    public UtilisateurService delete (){
+        return null;
     }
 
 }
