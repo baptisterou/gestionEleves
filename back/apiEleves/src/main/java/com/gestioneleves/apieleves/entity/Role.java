@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.model;
+package com.gestioneleves.apieleves.entity;
 
 public enum Role {
     admin,

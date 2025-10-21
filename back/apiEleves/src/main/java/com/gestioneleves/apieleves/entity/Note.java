@@ -1,5 +1,7 @@
-package com.gestioneleves.apieleves.model;
+package com.gestioneleves.apieleves.entity;
 
+import com.gestioneleves.apieleves.entity.Eleve;
+import com.gestioneleves.apieleves.entity.Matiere;
 import jakarta.persistence.*;
 import lombok.Data;
 
