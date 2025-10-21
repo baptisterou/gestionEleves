@@ -26,10 +26,8 @@ public class EleveService {
      *
      * @return Liste des objets Eleve contenant tous les élèves en base de données
      */
-    public Eleve createEleve(String nom_eleve, String prenom_eleve, Date naissance_eleve) {
-        return eleveRepository.save(
-                new Eleve(nom_eleve, prenom_eleve, naissance_eleve)
-        );
+    public Eleve createEleve(Eleve eleve) {
+        return eleveRepository.save(eleve);
     }
 
     public List<Eleve> getAllEleves() {
@@ -38,12 +36,7 @@ public class EleveService {
         return (List<Eleve>) eleveRepository.findAll();
     }
 
-    public Eleve editEleve(Long id_eleve, String nom_eleve, String prenom_eleve, Date naissance_eleve) {
-        Eleve eleve = eleveRepository.findById(id_eleve).orElseThrow();
-        eleve.setNom_eleve(nom_eleve);
-        eleve.setPrenom_eleve(prenom_eleve);
-        eleve.setNaissance_eleve(naissance_eleve);
-
+    public Eleve editEleve(Eleve eleve) {
         return eleveRepository.save(eleve);
     }
 

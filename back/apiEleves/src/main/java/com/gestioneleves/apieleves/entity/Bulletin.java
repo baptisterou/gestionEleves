@@ -3,6 +3,9 @@ package com.gestioneleves.apieleves.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Entité JPA représentant un bulletin scolaire dans le système
  * Correspond à la table "bulletin" en base de données
@@ -24,7 +27,6 @@ public class Bulletin {
      * Numéro du trimestre (ex: 1, 2 ou 3)
      */
     private int trimestre_bulletin;
-
     /**
      * Année scolaire du bulletin (ex: 2024)
      */
@@ -32,27 +34,9 @@ public class Bulletin {
 
     private String commentaire;
 
-    /**
-     * Constructeur par défaut requis par JPA
-     * Utilisé par Hibernate pour instancier les entités
-     */
-    public Bulletin() {
-        // Constructeur vide requis par JPA
-    }
 
-    @OneToMany(mappedBy="note")
-    private List<Note> = new ArrayList<>();
+    @OneToMany(mappedBy = "note")
+    private List<Note> notes = new ArrayList<>();
 
-    /**
-     * Constructeur avec paramètres pour créer un nouveau bulletin
-     * @param trimestre_bulletin Le numéro du trimestre
-     * @param annee_bulletin L'année scolaire
-     * @param eleve L'élève auquel ce bulletin est associé
-     */
-    public Bulletin(int trimestre_bulletin, int annee_bulletin, Eleve eleve, String commentaire) {
-        this.trimestre_bulletin = trimestre_bulletin;
-        this.annee_bulletin = annee_bulletin;
-        this.eleve = eleve;
-        this.commentaire = commentaire;
-    }
+
 }

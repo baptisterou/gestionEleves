@@ -47,23 +47,4 @@ public class Eleve {
     @OneToMany(mappedBy = "eleve")
     private List<Note> notes = new ArrayList<>();
 
-    /**
-     * Constructeur par défaut requis par JPA
-     * Utilisé par Hibernate pour instancier les entités
-     */
-    public Eleve() {
-        // Constructeur vide requis par JPA
-    }
-
-    /**
-     * Constructeur avec paramètres pour créer un nouvel élève
-     * @param nom_eleve Le nom de famille de l'élève
-     * @param prenom_eleve Le prénom de l'élève
-     * @param naissance_eleve La date de naissance de l'élève
-     */
-    public Eleve(String nom_eleve, String prenom_eleve, Date naissance_eleve) {
-        this.nom_eleve = nom_eleve;
-        this.prenom_eleve = prenom_eleve;
-        this.naissance_eleve = naissance_eleve;
-    }
 }
