@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * Fournit les méthodes standard : save, findById, findAll, delete, etc.
  */
 @Repository // Indique que cette interface est un repository Spring (accès aux données)
-public interface BulletinRepository extends CrudRepository<Bulletin, Integer> {
+public interface BulletinRepository extends CrudRepository<Bulletin, Long> {
     // Cette interface est volontairement vide
     // Spring Data JPA fournit automatiquement les implémentations des méthodes CRUD :
     // - save(Bulletin entity) : sauvegarde un bulletin

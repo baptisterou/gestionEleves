@@ -3,6 +3,9 @@ package com.gestioneleves.apieleves.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Entité JPA représentant une matière dans le système
  * Correspond à la table "matiere" en base de données

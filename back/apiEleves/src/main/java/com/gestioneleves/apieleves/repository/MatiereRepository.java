@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * Fournit les méthodes standard : save, findById, findAll, delete, etc.
  */
 @Repository // Indique que cette interface est un repository Spring (accès aux données)
-public interface MatiereRepository extends CrudRepository<Matiere, Integer> {
+public interface MatiereRepository extends CrudRepository<Matiere, Long> {
     // Cette interface est volontairement vide
     // Spring Data JPA fournit automatiquement les implémentations des méthodes CRUD :
     // - save(Matiere entity) : sauvegarde une matière
