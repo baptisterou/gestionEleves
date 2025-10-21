@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 
 @Data
@@ -15,12 +14,15 @@ public class Note {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id_note;
 
+    @Temporal(TemporalType.DATE)
     private Date date_note;
     private float coef_note;
 
-    @OneToMany(mappedBy = id_eleve)
-    private List<Eleve> eleves;
+    @ManyToOne
+    @JoinColumn(name = "id_eleve")
+    private Eleve eleve;
 
-    @OneToMany(mappedBy = id_matiere)
-    private List<Matiere> matieres;
+    @ManyToOne
+    @JoinColumn(name = "id_matiere")
+    private Matiere matiere;
 }
