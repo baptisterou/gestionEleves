@@ -1,13 +1,10 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.gestioneleves.apieleves.entity.Eleve;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,10 +24,8 @@ public class MatiereService {
      * @return Liste des objets Matiere contenant toutes les matières en base de données
      */
 
-    public Matiere createMatiere(String intitule_matiere) {
-        return matiereRepository.save(
-                new Matiere(intitule_matiere)
-        );
+    public Matiere createMatiere(Matiere matiere) {
+        return matiereRepository.save(matiere);
     }
 
     public List<Matiere> getAllMatieres() {
@@ -39,10 +34,7 @@ public class MatiereService {
         return (List<Matiere>) matiereRepository.findAll();
     }
 
-    public Matiere editMatiere(Long id_matiere, String intitule_matiere) {
-        Matiere matiere = matiereRepository.findById(id_matiere).orElseThrow();
-        matiere.setIntitule_matiere(intitule_matiere);
-
+    public Matiere editMatiere(Matiere matiere) {
         return matiereRepository.save(matiere);
     }
 

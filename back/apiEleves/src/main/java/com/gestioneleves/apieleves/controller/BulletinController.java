@@ -5,8 +5,6 @@ import com.gestioneleves.apieleves.service.BulletinService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gestioneleves.apieleves.service.EleveService;
-
 import java.util.List;
 
 /**
