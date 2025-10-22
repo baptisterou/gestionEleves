@@ -28,8 +28,6 @@ public class BulletinService {
     }
 
     public List<Bulletin> getAllBulletins() {
-        // Appel au repository pour récupérer tous les bulletins
-        // Le cast en List<Bulletin> est nécessaire car findAll() retourne un Iterable
         return (List<Bulletin>) bulletinRepository.findAll();
     }
 
