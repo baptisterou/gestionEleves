@@ -14,11 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UtilisateurController {
 
-    final UtilisateurService service;
+    private final UtilisateurService service;
 
-    @PostMapping("/add")
-    public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
-        return service.ajouterUtilisateur(utilisateur);
+    @PostMapping()
+    public Utilisateur createrUtilisateur (@RequestBody Utilisateur utilisateur){
+        return service.createUtilisateur(utilisateur);
     };
 
     @GetMapping()
@@ -32,15 +32,15 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    public Utilisateur modifier(@PathVariable Long id, @RequestBody  UtilisateurDto dto){
-        return service.modifierUtilisateur(id, dto);
+    public Utilisateur modifier(@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
+        return service.modifierUtilisateur(id, utilisateur);
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.supprimerUtilisateur(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }
