@@ -14,7 +14,7 @@ public class EleveController {
 
     private final EleveService eleveService;
 
-    @PostMapping("/eleve/create/{id}")
+    @PostMapping("/eleve/create")
     public Eleve createEleve(@RequestBody Eleve eleve) {
         return eleveService.createEleve(eleve);
     }

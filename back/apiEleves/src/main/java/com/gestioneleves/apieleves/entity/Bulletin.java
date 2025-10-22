@@ -23,7 +23,7 @@ public class Bulletin {
     private int annee_bulletin;
     private String commentaire;
 
-    @OneToMany(mappedBy = "note")
+    @OneToMany(mappedBy = "bulletin")
     private List<Note> notes = new ArrayList<>();
 
 
