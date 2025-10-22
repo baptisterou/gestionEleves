@@ -35,7 +35,7 @@ public class Bulletin {
     private String commentaire;
 
 
-    @OneToMany(mappedBy = "note")
+    @OneToMany(mappedBy = "bulletin")
     private List<Note> notes = new ArrayList<>();
 
 

@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.mapper;
+/*package com.gestioneleves.apieleves.mapper;
 
 import com.gestioneleves.apieleves.dto.UtilisateurDto;
 import com.gestioneleves.apieleves.entity.Role;
@@ -47,4 +47,4 @@ public class UtilisateurMapper {
 
         return dto;
     }
-}
+}*/
