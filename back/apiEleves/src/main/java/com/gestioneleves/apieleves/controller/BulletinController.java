@@ -41,8 +41,8 @@ public class BulletinController {
         return bulletinService.getAllBulletins();
     }
 
-    @GetMapping("/bulletin/create")
-    public Bulletin createBulletin() {
-        return bulletinService.createBulletin();
-    }
+//    @GetMapping("/bulletin/create")
+//    public Bulletin createBulletin() {
+//
+//    }
 }

@@ -1,13 +1,10 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.gestioneleves.apieleves.entity.Eleve;
 
-import java.util.Date;
 import java.util.List;
 
 /**

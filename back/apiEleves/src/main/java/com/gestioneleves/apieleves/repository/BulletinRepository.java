@@ -1,7 +1,7 @@
 package com.gestioneleves.apieleves.repository;
 
 import com.gestioneleves.apieleves.entity.Bulletin;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * Fournit les méthodes standard : save, findById, findAll, delete, etc.
  */
 @Repository // Indique que cette interface est un repository Spring (accès aux données)
-public interface BulletinRepository extends CrudRepository<Bulletin, Long> {
+public interface BulletinRepository extends JpaRepository<Bulletin, Long> {
     // Cette interface est volontairement vide
     // Spring Data JPA fournit automatiquement les implémentations des méthodes CRUD :
     // - save(Bulletin entity) : sauvegarde un bulletin

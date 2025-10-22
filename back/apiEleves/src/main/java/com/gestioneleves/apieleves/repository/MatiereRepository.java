@@ -1,7 +1,7 @@
 package com.gestioneleves.apieleves.repository;
 
 import com.gestioneleves.apieleves.entity.Matiere;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * Fournit les méthodes standard : save, findById, findAll, delete, etc.
  */
 @Repository // Indique que cette interface est un repository Spring (accès aux données)
-public interface MatiereRepository extends CrudRepository<Matiere, Long> {
+public interface MatiereRepository extends JpaRepository<Matiere, Long> {
     // Cette interface est volontairement vide
     // Spring Data JPA fournit automatiquement les implémentations des méthodes CRUD :
     // - save(Matiere entity) : sauvegarde une matière
