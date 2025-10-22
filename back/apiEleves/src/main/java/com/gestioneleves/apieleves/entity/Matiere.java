@@ -28,19 +28,8 @@ public class Matiere {
      */
     private String intitule_matiere;
 
-    /**
-     * Constructeur par défaut requis par JPA
-     * Utilisé par Hibernate pour instancier les entités
-     */
-    public Matiere() {
-        // Constructeur vide requis par JPA
-    }
+    @OneToMany(mappedBy = "matiere")
+    private List<Note> notes = new ArrayList<>();
 
-    /**
-     * Constructeur avec paramètres pour créer une nouvelle matière
-     * @param intitule_matiere Le nom de la matière à créer
-     */
-    public Matiere(String intitule_matiere) {
-        this.intitule_matiere = intitule_matiere;
-    }
+
 }
