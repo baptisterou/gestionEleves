@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.dto;
+/*package com.gestioneleves.apieleves.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +15,4 @@ public class UtilisateurDto {
     private String dateNaissance;
     private String numTel;
     private String role;
-}
+}*/

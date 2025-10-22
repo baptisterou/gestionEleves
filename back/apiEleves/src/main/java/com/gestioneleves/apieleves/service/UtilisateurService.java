@@ -1,6 +1,6 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.dto.UtilisateurDto;
+//import com.gestioneleves.apieleves.dto.UtilisateurDto;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +22,15 @@ public class UtilisateurService {
             return UtilisateurRepository.save(utilisateur);
         }
 
-        public void modifierUtilisateur(UtilisateurDto dto){
+       // public void modifierUtilisateur(UtilisateurDto dto){
 
-        }
+        //}
 
         public void supprimerUtilisateur(Long id){
 
         }
 
-        public UtilisateurDto getUtilisateurById(Long id){
-            return null;
-        }
+        //public UtilisateurDto getUtilisateurById(Long id){
+        //    return null;
+        //}
 }

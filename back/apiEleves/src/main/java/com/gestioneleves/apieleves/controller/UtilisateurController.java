@@ -1,6 +1,6 @@
 package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.dto.UtilisateurDto;
+//import com.gestioneleves.apieleves.dto.UtilisateurDto;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class UtilisateurController {
         return service.getAllUtilisateurs();
     }
 
-    @PutMapping("/put/{id}")
+    /*@PutMapping("/put/{id}")
     public UtilisateurDto post (){
         return null;
-    };
+    };*/
 
     @DeleteMapping("/{id}")
     public UtilisateurService delete (){
