@@ -1,6 +1,7 @@
 package com.gestioneleves.apieleves.mapper;
 
 import com.gestioneleves.apieleves.dto.UtilisateurDto;
+import com.gestioneleves.apieleves.entity.Role;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
 public class UtilisateurMapper {
@@ -21,7 +22,7 @@ public class UtilisateurMapper {
 
         utilisateur.setPrenom(dto.getPrenom());
 
-        utilisateur.setRole(dto.getRole());
+        utilisateur.setRole(Role.valueOf(dto.getRole()));
 
         return utilisateur;
     }
@@ -42,7 +43,7 @@ public class UtilisateurMapper {
 
         dto.setPrenom(entity.getPrenom());
 
-        dto.setRole(entity.getRole());
+        dto.setRole(entity.getRole().name());
 
         return dto;
     }
