@@ -1,12 +1,9 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.gestioneleves.apieleves.entity.Eleve;
-import com.gestioneleves.apieleves.entity.Matiere;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-
 
 @Data
 @Entity
