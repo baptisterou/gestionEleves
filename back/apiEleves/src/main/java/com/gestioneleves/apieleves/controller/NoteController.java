@@ -15,7 +15,7 @@ public class NoteController {
     private NoteService noteService;
 
     @GetMapping("/notes")
-    public Iterable<Note> geAllNotes() {
+    public Iterable<Note> getAllNotes() {
         return noteService.getAllNotes();
     }
 
