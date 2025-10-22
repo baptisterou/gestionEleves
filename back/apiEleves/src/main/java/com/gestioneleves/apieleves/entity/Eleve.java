@@ -29,4 +29,7 @@ public class Eleve {
     @OneToMany(mappedBy = "eleve")
     private List<Note> notes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "eleve")
+    private List<Inscrire> inscriptions = new ArrayList<>();
+
 }

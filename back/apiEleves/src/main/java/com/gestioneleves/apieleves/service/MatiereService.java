@@ -35,10 +35,12 @@ public class MatiereService {
     }
 
     public Matiere editMatiere(Matiere matiere) {
+
         return matiereRepository.save(matiere);
     }
 
     public void deleteMatiere(Long id_matiere) {
+
         matiereRepository.deleteById(id_matiere);
     }
 }

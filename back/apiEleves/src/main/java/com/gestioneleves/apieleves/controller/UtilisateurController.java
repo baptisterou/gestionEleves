@@ -1,9 +1,10 @@
 package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.dto.UtilisateurDto;
+//import com.gestioneleves.apieleves.dto.UtilisateurDto;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,11 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UtilisateurController {
 
-    final UtilisateurService service;
+    private final UtilisateurService service;
 
-    @PostMapping("/add")
-    public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
-        return service.ajouterUtilisateur(utilisateur);
+    @PostMapping()
+    public Utilisateur createrUtilisateur (@RequestBody Utilisateur utilisateur){
+        return service.createUtilisateur(utilisateur);
     };
 
     @GetMapping()
@@ -25,14 +26,21 @@ public class UtilisateurController {
         return service.getAllUtilisateurs();
     }
 
-    @PutMapping("/put/{id}")
-    public UtilisateurDto post (){
-        return null;
-    };
+    @GetMapping("/{id}")
+    public UtilisateurDto getById(@PathVariable Long id){
+        return service.getUtilisateurById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Utilisateur modifier(@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
+        return service.modifierUtilisateur(id, utilisateur);
+    }
+
 
     @DeleteMapping("/{id}")
-    public UtilisateurService delete (){
-        return null;
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.supprimerUtilisateur(id);
+        return ResponseEntity.ok().build();
     }
 
 }
