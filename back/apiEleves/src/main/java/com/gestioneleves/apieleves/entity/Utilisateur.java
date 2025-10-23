@@ -40,4 +40,7 @@ public class Utilisateur {
     @OneToMany(mappedBy = "utilisateur")
     private List<Matiere> matieresEnseignant = new ArrayList<>();
 
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Inscrire> inscriptionEffectuees = new ArrayList<>();
+
 }
