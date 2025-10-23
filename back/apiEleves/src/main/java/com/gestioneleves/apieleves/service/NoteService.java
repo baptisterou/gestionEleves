@@ -2,10 +2,11 @@ package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Note;
 import com.gestioneleves.apieleves.repository.NoteRepository;
-import lombok.Data;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,19 +15,44 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
-    public Iterable<Note> getAllNotes() {
+    public NoteService(NoteRepository noteRepository) {
+        this.noteRepository = noteRepository;
+    }
 
+    public List<Note> getAllNotes(){
         return noteRepository.findAll();
     }
 
-    public Optional<Note> getNote(Long id) {
-        return noteRepository.findById(id); }
-
-    public Note addNote(Note note) {
-
+    public Note createNote (Note note){
         return noteRepository.save(note);
     }
 
-    public void deleteNote(Long id) {
-        noteRepository.deleteById(id); }
+    public Note modifierNote(Long id, Note note){
+        Optional<Note> entite = noteRepository.findById(id);
+        if (!entite.isPresent()) {
+            throw new EntityNotFoundException("Note introuvable: " + id);
+        }
+        if (note.getDateNote() != null) {
+            entite.get().setDateNote(note.getDateNote());
+        }
+        if (note.getCoefNote() > 0) {
+            entite.get().setCoefNote(note.getCoefNote());
+        }
+        if (note.getValeurNote() >=  0 || note.getValeurNote() <= 20) {
+            entite.get().setValeurNote(note.getValeurNote());
+        }
+        return noteRepository.save(entite.get());
+    }
+
+    public void deleteNote(Long id){
+        if (!noteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Note introuvable: " + id);
+        }
+        noteRepository.deleteById(id);
+    }
+
+    public Note getNoteById(Long id){
+        return noteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Note introuvable: " + id));
+    }
 }

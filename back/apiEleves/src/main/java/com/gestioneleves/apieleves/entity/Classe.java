@@ -16,13 +16,13 @@ public class Classe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_classe;
+    private long idClasse;
 
-    private String nom_classe;
-    private String niveau_classe;
-    private Date annee_scolaire;
+    private String nomClasse;
+    private String niveauClasse;
+    private Date anneeScolaire;
 
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "idUtilisateur")
     private Utilisateur enseignant;
 }

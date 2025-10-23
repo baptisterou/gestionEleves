@@ -19,13 +19,13 @@ public class Inscrire implements Serializable {
     private InscrireId id;
 
     @ManyToOne
-    @MapsId("id_eleve")
-    @JoinColumn(name = "id_eleve")
+    @MapsId("idEleve")
+    @JoinColumn(name = "idEleve")
     private Eleve eleve;
 
     @ManyToOne
     @MapsId("id_utilisateur")
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "idUtilisateur")
     private Utilisateur utilisateur;
 
     @Column(name = "DateInscrip")

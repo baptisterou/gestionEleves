@@ -15,19 +15,19 @@ public class Note {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id_note;
+    private Long idNote;
 
     @Temporal(TemporalType.DATE)
-    private Date date_note;
-    private float coef_note;
-    private float valeur_note;
+    private Date dateNote;
+    private float coefNote;
+    private float valeurNote;
 
     @ManyToOne
-    @JoinColumn(name = "id_eleve")
+    @JoinColumn(name = "idEleve")
     private Eleve eleve;
 
     @ManyToOne
-    @JoinColumn(name = "id_matiere")
+    @JoinColumn(name = "idMatiere")
     private Matiere matiere;
 
     @ManyToOne

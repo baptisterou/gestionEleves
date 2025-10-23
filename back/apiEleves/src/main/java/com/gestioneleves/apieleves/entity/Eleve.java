@@ -22,10 +22,10 @@ public class Eleve {
     
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
-    private long id_eleve;
-    private String nom_eleve;
-    private String prenom_eleve;
-    private Date naissance_eleve;
+    private long idEleve;
+    private String nom;
+    private String prenom;
+    private Date dateNaissance;
 
     /**
      * Relation One-to-Many avec l'entité Bulletin
@@ -33,7 +33,7 @@ public class Eleve {
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "idUtilisateur")
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")

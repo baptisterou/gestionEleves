@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/utilisateurs")
+@RequestMapping("api/utilisateur")
 @RequiredArgsConstructor
 public class UtilisateurController {
 
     final UtilisateurService service;
 
-    @PostMapping("/add")
+    @PostMapping()
     public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
         return service.createUtilisateur(utilisateur);
     };

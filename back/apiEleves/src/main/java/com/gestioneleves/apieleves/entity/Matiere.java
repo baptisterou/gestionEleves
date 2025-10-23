@@ -25,14 +25,14 @@ public class Matiere {
      */
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
-    private long id_matiere;
+    private long idMatiere;
 
     /**
      * Intitulé ou nom de la matière (ex: "Mathématiques", "Français")
      */
-    private String intitule_matiere;
+    private String intituleMatiere;
 
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "idUtilisateur")
     private Utilisateur enseignant;
 }
