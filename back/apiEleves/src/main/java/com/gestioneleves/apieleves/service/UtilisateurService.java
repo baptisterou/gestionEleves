@@ -21,7 +21,8 @@ public class UtilisateurService {
             return UtilisateurRepository.save(utilisateur);
         }
 
-        public void supprimerUtilisateur(Long id){
-
-        }
+    public Utilisateur getUtilisateurById(Long id){
+        return utilisateurRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));
+    }
 }

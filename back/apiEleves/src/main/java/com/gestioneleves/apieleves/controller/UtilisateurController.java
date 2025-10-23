@@ -24,6 +24,17 @@ public class UtilisateurController {
         return service.getAllUtilisateurs();
     }
 
+    @GetMapping("/{id}")
+    public Utilisateur getById(@PathVariable Long id){
+        return service.getUtilisateurById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Utilisateur modifier(@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
+        return service.modifierUtilisateur(id, utilisateur);
+    }
+
+
     @DeleteMapping("/{id}")
     public UtilisateurService delete (){
         return null;
