@@ -32,12 +32,12 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    public Note modifierNote (@PathVariable Long id, @RequestBody  Note note){
+    public Note editNote (@PathVariable Long id, @RequestBody  Note note){
         return noteService.editNote(id, note);
     }
 
     @DeleteMapping("/{id}")
     public void deleteNote (Long id){
-        noteService.sdeleteNote(id);
+        noteService.deleteNote(id);
     }
 }

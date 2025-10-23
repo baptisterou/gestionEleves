@@ -27,7 +27,7 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public Note modifierNote(Long id, Note note){
+    public Note editNote(Long id, Note note){
         Optional<Note> entite = noteRepository.findById(id);
         if (!entite.isPresent()) {
             throw new EntityNotFoundException("Note introuvable: " + id);
