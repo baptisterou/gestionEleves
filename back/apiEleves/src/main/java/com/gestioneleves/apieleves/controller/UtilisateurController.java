@@ -30,14 +30,13 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    public Utilisateur modifier(@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
+    public Utilisateur modifierUtilisateur (@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
         return service.modifierUtilisateur(id, utilisateur);
     }
 
-
     @DeleteMapping("/{id}")
-    public UtilisateurService delete (){
-        return null;
+    public void supprimerUtilisateur(Long id){
+        service.supprimerUtilisateur(id);
     }
 
 }
