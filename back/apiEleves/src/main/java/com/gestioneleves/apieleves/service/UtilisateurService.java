@@ -1,8 +1,6 @@
 package com.gestioneleves.apieleves.service;
 
-//import com.gestioneleves.apieleves.dto.UtilisateurDto;
 import com.gestioneleves.apieleves.entity.Utilisateur;
-import com.gestioneleves.apieleves.mapper.UtilisateurMapper;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
