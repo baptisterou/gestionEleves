@@ -1,11 +1,14 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Eleve;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.EleveRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service pour la gestion des élèves
@@ -35,9 +38,28 @@ public class EleveService {
         return (List<Eleve>) eleveRepository.findAll();
     }
 
-    public Eleve editEleve(Eleve eleve) {
 
-        return eleveRepository.save(eleve);
+
+    public Eleve editEleve(Long id, Eleve eleve){
+        Optional<Eleve> entite = eleveRepository.findById(id);
+        if (!entite.isPresent()) {
+            throw new EntityNotFoundException("Eleve introuvable: " + id);
+        }
+        if (eleve.getNom() != null) {
+            entite.get().setNom(eleve.getNom());
+        }
+        if (eleve.getPrenom() != null) {
+            entite.get().setPrenom(eleve.getPrenom());
+        }
+        if (eleve.getDateNaissance() != null) {
+            entite.get().setDateNaissance(eleve.getDateNaissance());
+        }
+        return eleveRepository.save(entite.get());
+    }
+
+    public Eleve getEleveById(Long id){
+        return eleveRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Eleve introuvable: " + id));
     }
 
     public void deleteEleve(Long id_eleve) {
