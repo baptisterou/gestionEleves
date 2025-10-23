@@ -1,11 +1,14 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Matiere;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service pour la gestion des matières
@@ -34,9 +37,21 @@ public class MatiereService {
         return (List<Matiere>) matiereRepository.findAll();
     }
 
-    public Matiere editMatiere(Matiere matiere) {
 
-        return matiereRepository.save(matiere);
+    public Matiere editMatiere(Long id, Matiere matiere){
+        Optional<Matiere> entite = matiereRepository.findById(id);
+        if (!entite.isPresent()) {
+            throw new EntityNotFoundException("Utilisateur introuvable: " + id);
+        }
+        if (matiere.getIntituleMatiere() != null) {
+            entite.get().setIntituleMatiere(matiere.getIntituleMatiere());
+        }
+        return matiereRepository.save(entite.get());
+    }
+
+    public Matiere getMatiereById(Long id){
+        return matiereRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Matiere introuvable: " + id));
     }
 
     public void deleteMatiere(Long id_matiere) {
