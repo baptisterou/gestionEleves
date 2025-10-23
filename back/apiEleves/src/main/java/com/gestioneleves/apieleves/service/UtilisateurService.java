@@ -60,9 +60,8 @@ public class UtilisateurService {
         utilisateurRepository.deleteById(id);
     }
 
-    public UtilisateurDto getUtilisateurById(Long id){
-        Utilisateur entite = utilisateurRepository.findById(id)
+    public Utilisateur getUtilisateurById(Long id){
+        return utilisateurRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));
-        return UtilisateurMapper.entityToDto(entite);
     }
 }
