@@ -19,7 +19,7 @@ public class EleveController {
         return eleveService.createEleve(eleve);
     }
 
-    @GetMapping("/eleves/")
+    @GetMapping("/eleves")
     public List<Eleve> getAllEleves() {
         return eleveService.getAllEleves();
     }
