@@ -1,11 +1,14 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Bulletin;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.BulletinRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service pour la gestion des bulletins
@@ -31,8 +34,27 @@ public class BulletinService {
         return (List<Bulletin>) bulletinRepository.findAll();
     }
 
-    public Bulletin editBulletin(Bulletin bulletin) {
-        return bulletinRepository.save(bulletin);
+    public Bulletin editBulletin(Long id, Bulletin bulletin){
+        Optional<Bulletin> entite = bulletinRepository.findById(id);
+        if (!entite.isPresent()) {
+            throw new EntityNotFoundException("Bulletin introuvable: " + id);
+        }
+        if (bulletin.getTrimestreBulletin()==1||bulletin.getTrimestreBulletin()==2||bulletin.getTrimestreBulletin()==3) {
+            entite.get().setTrimestreBulletin(bulletin.getTrimestreBulletin());
+        }
+        if (bulletin.getAnneeBulletin() > new java.util.Date().getYear() -1 ) {
+            entite.get().setAnneeBulletin(bulletin.getAnneeBulletin());
+        }
+        if (bulletin.getCommentaire() != null) {
+            entite.get().setCommentaire(bulletin.getCommentaire());
+        }
+
+        return bulletinRepository.save(entite.get());
+    }
+
+    public Bulletin getBulletinById(Long id){
+        return bulletinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));
     }
 
     public void deleteBulletin(Long id_bulletin) {

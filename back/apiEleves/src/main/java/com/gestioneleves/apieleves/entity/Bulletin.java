@@ -17,10 +17,10 @@ public class Bulletin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_bulletin;
+    private Long idBulletin;
 
-    private int trimestre_bulletin;
-    private int annee_bulletin;
+    private int trimestreBulletin;
+    private int anneeBulletin;
     private String commentaire;
 
 

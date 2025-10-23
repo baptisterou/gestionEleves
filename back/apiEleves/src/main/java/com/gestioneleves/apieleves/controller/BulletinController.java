@@ -8,28 +8,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/bulletin")
 @RequiredArgsConstructor
 public class BulletinController {
 
     private final BulletinService bulletinService;
 
-    @PostMapping("/bulletin/create/{id}")
+    @PostMapping()
     public Bulletin createBulletin(@RequestBody Bulletin bulletin) {
         return bulletinService.createBulletin(bulletin);
     }
 
-    @GetMapping("/bulletins/")
+    @GetMapping()
     public List<Bulletin> getAllBulletins() {
         return bulletinService.getAllBulletins();
     }
 
-    @PutMapping("/bulletin/edit/{id}")
-    public Bulletin editBulletin(@PathVariable Long id, @RequestBody Bulletin bulletin) {
-        return bulletinService.editBulletin(bulletin);
+    @GetMapping("/{id}")
+    public Bulletin getBulletinById (@PathVariable Long id){
+        return bulletinService.getBulletinById(id);
     }
 
-    @DeleteMapping("/bulletin/delete/{id}")
+    @PutMapping("/{id}")
+    public Bulletin editBulletin(@PathVariable Long id, @RequestBody Bulletin bulletin) {
+        return bulletinService.editBulletin(id, bulletin);
+    }
+
+    @DeleteMapping("/{id}")
     public void deleteBulletin(@PathVariable Long id) {
         bulletinService.deleteBulletin(id);
     }
