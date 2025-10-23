@@ -29,6 +29,6 @@ public class InscrireService {
 
     // Récupérer toutes les inscriptions faites par un administrateur
     public List<Inscrire> getInscriptionsByAdmin(Utilisateur admin) {
-        return inscrireRepository.findByAdministrateur(admin);
+        return inscrireRepository.findByUtilisateur(admin);
     }
 }

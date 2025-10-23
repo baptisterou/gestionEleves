@@ -28,8 +28,7 @@ public class Matiere {
      */
     private String intitule_matiere;
 
-    @OneToMany(mappedBy = "matiere")
-    private List<Note> notes = new ArrayList<>();
-
-
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur")
+    private Utilisateur enseignant;
 }

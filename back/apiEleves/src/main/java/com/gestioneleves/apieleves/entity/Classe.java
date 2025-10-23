@@ -1,9 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "classe")
 public class Classe {
 
     @Id
@@ -23,4 +21,8 @@ public class Classe {
     private String nom_classe;
     private String niveau_classe;
     private Date annee_scolaire;
+
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur")
+    private Utilisateur enseignant;
 }

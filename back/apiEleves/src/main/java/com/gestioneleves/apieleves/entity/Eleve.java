@@ -44,8 +44,9 @@ public class Eleve {
      * Un élève peut avoir plusieurs bulletins (un par trimestre)
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
-    @OneToMany(mappedBy = "eleve")
-    private List<Note> notes = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur")
+    private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
     private List<Inscrire> inscriptions = new ArrayList<>();
