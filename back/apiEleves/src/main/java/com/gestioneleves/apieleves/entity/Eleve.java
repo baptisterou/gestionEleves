@@ -26,8 +26,15 @@ public class Eleve {
     private String nom_eleve;
     private String prenom_eleve;
     private Date naissance_eleve;
-    @OneToMany(mappedBy = "eleve")
-    private List<Note> notes = new ArrayList<>();
+
+    /**
+     * Relation One-to-Many avec l'entité Bulletin
+     * Un élève peut avoir plusieurs bulletins (un par trimestre)
+     * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur")
+    private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
     private List<Inscrire> inscriptions = new ArrayList<>();
