@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "utilisateur")
 public class Utilisateur {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idUtilisateur")
     private Long idUtilisateur;
     @Column(name="Nom")
@@ -34,10 +34,10 @@ public class Utilisateur {
     @OneToMany(mappedBy = "utilisateur")
     private List<Eleve> eleves = new ArrayList<>();
 
-    @OneToMany(mappedBy = "utilisateur")
+    @OneToMany(mappedBy = "enseignant")
     private List<Classe> classesEnseignant = new ArrayList<>();
 
-    @OneToMany(mappedBy = "utilisateur")
+    @OneToMany(mappedBy = "enseignant")
     private List<Matiere> matieresEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "utilisateur")

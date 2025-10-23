@@ -2,8 +2,6 @@ package com.gestioneleves.apieleves.controller;
 
 import com.gestioneleves.apieleves.entity.Inscrire;
 import com.gestioneleves.apieleves.entity.InscrireId;
-import com.gestioneleves.apieleves.entity.Note;
-import com.gestioneleves.apieleves.repository.InscrireRepository;
 import com.gestioneleves.apieleves.service.InscrireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

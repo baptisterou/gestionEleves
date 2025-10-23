@@ -15,6 +15,6 @@ public interface InscrireRepository extends JpaRepository<Inscrire, InscrireId> 
     List<Inscrire> findByEleve(Eleve eleve);
 
     //Trouver toutes les inscriptions faites par un administrateur
-    List<Inscrire> findByAdministrateur(Utilisateur administrateur);
+    List<Inscrire> findByUtilisateur(Utilisateur utilisateur);
 
 }
