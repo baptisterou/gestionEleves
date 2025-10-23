@@ -16,7 +16,7 @@ public class UtilisateurController {
 
     @PostMapping("/add")
     public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
-        return service.ajouterUtilisateur(utilisateur);
+        return service.createUtilisateur(utilisateur);
     };
 
     @GetMapping()
