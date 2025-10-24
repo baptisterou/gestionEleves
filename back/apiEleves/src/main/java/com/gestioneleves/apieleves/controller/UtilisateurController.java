@@ -35,8 +35,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
-    public void supprimerUtilisateur(Long id){
+    public void supprimerUtilisateur(@PathVariable Long id){
         service.supprimerUtilisateur(id);
     }
-
 }
