@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UtilisateurController {
 
-    final UtilisateurService service;
+    private final UtilisateurService service;
 
     @PostMapping()
     public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
@@ -35,8 +35,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
-    public void supprimerUtilisateur(Long id){
+    public void supprimerUtilisateur(@PathVariable Long id){
         service.supprimerUtilisateur(id);
     }
-
 }

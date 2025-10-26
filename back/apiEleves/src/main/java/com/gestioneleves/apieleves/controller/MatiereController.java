@@ -8,28 +8,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/matiere")
 @RequiredArgsConstructor
 public class MatiereController {
 
     private final MatiereService matiereService;
 
-    @PostMapping("/matiere/create/{id}")
+    @PostMapping()
     public Matiere createMatiere(@RequestBody Matiere matiere) {
         return matiereService.createMatiere(matiere);
     }
 
-    @GetMapping("/matieres/")
+    @GetMapping()
     public List<Matiere> getAllMatieres() {
         return matiereService.getAllMatieres();
     }
 
-    @PutMapping("/matiere/edit/{id}")
-    public Matiere editMatiere(@PathVariable Long id, @RequestBody Matiere matiere) {
-        return matiereService.editMatiere(matiere);
+    @GetMapping("/{id}")
+    public Matiere getMatiereById (@PathVariable Long id){
+        return matiereService.getMatiereById(id);
     }
 
-    @DeleteMapping("/matiere/delete/{id}")
+    @PutMapping("/{id}")
+    public Matiere editMatiere(@PathVariable Long id, @RequestBody Matiere matiere) {
+        return matiereService.editMatiere(id, matiere);
+    }
+
+    @DeleteMapping("/{id}")
     public void deleteMatiere(@PathVariable Long id) {
         matiereService.deleteMatiere(id);
     }
