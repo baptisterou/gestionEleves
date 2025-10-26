@@ -33,7 +33,7 @@ public class Eleve {
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
     @ManyToOne
-    @JoinColumn(name = "idUtilisateur")
+    @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
