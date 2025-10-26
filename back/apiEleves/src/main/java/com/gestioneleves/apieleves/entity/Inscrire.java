@@ -24,7 +24,7 @@ public class Inscrire implements Serializable {
     private Eleve eleve;
 
     @ManyToOne
-    @MapsId("id_utilisateur")
+    @MapsId("idUtilisateur")
     @JoinColumn(name = "idUtilisateur")
     private Utilisateur utilisateur;
 
