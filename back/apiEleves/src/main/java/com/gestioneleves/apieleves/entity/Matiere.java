@@ -33,6 +33,6 @@ public class Matiere {
     private String intituleMatiere;
 
     @ManyToOne
-    @JoinColumn(name = "idUtilisateur")
+    @JoinColumn(name = "id_utilisateur")
     private Utilisateur enseignant;
 }
