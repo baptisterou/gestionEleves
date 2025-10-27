@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,26 +13,25 @@ import java.util.List;
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_utilisateur")
+    @Column(name="idUtilisateur")
     private Long idUtilisateur;
-    @Column(name="nom")
+    @Column(name="Nom")
     private String nom;
-    @Column(name="prenom")
+    @Column(name="Prenom")
     private String prenom;
-    @Column(name="email")
+    @Column(name="Email")
     private String email;
-    @Column(name="mot_de_passe")
+    @Column(name="MotDePasse")
     private String motDePasse;
-    @Column(name="date_naissance")
+    @Column(name="DateNaissance")
     private String dateNaissance;
-    @Column(name="num_tel")
+    @Column(name="NumTel")
     private String numTel;
     @Enumerated(EnumType.STRING)
-    @Column(name="role")
+    @Column(name="Role")
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur")
-    @JsonBackReference
     private List<Eleve> eleves = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")

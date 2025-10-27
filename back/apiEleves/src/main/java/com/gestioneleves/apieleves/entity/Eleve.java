@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,9 +32,8 @@ public class Eleve {
      * Un élève peut avoir plusieurs bulletins (un par trimestre)
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_utilisateur")
-    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "idUtilisateur")
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
