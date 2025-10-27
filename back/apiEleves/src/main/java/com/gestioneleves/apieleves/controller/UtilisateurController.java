@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UtilisateurController {
 
-    final UtilisateurService service;
+    private final UtilisateurService service;
 
     @PostMapping()
     public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
