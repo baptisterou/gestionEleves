@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/classes")
+@RequestMapping("/api/classe")
 @RequiredArgsConstructor
 public class ClasseController {
 
-    @Autowired
-    private ClasseService classeService;
+    private final ClasseService classeService;
 
     @PostMapping()
     public Classe createClasse(@RequestBody Classe classe) {
