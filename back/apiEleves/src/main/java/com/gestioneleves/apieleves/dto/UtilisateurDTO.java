@@ -12,7 +12,7 @@ class UtilisateurEnseignantDTO extends UtilisateurDTO {
 
 }
 
-class UtilisateurResponsableDTO extends UtilisateurDTO {
+class UtilisateurResponsableDTO extends UtilisateurEnseignantDTO {
     protected String email;
     protected String dateNaissance;
     protected String numTel;
