@@ -25,7 +25,7 @@ public class Eleve {
     private long idEleve;
     private String nom;
     private String prenom;
-    private String dateNaissance;
+    private Date dateNaissance;
 
     /**
      * Relation One-to-Many avec l'entité Bulletin
