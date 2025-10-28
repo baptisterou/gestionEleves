@@ -1,7 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +35,7 @@ public class Eleve {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
+    //@JsonManagedReference
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
