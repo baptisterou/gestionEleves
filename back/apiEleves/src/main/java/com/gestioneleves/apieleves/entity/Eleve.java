@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,11 @@ public class Eleve {
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
     private List<Inscrire> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
+    private List<Note> notes = new ArrayList<>();
 
 }

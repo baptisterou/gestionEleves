@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,13 +33,15 @@ public class Utilisateur {
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur")
-    //@JsonBackReference
+    @JsonIgnore
     private List<Eleve> eleves = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
+    @JsonIgnore
     private List<Classe> classesEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
+    @JsonIgnore
     private List<Matiere> matieresEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "utilisateur")

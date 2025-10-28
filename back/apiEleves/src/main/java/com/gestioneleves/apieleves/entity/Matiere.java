@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,4 +36,8 @@ public class Matiere {
     @ManyToOne
     @JoinColumn(name = "id_enseignant")
     private Utilisateur enseignant;
+
+    @OneToMany(mappedBy = "matiere")
+    @JsonIgnore
+    private List<Note> notes = new ArrayList<>();
 }
