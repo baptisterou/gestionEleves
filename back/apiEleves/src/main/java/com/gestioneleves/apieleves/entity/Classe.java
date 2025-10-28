@@ -20,9 +20,9 @@ public class Classe {
 
     private String nomClasse;
     private String niveauClasse;
-    private Date anneeScolaire;
+    private String anneeScolaire;
 
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "id_enseignant")
     private Utilisateur enseignant;
 }
