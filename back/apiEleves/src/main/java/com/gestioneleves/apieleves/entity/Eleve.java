@@ -35,7 +35,7 @@ public class Eleve {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
-    @JsonManagedReference
+    //@JsonManagedReference
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")

@@ -23,11 +23,11 @@ public class Note {
     private float valeurNote;
 
     @ManyToOne
-    @JoinColumn(name = "idEleve")
+    @JoinColumn(name = "id_eleve")
     private Eleve eleve;
 
     @ManyToOne
-    @JoinColumn(name = "idMatiere")
+    @JoinColumn(name = "id_matiere")
     private Matiere matiere;
 
     @ManyToOne

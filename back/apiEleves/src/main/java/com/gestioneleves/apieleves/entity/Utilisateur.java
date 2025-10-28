@@ -33,7 +33,7 @@ public class Utilisateur {
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur")
-    @JsonBackReference
+    //@JsonBackReference
     private List<Eleve> eleves = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
