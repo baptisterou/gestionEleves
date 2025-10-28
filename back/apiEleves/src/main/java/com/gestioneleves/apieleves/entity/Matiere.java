@@ -34,7 +34,7 @@ public class Matiere {
     private String intituleMatiere;
 
     @ManyToOne
-    @JoinColumn(name = "idUtilisateur")
+    @JoinColumn(name = "id_enseignant")
     private Utilisateur enseignant;
 
     @OneToMany(mappedBy = "matiere")

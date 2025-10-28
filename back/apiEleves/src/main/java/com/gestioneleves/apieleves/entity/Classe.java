@@ -20,9 +20,9 @@ public class Classe {
 
     private String nomClasse;
     private String niveauClasse;
-    private Date anneeScolaire;
+    private String anneeScolaire;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_utilisateur")
+    @ManyToOne
+    @JoinColumn(name = "id_enseignant")
     private Utilisateur enseignant;
 }
