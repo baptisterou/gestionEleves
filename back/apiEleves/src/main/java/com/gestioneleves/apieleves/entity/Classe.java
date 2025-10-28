@@ -22,7 +22,7 @@ public class Classe {
     private String niveauClasse;
     private Date anneeScolaire;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur enseignant;
 }

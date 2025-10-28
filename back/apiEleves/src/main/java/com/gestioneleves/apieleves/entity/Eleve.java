@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,10 +36,14 @@ public class Eleve {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
-    //@JsonManagedReference
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
     private List<Inscrire> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
+    private List<Note> notes = new ArrayList<>();
 
 }
