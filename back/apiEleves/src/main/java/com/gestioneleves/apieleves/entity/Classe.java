@@ -23,6 +23,6 @@ public class Classe {
     private Date anneeScolaire;
 
     @ManyToOne
-    @JoinColumn(name = "idUtilisateur")
+    @JoinColumn(name = "id_utilisateur")
     private Utilisateur enseignant;
 }
