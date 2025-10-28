@@ -31,7 +31,7 @@ public class BulletinService {
     }
 
     public List<Bulletin> getAllBulletins() {
-        return (List<Bulletin>) bulletinRepository.findAll();
+         return (List<Bulletin>) bulletinRepository.findAll();
     }
 
     public Bulletin editBulletin(Long id, Bulletin bulletin){
@@ -42,7 +42,7 @@ public class BulletinService {
         if (bulletin.getTrimestreBulletin()==1||bulletin.getTrimestreBulletin()==2||bulletin.getTrimestreBulletin()==3) {
             entite.get().setTrimestreBulletin(bulletin.getTrimestreBulletin());
         }
-        if (bulletin.getAnneeBulletin() > new java.util.Date().getYear() -1 ) {
+        if (bulletin.getAnneeBulletin() == new java.util.Date().getYear() || bulletin.getAnneeBulletin() == new java.util.Date().getYear() +1 ) {
             entite.get().setAnneeBulletin(bulletin.getAnneeBulletin());
         }
         if (bulletin.getCommentaire() != null) {
