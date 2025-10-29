@@ -26,7 +26,7 @@ public class Matiere {
      */
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
-    private long idMatiere;
+    private Long idMatiere;
 
     /**
      * Intitulé ou nom de la matière (ex: "Mathématiques", "Français")
