@@ -28,6 +28,4 @@ public class Bulletin {
     @OneToMany(mappedBy = "bulletin")
     @JsonIgnore
     private List<Note> notes = new ArrayList<>();
-
-
 }
