@@ -23,7 +23,7 @@ public class Eleve {
     
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
-    private long idEleve;
+    private Long idEleve;
     private String nom;
     private String prenom;
     private Date dateNaissance;

@@ -16,7 +16,7 @@ public class Classe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idClasse;
+    private Long idClasse;
 
     private String nomClasse;
     private String niveauClasse;

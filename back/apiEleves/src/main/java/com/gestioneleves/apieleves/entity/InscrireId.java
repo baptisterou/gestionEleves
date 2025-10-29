@@ -12,6 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InscrireId implements Serializable {
-    private Integer idEleve;
-    private Integer idUtilisateur;
+    private Long idEleve;
+    private Long idUtilisateur;
 }
