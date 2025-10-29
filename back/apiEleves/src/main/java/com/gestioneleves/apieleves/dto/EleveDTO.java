@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UtilisateurDTO {
-    protected Long idUtilisateur;
-    protected String nom;
-    protected String prenom;
-
+public class EleveDTO {
+    private Long idEleve;
+    private String nom;
+    private String prenom;
+    private String dateNaissance;
+    private String classe;
 }
