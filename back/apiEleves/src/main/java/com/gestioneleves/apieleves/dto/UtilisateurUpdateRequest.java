@@ -5,15 +5,15 @@ import com.gestioneleves.apieleves.entity.Role;
 import java.util.Date;
 
 /**
- * Représentation publique d'un utilisateur à exposer par l'API.
- * Ne contient jamais le mot de passe.
+ * Payload pour la mise à jour partielle d'un utilisateur.
+ * Tous les champs sont optionnels.
  */
-public class UtilisateurDTO {
-    public Long idUtilisateur;
+public class UtilisateurUpdateRequest {
     public String nom;
     public String prenom;
     public String email;
-    public String numTel;
+    public String motDePasse;
     public Date dateNaissance;
+    public String numTel;
     public Role role;
 }

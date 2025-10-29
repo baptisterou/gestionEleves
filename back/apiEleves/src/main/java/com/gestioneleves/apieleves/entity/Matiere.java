@@ -1,10 +1,14 @@
 package com.gestioneleves.apieleves.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +17,15 @@ import java.util.List;
  * Entité JPA représentant une matière dans le système
  * Correspond à la table "matiere" en base de données
  */
-@Data // Annotation Lombok qui génère automatiquement getters, setters, toString, equals, hashCode
+@Getter
+@Setter
+@ToString(exclude = {"enseignant", "notes"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // Indique que cette classe est une entité JPA
 @Table(name = "matiere") // Spécifie le nom de la table en base de données
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Matiere {
 
     /**
@@ -26,6 +34,7 @@ public class Matiere {
      */
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
+    @EqualsAndHashCode.Include
     private Long idMatiere;
 
     /**
