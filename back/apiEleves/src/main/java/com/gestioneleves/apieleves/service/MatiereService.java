@@ -3,6 +3,7 @@ package com.gestioneleves.apieleves.service;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
+import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class MatiereService {
     @Autowired
     private MatiereRepository matiereRepository;
 
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
     /**
      * Récupère la liste de toutes les matières
      * @return Liste des objets Matiere contenant toutes les matières en base de données
@@ -38,15 +42,26 @@ public class MatiereService {
     }
 
 
-    public Matiere editMatiere(Long id, Matiere matiere){
-        Optional<Matiere> entite = matiereRepository.findById(id);
-        if (!entite.isPresent()) {
-            throw new EntityNotFoundException("Utilisateur introuvable: " + id);
-        }
-        if (matiere.getIntituleMatiere() != null) {
-            entite.get().setIntituleMatiere(matiere.getIntituleMatiere());
-        }
-        return matiereRepository.save(entite.get());
+    public Matiere editMatiere(Long id, Matiere matiere) {
+        return matiereRepository.findById(id)
+                .map(existing -> {
+                    // Champs simples
+                    Optional.ofNullable(matiere.getIntituleMatiere())
+                            .ifPresent(existing::setIntituleMatiere);
+
+                    // Objet lié : enseignant
+                    if (matiere.getEnseignant() != null && matiere.getEnseignant().getIdUtilisateur() != null) {
+                        Utilisateur enseignant = utilisateurRepository.findById(
+                                matiere.getEnseignant().getIdUtilisateur()
+                        ).orElseThrow(() -> new EntityNotFoundException(
+                                "Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()
+                        ));
+                        existing.setEnseignant(enseignant);
+                    }
+
+                    return matiereRepository.save(existing);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
     }
 
     public Matiere getMatiereById(Long id){
