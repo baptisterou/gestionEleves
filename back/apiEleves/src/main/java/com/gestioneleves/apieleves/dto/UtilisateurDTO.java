@@ -12,5 +12,4 @@ public class UtilisateurDTO {
     protected Long idUtilisateur;
     protected String nom;
     protected String prenom;
-
 }

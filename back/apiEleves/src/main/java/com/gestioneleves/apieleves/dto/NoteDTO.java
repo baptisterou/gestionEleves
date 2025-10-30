@@ -15,5 +15,6 @@ public class NoteDTO {
     private Float valeurNote;
     private Float coefNote;
     private String matiere;
-    private String eleveNom;
+    private String nom;
+    private String prenom;
 }
