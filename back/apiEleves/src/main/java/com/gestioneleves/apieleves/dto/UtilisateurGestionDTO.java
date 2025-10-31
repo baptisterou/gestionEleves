@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UtilisateurGestion {
+public class UtilisateurGestionDTO {
     @NotBlank private String nom;
     @NotBlank private String prenom;
     @NotBlank private String email;

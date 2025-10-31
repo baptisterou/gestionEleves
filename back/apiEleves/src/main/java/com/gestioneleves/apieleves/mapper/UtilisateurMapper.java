@@ -1,7 +1,7 @@
 package com.gestioneleves.apieleves.mapper;
 
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
-import com.gestioneleves.apieleves.dto.UtilisateurGestion;
+import com.gestioneleves.apieleves.dto.UtilisateurGestionDTO;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public final class UtilisateurMapper {
         return list.stream().filter(Objects::nonNull).map(UtilisateurMapper::toDto).collect(Collectors.toList());
     }
 
-    public static Utilisateur fromCreate(UtilisateurGestion req) {
+    public static Utilisateur fromCreate(UtilisateurGestionDTO req) {
         if (req == null) return null;
         Utilisateur u = new Utilisateur();
         u.setNom(req.getNom());
@@ -38,7 +38,7 @@ public final class UtilisateurMapper {
         return u;
     }
 
-    public static void applyUpdate(UtilisateurGestion req, Utilisateur target) {
+    public static void applyUpdate(UtilisateurGestionDTO req, Utilisateur target) {
         if (req == null || target == null) return;
         if (req.getNom() != null) target.setNom(req.getNom());
         if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
@@ -49,7 +49,7 @@ public final class UtilisateurMapper {
         if (req.getRole() != null) target.setRole(req.getRole());
     }
 
-    public static Utilisateur fromUpdate(UtilisateurGestion req) {
+    public static Utilisateur fromUpdate(UtilisateurGestionDTO req) {
         if (req == null) return null;
         Utilisateur u = new Utilisateur();
         if (req.getNom() != null) u.setNom(req.getNom());
