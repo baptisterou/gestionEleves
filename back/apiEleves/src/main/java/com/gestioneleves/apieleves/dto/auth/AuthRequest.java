@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.auth.dto;
+package com.gestioneleves.apieleves.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

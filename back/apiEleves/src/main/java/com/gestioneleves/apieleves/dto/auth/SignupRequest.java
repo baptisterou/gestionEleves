@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.auth.dto;
+package com.gestioneleves.apieleves.dto.auth;
 
 import com.gestioneleves.apieleves.entity.Role;
 import jakarta.validation.constraints.Email;
@@ -23,5 +23,5 @@ public class SignupRequest {
     private Date dateNaissance;
     @NotBlank
     private String numTel;
-    private Role role; // optional, default RESPONSABLE if null
+    private Role role;
 }

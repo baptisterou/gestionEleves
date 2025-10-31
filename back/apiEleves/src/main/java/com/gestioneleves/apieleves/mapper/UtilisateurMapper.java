@@ -1,8 +1,7 @@
 package com.gestioneleves.apieleves.mapper;
 
-import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
-import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
+import com.gestioneleves.apieleves.dto.UtilisateurGestion;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
 import java.util.List;
@@ -15,13 +14,9 @@ public final class UtilisateurMapper {
     public static UtilisateurDTO toDto(Utilisateur entity) {
         if (entity == null) return null;
         UtilisateurDTO dto = new UtilisateurDTO();
-        dto.idUtilisateur = entity.getIdUtilisateur();
-        dto.nom = entity.getNom();
-        dto.prenom = entity.getPrenom();
-        dto.email = entity.getEmail();
-        dto.numTel = entity.getNumTel();
-        dto.dateNaissance = entity.getDateNaissance();
-        dto.role = entity.getRole();
+        dto.setIdUtilisateur(entity.getIdUtilisateur());
+        dto.setNom(entity.getNom());
+        dto.setPrenom(entity.getPrenom());
         return dto;
     }
 
@@ -30,40 +25,40 @@ public final class UtilisateurMapper {
         return list.stream().filter(Objects::nonNull).map(UtilisateurMapper::toDto).collect(Collectors.toList());
     }
 
-    public static Utilisateur fromCreate(UtilisateurCreateRequest req) {
+    public static Utilisateur fromCreate(UtilisateurGestion req) {
         if (req == null) return null;
         Utilisateur u = new Utilisateur();
-        u.setNom(req.nom);
-        u.setPrenom(req.prenom);
-        u.setEmail(req.email);
-        u.setMotDePasse(req.motDePasse);
-        u.setDateNaissance(req.dateNaissance);
-        u.setNumTel(req.numTel);
-        if (req.role != null) u.setRole(req.role);
+        u.setNom(req.getNom());
+        u.setPrenom(req.getPrenom());
+        u.setEmail(req.getEmail());
+        u.setMotDePasse(req.getMotDePasse());
+        u.setDateNaissance(req.getDateNaissance());
+        u.setNumTel(req.getNumTel());
+        if (req.getRole() != null) u.setRole(req.getRole());
         return u;
     }
 
-    public static void applyUpdate(UtilisateurUpdateRequest req, Utilisateur target) {
+    public static void applyUpdate(UtilisateurGestion req, Utilisateur target) {
         if (req == null || target == null) return;
-        if (req.nom != null) target.setNom(req.nom);
-        if (req.prenom != null) target.setPrenom(req.prenom);
-        if (req.email != null) target.setEmail(req.email);
-        if (req.motDePasse != null) target.setMotDePasse(req.motDePasse);
-        if (req.dateNaissance != null) target.setDateNaissance(req.dateNaissance);
-        if (req.numTel != null) target.setNumTel(req.numTel);
-        if (req.role != null) target.setRole(req.role);
+        if (req.getNom() != null) target.setNom(req.getNom());
+        if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
+        if (req.getEmail() != null) target.setEmail(req.getEmail());
+        if (req.getMotDePasse() != null) target.setMotDePasse(req.getMotDePasse());
+        if (req.getDateNaissance() != null) target.setDateNaissance(req.getDateNaissance());
+        if (req.getNumTel() != null) target.setNumTel(req.getNumTel());
+        if (req.getRole() != null) target.setRole(req.getRole());
     }
 
-    public static Utilisateur fromUpdate(UtilisateurUpdateRequest req) {
+    public static Utilisateur fromUpdate(UtilisateurGestion req) {
         if (req == null) return null;
         Utilisateur u = new Utilisateur();
-        if (req.nom != null) u.setNom(req.nom);
-        if (req.prenom != null) u.setPrenom(req.prenom);
-        if (req.email != null) u.setEmail(req.email);
-        if (req.motDePasse != null) u.setMotDePasse(req.motDePasse);
-        if (req.dateNaissance != null) u.setDateNaissance(req.dateNaissance);
-        if (req.numTel != null) u.setNumTel(req.numTel);
-        if (req.role != null) u.setRole(req.role);
+        if (req.getNom() != null) u.setNom(req.getNom());
+        if (req.getPrenom() != null) u.setPrenom(req.getPrenom());
+        if (req.getEmail() != null) u.setEmail(req.getEmail());
+        if (req.getMotDePasse() != null) u.setMotDePasse(req.getMotDePasse());
+        if (req.getDateNaissance() != null) u.setDateNaissance(req.getDateNaissance());
+        if (req.getNumTel() != null) u.setNumTel(req.getNumTel());
+        if (req.getRole() != null) u.setRole(req.getRole());
         return u;
     }
 }

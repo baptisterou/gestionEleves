@@ -1,4 +1,4 @@
-package com.gestioneleves.apieleves.auth.dto;
+package com.gestioneleves.apieleves.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

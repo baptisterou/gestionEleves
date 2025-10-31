@@ -1,8 +1,8 @@
-package com.gestioneleves.apieleves.auth;
+package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.auth.dto.AuthRequest;
-import com.gestioneleves.apieleves.auth.dto.AuthResponse;
-import com.gestioneleves.apieleves.auth.dto.SignupRequest;
+import com.gestioneleves.apieleves.dto.auth.AuthRequest;
+import com.gestioneleves.apieleves.dto.auth.AuthResponse;
+import com.gestioneleves.apieleves.dto.auth.SignupRequest;
 import com.gestioneleves.apieleves.entity.Role;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
@@ -27,7 +27,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest request) {
         if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().build();
