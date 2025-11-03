@@ -9,7 +9,6 @@ import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.NoteRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +16,7 @@ import java.util.List;
 @Service
 public class NoteService {
 
-    @Autowired
-    private NoteRepository noteRepository;
+    private final NoteRepository noteRepository;
 
     @Autowired
     private BulletinRepository bulletinRepository;
@@ -36,46 +34,47 @@ public class NoteService {
     }
 
     public Note createNote (Note note){
+        validateNote(note);
         return noteRepository.save(note);
     }
 
     public Note editNote(Long id, Note note){
-        // Récupération ou exception si non trouvé
-        Note existing = noteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
-
-        // Mise à jour des champs simples
+        Note entite = noteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Note introuvable: " + id));
         if (note.getDateNote() != null) {
+            entite.setDateNote(note.getDateNote());
             existing.setDateNote(note.getDateNote());
         }
         if (note.getCoefNote() > 0) {
+            entite.setCoefNote(note.getCoefNote());
             existing.setCoefNote(note.getCoefNote());
         }
-        if (note.getValeurNote() >=  0 || note.getValeurNote() <= 20) {
-            existing.setValeurNote(note.getValeurNote());
+        if (note.getValeurNote() >= 0 && note.getValeurNote() <= 20) {
+            entite.setValeurNote(note.getValeurNote());
         }
 
         // Mise à jour de l'objet lié
         if (note.getBulletin() != null && note.getBulletin().getIdBulletin() != null) {
             Bulletin bulletin = bulletinRepository.findById(note.getBulletin().getIdBulletin())
                     .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable : " + note.getBulletin().getIdBulletin()));
-            existing.setBulletin(bulletin);
+            entite.setBulletin(bulletin);
         }
 
         if (note.getEleve() != null && note.getEleve().getIdEleve() != null) {
             Eleve eleve = eleveRepository.findById(note.getEleve().getIdEleve())
                     .orElseThrow(() -> new EntityNotFoundException("Eleve introuvable : " + note.getEleve().getIdEleve()));
-            existing.setEleve(eleve);
+            entite.setEleve(eleve);
         }
 
         if (note.getMatiere() != null && note.getMatiere().getIdMatiere() != null) {
             Matiere matiere = matiereRepository.findById(note.getMatiere().getIdMatiere())
-                    .orElseThrow(() -> new EntityNotFoundException("Matière  introuvable : " + note.getMatiere().getIdMatiere()));
-            existing.setMatiere(matiere);
+                    .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + note.getMatiere().getIdMatiere()));
+            entite.setMatiere(matiere);
         }
-
-        // Sauvegarde et retour
-        return noteRepository.save(existing);
+        }
+        // revalidate after applying changes
+        validateNote(entite);
+        return noteRepository.save(entite);
     }
 
     public void deleteNote(Long id){
@@ -88,5 +87,14 @@ public class NoteService {
     public Note getNoteById(Long id){
         return noteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Note introuvable: " + id));
+    }
+
+    private void validateNote(Note n) {
+        if (n.getCoefNote() <= 0) {
+            throw new IllegalArgumentException("Le coefficient doit être > 0");
+        }
+        if (n.getValeurNote() < 0 || n.getValeurNote() > 20) {
+            throw new IllegalArgumentException("La note doit être entre 0 et 20");
+        }
     }
 }

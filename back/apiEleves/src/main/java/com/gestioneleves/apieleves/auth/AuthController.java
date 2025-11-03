@@ -39,7 +39,8 @@ public class AuthController {
         user.setMotDePasse(passwordEncoder.encode(request.getPassword()));
         user.setDateNaissance(request.getDateNaissance());
         user.setNumTel(request.getNumTel());
-        user.setRole(request.getRole() != null ? request.getRole() : Role.RESPONSABLE);
+        // For security reasons, ignore any incoming role from signup and force RESPONSABLE
+        user.setRole(Role.RESPONSABLE);
         Utilisateur saved = utilisateurRepository.save(user);
         String token = jwtService.generateToken(saved.getUsername(), saved.getAuthorities());
         return ResponseEntity.ok(new AuthResponse(token));

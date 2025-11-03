@@ -27,10 +27,17 @@ public class ApplicationSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UtilisateurRepository utilisateurRepository;
+    private final JsonAuthenticationEntryPoint authenticationEntryPoint;
+    private final JsonAccessDeniedHandler accessDeniedHandler;
 
-    public ApplicationSecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthFilter, UtilisateurRepository utilisateurRepository) {
+    public ApplicationSecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthFilter,
+                                     UtilisateurRepository utilisateurRepository,
+                                     JsonAuthenticationEntryPoint authenticationEntryPoint,
+                                     JsonAccessDeniedHandler accessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.utilisateurRepository = utilisateurRepository;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -61,11 +68,58 @@ public class ApplicationSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/users/**").authenticated()
+
+                        // Eleves
+                        .requestMatchers(HttpMethod.GET, "/api/eleve/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/eleve/**").hasAnyRole("ADMIN", "RESPONSABLE")
+                        .requestMatchers(HttpMethod.PUT, "/api/eleve/**").hasAnyRole("ADMIN", "RESPONSABLE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/eleve/**").hasRole("ADMIN")
+
+                        // Notes
+                        .requestMatchers(HttpMethod.GET, "/api/note/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/note/**").hasAnyRole("ADMIN", "ENSEIGNANT")
+                        .requestMatchers(HttpMethod.PUT, "/api/note/**").hasAnyRole("ADMIN", "ENSEIGNANT")
+                        .requestMatchers(HttpMethod.DELETE, "/api/note/**").hasRole("ADMIN")
+
+                        // Matieres
+                        .requestMatchers(HttpMethod.GET, "/api/matiere/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/matiere/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/matiere/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/matiere/**").hasRole("ADMIN")
+
+                        // Classes
+                        .requestMatchers(HttpMethod.GET, "/api/classe/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/classe/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/classe/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/classe/**").hasRole("ADMIN")
+
+                        // Inscriptions
+                        .requestMatchers(HttpMethod.GET, "/api/inscription/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/inscription/**").hasAnyRole("ADMIN", "RESPONSABLE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/inscription/**").hasAnyRole("ADMIN", "RESPONSABLE")
+
+                        // Bulletins
+                        .requestMatchers(HttpMethod.GET, "/api/bulletin/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/bulletin/**").hasAnyRole("ADMIN", "ENSEIGNANT")
+                        .requestMatchers(HttpMethod.PUT, "/api/bulletin/**").hasAnyRole("ADMIN", "ENSEIGNANT")
+                        .requestMatchers(HttpMethod.DELETE, "/api/bulletin/**").hasRole("ADMIN")
+
+                        // Utilisateurs
+                        .requestMatchers(HttpMethod.GET, "/api/utilisateur/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/utilisateur/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/utilisateur/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/utilisateur/**").hasRole("ADMIN")
+
+                        // fallback generic rules
                         .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
