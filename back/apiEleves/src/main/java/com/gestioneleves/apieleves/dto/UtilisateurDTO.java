@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UtilisateurDTO {
-    protected Long idUtilisateur;
-    protected String nom;
-    protected String prenom;
+    private Long idUtilisateur;
+    private String nom;
+    private String prenom;
 }

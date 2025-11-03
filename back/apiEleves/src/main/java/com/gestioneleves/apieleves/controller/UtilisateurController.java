@@ -1,6 +1,10 @@
 package com.gestioneleves.apieleves.controller;
 
+import com.gestioneleves.apieleves.dto.UtilisateurDTO;
+import com.gestioneleves.apieleves.dto.UtilisateurGestionDTO;
 import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.mapper.UtilisateurMapper;
+import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import com.gestioneleves.apieleves.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,25 +17,32 @@ import java.util.List;
 public class UtilisateurController {
 
     private final UtilisateurService service;
+    private final UtilisateurRepository utilisateurRepository;
 
     @PostMapping()
-    public Utilisateur ajouterUtilisateur(@RequestBody Utilisateur utilisateur){
-        return service.createUtilisateur(utilisateur);
-    };
+    public UtilisateurDTO ajouterUtilisateur(@RequestBody UtilisateurGestionDTO utilisateur){
+        Utilisateur entity = UtilisateurMapper.fromCreate(utilisateur);
+        Utilisateur result = service.createUtilisateur(entity);
+        return UtilisateurMapper.toDto(result);
+    }
 
     @GetMapping()
-    public List<Utilisateur> getAllUtilisateurs(){
-        return service.getAllUtilisateurs();
+    public List<UtilisateurDTO> getAllUtilisateurs(){
+        List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+        return UtilisateurMapper.toDtoList(utilisateurs);
     }
 
     @GetMapping("/{id}")
-    public Utilisateur getById(@PathVariable Long id){
-        return service.getUtilisateurById(id);
+    public UtilisateurDTO getById(@PathVariable Long id){
+        Utilisateur utilisateur = service.getUtilisateurById(id);
+        return UtilisateurMapper.toDto(utilisateur);
     }
 
     @PutMapping("/{id}")
-    public Utilisateur modifierUtilisateur (@PathVariable Long id, @RequestBody  Utilisateur utilisateur){
-        return service.modifierUtilisateur(id, utilisateur);
+    public UtilisateurDTO modifierUtilisateur (@PathVariable Long id, @RequestBody UtilisateurGestionDTO utilisateur){
+        Utilisateur entity = UtilisateurMapper.fromUpdate(utilisateur);
+        Utilisateur result = service.modifierUtilisateur(id, entity);
+        return UtilisateurMapper.toDto(result);
     }
 
     @DeleteMapping("/{id}")

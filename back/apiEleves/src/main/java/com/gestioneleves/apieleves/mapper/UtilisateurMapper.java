@@ -31,7 +31,6 @@ public final class UtilisateurMapper {
         u.setNom(req.getNom());
         u.setPrenom(req.getPrenom());
         u.setEmail(req.getEmail());
-        u.setMotDePasse(req.getMotDePasse());
         u.setDateNaissance(req.getDateNaissance());
         u.setNumTel(req.getNumTel());
         if (req.getRole() != null) u.setRole(req.getRole());
@@ -43,7 +42,6 @@ public final class UtilisateurMapper {
         if (req.getNom() != null) target.setNom(req.getNom());
         if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
         if (req.getEmail() != null) target.setEmail(req.getEmail());
-        if (req.getMotDePasse() != null) target.setMotDePasse(req.getMotDePasse());
         if (req.getDateNaissance() != null) target.setDateNaissance(req.getDateNaissance());
         if (req.getNumTel() != null) target.setNumTel(req.getNumTel());
         if (req.getRole() != null) target.setRole(req.getRole());
@@ -55,7 +53,6 @@ public final class UtilisateurMapper {
         if (req.getNom() != null) u.setNom(req.getNom());
         if (req.getPrenom() != null) u.setPrenom(req.getPrenom());
         if (req.getEmail() != null) u.setEmail(req.getEmail());
-        if (req.getMotDePasse() != null) u.setMotDePasse(req.getMotDePasse());
         if (req.getDateNaissance() != null) u.setDateNaissance(req.getDateNaissance());
         if (req.getNumTel() != null) u.setNumTel(req.getNumTel());
         if (req.getRole() != null) u.setRole(req.getRole());
