@@ -43,25 +43,24 @@ public class MatiereService {
 
 
     public Matiere editMatiere(Long id, Matiere matiere) {
-        return matiereRepository.findById(id)
-                .map(existing -> {
-                    // Champs simples
-                    Optional.ofNullable(matiere.getIntituleMatiere())
-                            .ifPresent(existing::setIntituleMatiere);
-
-                    // Objet lié : enseignant
-                    if (matiere.getEnseignant() != null && matiere.getEnseignant().getIdUtilisateur() != null) {
-                        Utilisateur enseignant = utilisateurRepository.findById(
-                                matiere.getEnseignant().getIdUtilisateur()
-                        ).orElseThrow(() -> new EntityNotFoundException(
-                                "Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()
-                        ));
-                        existing.setEnseignant(enseignant);
-                    }
-
-                    return matiereRepository.save(existing);
-                })
+        // Récupération ou exception si non trouvé
+        Matiere existing = matiereRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
+
+        // Mise à jour des champs simples
+        if (matiere.getIntituleMatiere() != null) {
+            existing.setIntituleMatiere(matiere.getIntituleMatiere());
+        }
+
+        // Mise à jour de l'objet lié
+        if (matiere.getEnseignant() != null && matiere.getEnseignant().getIdUtilisateur() != null) {
+            Utilisateur enseignant = utilisateurRepository.findById(matiere.getEnseignant().getIdUtilisateur())
+                .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()));
+            existing.setEnseignant(enseignant);
+        }
+
+        // Sauvegarde et retour
+        return matiereRepository.save(existing);
     }
 
     public Matiere getMatiereById(Long id){

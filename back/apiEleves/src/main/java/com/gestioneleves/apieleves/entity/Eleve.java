@@ -34,9 +34,9 @@ public class Eleve {
      * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_utilisateur")
+    @JoinColumn(name = "id_representant")
     //@JsonManagedReference
-    private Utilisateur utilisateur;
+    private Utilisateur representant;
 
     @OneToMany(mappedBy = "eleve")
     @JsonIgnore

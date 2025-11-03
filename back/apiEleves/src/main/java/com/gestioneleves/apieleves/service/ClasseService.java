@@ -1,7 +1,9 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Classe;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.ClasseRepository;
+import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,10 @@ public class ClasseService {
     @Autowired
     private ClasseRepository classeRepository;
 
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
+
     public Classe createClasse(Classe classe) {
         return classeRepository.save(classe);
     }
@@ -24,21 +30,30 @@ public class ClasseService {
     }
 
     public Classe editClasse(Long id, Classe classe){
-        Optional<Classe> entite = classeRepository.findById(id);
-        if (!entite.isPresent()) {
-            throw new EntityNotFoundException("Classe introuvable: " + id);
-        }
+        // Récupération ou exception si non trouvé
+        Classe existing = classeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Classe introuvable : " + id));
+
+        // Mise à jour des champs simples
         if (classe.getNomClasse() != null) {
-            entite.get().setNomClasse(classe.getNomClasse());
+            classe.setNomClasse(classe.getNomClasse());
         }
         if (classe.getNiveauClasse() != null) {
-            entite.get().setNiveauClasse(classe.getNiveauClasse());
+            classe.setNiveauClasse(classe.getNiveauClasse());
         }
         if (classe.getAnneeScolaire() != null) {
-            entite.get().setAnneeScolaire(classe.getAnneeScolaire());
+            classe.setAnneeScolaire(classe.getAnneeScolaire());
         }
 
-        return classeRepository.save(entite.get());
+        // Mise à jour de l'objet lié
+        if (classe.getEnseignant() != null && classe.getEnseignant().getIdUtilisateur() != null) {
+            Utilisateur enseignant = utilisateurRepository.findById(classe.getEnseignant().getIdUtilisateur())
+                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + classe.getEnseignant().getIdUtilisateur()));
+            existing.setEnseignant(enseignant);
+        }
+
+        // Sauvegarde et retour
+        return classeRepository.save(existing);
     }
 
     public Classe getClasseById(Long id){
