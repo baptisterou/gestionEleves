@@ -16,7 +16,6 @@ public class UtilisateurGestionDTO {
     @NotBlank private String nom;
     @NotBlank private String prenom;
     @NotBlank private String email;
-    @NotBlank private String motDePasse;
     @NotNull private Date dateNaissance;
     @NotBlank private String numTel;
     @NotNull private Role role;
