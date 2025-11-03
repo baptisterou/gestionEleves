@@ -19,6 +19,5 @@ public class UtilisateurGestionDTO {
     @NotBlank private String motDePasse;
     @NotNull private Date dateNaissance;
     @NotBlank private String numTel;
-    @NotNull
-    private Role role;
+    @NotNull private Role role;
 }
