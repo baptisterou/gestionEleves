@@ -51,37 +51,33 @@ public class UtilisateurService {
 
     @Transactional
     public Utilisateur modifierUtilisateur(Long id, Utilisateur utilisateur){
-        Optional<Utilisateur> entiteOpt = utilisateurRepository.findById(id);
-        if (!entiteOpt.isPresent()) {
-            throw new EntityNotFoundException("Utilisateur introuvable: " + id);
-        }
-        Utilisateur entite = entiteOpt.get();
+        // Récupération ou exception si non trouvé
+        Utilisateur existing = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
+
+        // Mise à jour des champs simples
         if (utilisateur.getNom() != null) {
-            entite.setNom(utilisateur.getNom());
+            existing.setNom(utilisateur.getNom());
         }
         if (utilisateur.getPrenom() != null) {
-            entite.setPrenom(utilisateur.getPrenom());
+            existing.setPrenom(utilisateur.getPrenom());
         }
         if (utilisateur.getEmail() != null) {
-            // vérifier l'unicité si l'email change
-            utilisateurRepository.findByEmail(utilisateur.getEmail())
-                    .filter(u -> !u.getIdUtilisateur().equals(id))
-                    .ifPresent(u -> { throw new IllegalArgumentException("Email déjà utilisé"); });
-            entite.setEmail(utilisateur.getEmail());
+            existing.setEmail(utilisateur.getEmail());
         }
         if (utilisateur.getMotDePasse() != null) {
-            entite.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+            existing.setMotDePasse(utilisateur.getMotDePasse());
         }
         if (utilisateur.getNumTel() != null) {
-            entite.setNumTel(utilisateur.getNumTel());
+            existing.setNumTel(utilisateur.getNumTel());
         }
         if (utilisateur.getDateNaissance() != null) {
-            entite.setDateNaissance(utilisateur.getDateNaissance());
+            existing.setDateNaissance(utilisateur.getDateNaissance());
         }
         if (utilisateur.getRole() != null) {
-            entite.setRole(utilisateur.getRole());
+            existing.setRole(utilisateur.getRole());
         }
-        return utilisateurRepository.save(entite);
+        return utilisateurRepository.save(existing);
     }
 
     public void supprimerUtilisateur(Long id){
