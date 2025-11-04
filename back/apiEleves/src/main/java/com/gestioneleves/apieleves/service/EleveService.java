@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.entity.Classe;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.EleveRepository;
@@ -62,10 +61,10 @@ public class EleveService {
         }
 
         // Mise à jour de l'objet lié
-        if (eleve.getRepresentant() != null && eleve.getRepresentant().getIdUtilisateur() != null) {
-            Utilisateur representant = utilisateurRepository.findById(eleve.getRepresentant().getIdUtilisateur())
-                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getRepresentant().getIdUtilisateur()));
-            existing.setRepresentant(representant);
+        if (eleve.getUtilisateur() != null && eleve.getUtilisateur().getIdUtilisateur() != null) {
+            Utilisateur representant = utilisateurRepository.findById(eleve.getUtilisateur().getIdUtilisateur())
+                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getUtilisateur().getIdUtilisateur()));
+            existing.setUtilisateur(representant);
         }
 
         // Sauvegarde et retour
