@@ -54,7 +54,7 @@ public class BulletinService {
 
     public Bulletin getBulletinById(Long id){
         return bulletinRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable: " + id));
     }
 
     public void deleteBulletin(Long id_bulletin) {
