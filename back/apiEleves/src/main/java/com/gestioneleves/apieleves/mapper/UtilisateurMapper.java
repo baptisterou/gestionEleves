@@ -1,51 +1,69 @@
-/*package com.gestioneleves.apieleves.mapper;
+package com.gestioneleves.apieleves.mapper;
 
-import com.gestioneleves.apieleves.dto.UtilisateurDto;
-import com.gestioneleves.apieleves.entity.Role;
+import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
+import com.gestioneleves.apieleves.dto.UtilisateurDTO;
+import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
-public class UtilisateurMapper {
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-    public static Utilisateur dtoToEntity(UtilisateurDto dto){
+public final class UtilisateurMapper {
+    private UtilisateurMapper() {}
 
-        Utilisateur utilisateur = new Utilisateur();
-
-        utilisateur.setIdUtilisateur(dto.getIdUtilisateur());
-
-        utilisateur.setDateNaissance(dto.getDateNaissance());
-
-        utilisateur.setEmail(dto.getEmail());
-
-        utilisateur.setNumTel(dto.getNumTel());
-
-        utilisateur.setNom(dto.getNom());
-
-        utilisateur.setPrenom(dto.getPrenom());
-
-        utilisateur.setRole(Role.valueOf(dto.getRole()));
-
-        return utilisateur;
-    }
-
-    public static UtilisateurDto entityToDto(Utilisateur entity) {
-
-        UtilisateurDto dto = new UtilisateurDto();
-
-        dto.setIdUtilisateur(entity.getIdUtilisateur());
-
-        dto.setDateNaissance(entity.getDateNaissance());
-
-        dto.setEmail(entity.getEmail());
-
-        dto.setNumTel(entity.getNumTel());
-
-        dto.setNom(entity.getNom());
-
-        dto.setPrenom(entity.getPrenom());
-
-        dto.setRole(entity.getRole().name());
-
+    public static UtilisateurDTO toDto(Utilisateur entity) {
+        if (entity == null) return null;
+        UtilisateurDTO dto = new UtilisateurDTO();
+        dto.idUtilisateur = entity.getIdUtilisateur();
+        dto.nom = entity.getNom();
+        dto.prenom = entity.getPrenom();
+        dto.email = entity.getEmail();
+        dto.numTel = entity.getNumTel();
+        dto.dateNaissance = entity.getDateNaissance();
+        dto.role = entity.getRole();
         return dto;
     }
+
+    public static List<UtilisateurDTO> toDtoList(List<Utilisateur> list) {
+        if (list == null) return List.of();
+        return list.stream().filter(Objects::nonNull).map(UtilisateurMapper::toDto).collect(Collectors.toList());
+    }
+
+    public static Utilisateur fromCreate(UtilisateurCreateRequest req) {
+        if (req == null) return null;
+        Utilisateur u = new Utilisateur();
+        u.setNom(req.nom);
+        u.setPrenom(req.prenom);
+        u.setEmail(req.email);
+        u.setMotDePasse(req.motDePasse);
+        u.setDateNaissance(req.dateNaissance);
+        u.setNumTel(req.numTel);
+        if (req.role != null) u.setRole(req.role);
+        return u;
+    }
+
+    public static void applyUpdate(UtilisateurUpdateRequest req, Utilisateur target) {
+        if (req == null || target == null) return;
+        if (req.nom != null) target.setNom(req.nom);
+        if (req.prenom != null) target.setPrenom(req.prenom);
+        if (req.email != null) target.setEmail(req.email);
+        if (req.motDePasse != null) target.setMotDePasse(req.motDePasse);
+        if (req.dateNaissance != null) target.setDateNaissance(req.dateNaissance);
+        if (req.numTel != null) target.setNumTel(req.numTel);
+        if (req.role != null) target.setRole(req.role);
+    }
+
+    public static Utilisateur fromUpdate(UtilisateurUpdateRequest req) {
+        if (req == null) return null;
+        Utilisateur u = new Utilisateur();
+        if (req.nom != null) u.setNom(req.nom);
+        if (req.prenom != null) u.setPrenom(req.prenom);
+        if (req.email != null) u.setEmail(req.email);
+        if (req.motDePasse != null) u.setMotDePasse(req.motDePasse);
+        if (req.dateNaissance != null) u.setDateNaissance(req.dateNaissance);
+        if (req.numTel != null) u.setNumTel(req.numTel);
+        if (req.role != null) u.setRole(req.role);
+        return u;
+    }
 }
-*/

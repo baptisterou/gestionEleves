@@ -1,48 +1,109 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"eleves", "classesEnseignant", "matieresEnseignant", "inscriptionEffectuees"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "utilisateur")
-public class Utilisateur {
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="idUtilisateur")
+    @Column(name="id_utilisateur", nullable = false)
+    @EqualsAndHashCode.Include
     private Long idUtilisateur;
-    @Column(name="nom")
+    @Column(name="nom", nullable = false)
     private String nom;
-    @Column(name="prenom")
+    @Column(name="prenom" , nullable = false)
     private String prenom;
-    @Column(name="email")
+    @Column(name="email",unique = true, length = 100, nullable = false)
     private String email;
-    @Column(name="mot_de_passe")
+    @Column(name="mot_de_passe", nullable = false)
+    @JsonIgnore
     private String motDePasse;
-    @Column(name="date_naissance")
-    private String dateNaissance;
-    @Column(name="num_tel")
+    @Column(name="date_naissance", nullable = false)
+    private Date dateNaissance;
+    @Column(name="num_tel", nullable = false)
     private String numTel;
     @Enumerated(EnumType.STRING)
-    @Column(name="role")
+    @Column(name="role", nullable = false)
     private Role role;
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Date createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "utilisateur")
-    @JsonBackReference
+    @JsonIgnore
     private List<Eleve> eleves = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
+    @JsonIgnore
     private List<Classe> classesEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
+    @JsonIgnore
     private List<Matiere> matieresEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "utilisateur")
+    @JsonIgnore
     private List<Inscrire> inscriptionEffectuees = new ArrayList<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) return Collections.emptyList();
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return motDePasse;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
