@@ -1,10 +1,8 @@
 package com.gestioneleves.apieleves.service;
 
-import com.gestioneleves.apieleves.entity.Eleve;
-import com.gestioneleves.apieleves.entity.Inscrire;
-import com.gestioneleves.apieleves.entity.InscrireId;
-import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.entity.*;
 import com.gestioneleves.apieleves.repository.InscrireRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,19 @@ public class InscrireService {
     public List<Inscrire> getAllInscriptions(){ return inscrireRepository.findAll(); }
 
     public Inscrire createInscription(Inscrire inscription){ return inscrireRepository.save(inscription); }
+
+    public Inscrire editInscription(InscrireId id, Inscrire inscription){
+        // Récupération ou exception si non trouvé
+        Inscrire existing = inscrireRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Inscription introuvable : " + id));
+
+        // Mise à jour des champs simples
+        if (inscription.getDateInscrip() != null) {
+            existing.setDateInscrip(inscription.getDateInscrip());
+        }
+
+        //Sauvegarde et retour
+        return inscrireRepository.save(inscription); }
 
     public void deleteInscription(InscrireId id){
         if (!inscrireRepository.existsById(id)) {
