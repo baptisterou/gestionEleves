@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BulletinDTO {
     private Long idBulletin;
-    private String nom;
-    private String prenom;
+    private Double moyenneGenerale;
     private Integer trimestreBulletin;
     private Integer anneeBulletin;
     private String commentaire;

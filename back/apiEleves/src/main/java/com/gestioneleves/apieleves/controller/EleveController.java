@@ -1,6 +1,8 @@
 package com.gestioneleves.apieleves.controller;
 
+import com.gestioneleves.apieleves.dto.EleveDTO;
 import com.gestioneleves.apieleves.entity.Eleve;
+import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.service.EleveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,11 @@ import java.util.List;
 public class EleveController {
 
     private final EleveService eleveService;
+    private final EleveRepository eleveRepository;
 
     @PostMapping()
-    public Eleve createEleve(@RequestBody Eleve eleve) {
+    public EleveDTO createEleve(@RequestBody EleveDTO eleve) {
+        Eleve entity = EleveMapper.fromCreate(eleve);
         return eleveService.createEleve(eleve);
     }
 

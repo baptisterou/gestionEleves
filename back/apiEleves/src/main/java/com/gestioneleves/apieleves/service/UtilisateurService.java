@@ -50,7 +50,7 @@ public class UtilisateurService {
     }
 
     @Transactional
-    public Utilisateur modifierUtilisateur(Long id, Utilisateur utilisateur){
+    public Utilisateur editUtilisateur(Long id, Utilisateur utilisateur){
         Optional<Utilisateur> entiteOpt = utilisateurRepository.findById(id);
         if (!entiteOpt.isPresent()) {
             throw new EntityNotFoundException("Utilisateur introuvable: " + id);

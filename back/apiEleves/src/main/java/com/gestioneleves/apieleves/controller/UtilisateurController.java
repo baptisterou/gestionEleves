@@ -39,9 +39,9 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    public UtilisateurDTO modifierUtilisateur (@PathVariable Long id, @RequestBody UtilisateurGestionDTO utilisateur){
+    public UtilisateurDTO editUtilisateur (@PathVariable Long id, @RequestBody UtilisateurGestionDTO utilisateur){
         Utilisateur entity = UtilisateurMapper.fromUpdate(utilisateur);
-        Utilisateur result = service.modifierUtilisateur(id, entity);
+        Utilisateur result = service.editUtilisateur(id, entity);
         return UtilisateurMapper.toDto(result);
     }
 

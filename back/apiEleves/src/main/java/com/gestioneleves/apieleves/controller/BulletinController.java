@@ -1,6 +1,9 @@
 package com.gestioneleves.apieleves.controller;
 
+import com.gestioneleves.apieleves.dto.BulletinDTO;
 import com.gestioneleves.apieleves.entity.Bulletin;
+import com.gestioneleves.apieleves.mapper.BulletinMapper;
+import com.gestioneleves.apieleves.repository.BulletinRepository;
 import com.gestioneleves.apieleves.service.BulletinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,25 +16,32 @@ import java.util.List;
 public class BulletinController {
 
     private final BulletinService bulletinService;
+    private final BulletinRepository bulletinRepository;
 
     @PostMapping()
-    public Bulletin createBulletin(@RequestBody Bulletin bulletin) {
-        return bulletinService.createBulletin(bulletin);
+    public BulletinDTO createBulletin(@RequestBody BulletinDTO bulletin) {
+        Bulletin entity = BulletinMapper.fromCreate(bulletin);
+        Bulletin result = bulletinService.createBulletin(entity);
+        return BulletinMapper.toDto(result);
     }
 
     @GetMapping()
-    public List<Bulletin> getAllBulletins() {
-        return bulletinService.getAllBulletins();
+    public List<BulletinDTO> getAllBulletins() {
+        List<Bulletin> bulletins = bulletinRepository.findAll();
+        return BulletinMapper.toDtoList(bulletins);
     }
 
     @GetMapping("/{id}")
-    public Bulletin getBulletinById (@PathVariable Long id){
-        return bulletinService.getBulletinById(id);
+    public BulletinDTO getBulletinById (@PathVariable Long id){
+        Bulletin bulletin = bulletinService.getBulletinById(id);
+        return BulletinMapper.toDto(bulletin);
     }
 
     @PutMapping("/{id}")
-    public Bulletin editBulletin(@PathVariable Long id, @RequestBody Bulletin bulletin) {
-        return bulletinService.editBulletin(id, bulletin);
+    public BulletinDTO editBulletin(@PathVariable Long id, @RequestBody BulletinDTO bulletin) {
+        Bulletin entity = BulletinMapper.fromUpdate(bulletin);
+        Bulletin result = bulletinService.editBulletin(id, entity);
+        return BulletinMapper.toDto(result);
     }
 
     @DeleteMapping("/{id}")

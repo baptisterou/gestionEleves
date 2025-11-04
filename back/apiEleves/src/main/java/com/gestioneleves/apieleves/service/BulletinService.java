@@ -39,10 +39,13 @@ public class BulletinService {
         if (!entite.isPresent()) {
             throw new EntityNotFoundException("Bulletin introuvable: " + id);
         }
+
+        int currentYear = java.time.Year.now().getValue();
+
         if (bulletin.getTrimestreBulletin()==1||bulletin.getTrimestreBulletin()==2||bulletin.getTrimestreBulletin()==3) {
             entite.get().setTrimestreBulletin(bulletin.getTrimestreBulletin());
         }
-        if (bulletin.getAnneeBulletin() == new java.util.Date().getYear() || bulletin.getAnneeBulletin() == new java.util.Date().getYear() +1 ) {
+        if (bulletin.getAnneeBulletin() == currentYear || bulletin.getAnneeBulletin() == currentYear +1 ) {
             entite.get().setAnneeBulletin(bulletin.getAnneeBulletin());
         }
         if (bulletin.getCommentaire() != null) {

@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.dto;
 
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,5 @@ public class ClasseDTO {
     private String nomClasse;
     private String niveauClasse;
     private String anneeScolaire;
-    private String nom;
-    private String prenom;
+    private Long EnseignantId;
 }

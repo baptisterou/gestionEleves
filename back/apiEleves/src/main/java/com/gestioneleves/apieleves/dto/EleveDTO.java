@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EleveDTO {
     private Long idEleve;
-    private String nom;
-    private String prenom;
-    private String dateNaissance;
-    private String classe;
+    private String nomEleve;
+    private String prenomEleve;
+    private String naissanceEleve;
 }
