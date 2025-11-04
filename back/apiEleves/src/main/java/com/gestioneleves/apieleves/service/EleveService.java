@@ -3,6 +3,7 @@ package com.gestioneleves.apieleves.service;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.EleveRepository;
+import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class EleveService {
     // Spring fournit automatiquement une instance de EleveRepository
     @Autowired
     private EleveRepository eleveRepository;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     /**
      * Récupère la liste de tous les élèves
@@ -41,20 +45,30 @@ public class EleveService {
 
 
     public Eleve editEleve(Long id, Eleve eleve){
-        Optional<Eleve> entite = eleveRepository.findById(id);
-        if (!entite.isPresent()) {
-            throw new EntityNotFoundException("Eleve introuvable: " + id);
-        }
+        // Récupération ou exception si non trouvé
+        Eleve existing = eleveRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Elève introuvable : " + id));
+
+        // Mise à jour des champs simples
         if (eleve.getNom() != null) {
-            entite.get().setNom(eleve.getNom());
+            eleve.setNom(eleve.getNom());
         }
         if (eleve.getPrenom() != null) {
-            entite.get().setPrenom(eleve.getPrenom());
+            eleve.setPrenom(eleve.getPrenom());
         }
         if (eleve.getDateNaissance() != null) {
-            entite.get().setDateNaissance(eleve.getDateNaissance());
+            eleve.setDateNaissance(eleve.getDateNaissance());
         }
-        return eleveRepository.save(entite.get());
+
+        // Mise à jour de l'objet lié
+        if (eleve.getUtilisateur() != null && eleve.getUtilisateur().getIdUtilisateur() != null) {
+            Utilisateur representant = utilisateurRepository.findById(eleve.getUtilisateur().getIdUtilisateur())
+                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getUtilisateur().getIdUtilisateur()));
+            existing.setUtilisateur(representant);
+        }
+
+        // Sauvegarde et retour
+        return eleveRepository.save(existing);
     }
 
     public Eleve getEleveById(Long id){
