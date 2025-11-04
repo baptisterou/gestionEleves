@@ -1,9 +1,66 @@
-
-.idea/
-*.iml
-
+# === OS files ===
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === IDE / Editors ===
 .idea/
 *.iml
+*.iws
+*.ipr
+out/
 compiler.xml
+
+# === Java / Build tools ===
+# Maven/Gradle outputs
+target/
+build/
+.gradle/
+.mvn/
+.settings/
+.classpath
+.project
+bin/
+
+# Spring Boot default log
+spring.log
+
+# === Node / Frontend ===
+node_modules/
+front/node_modules/
+# Common build outputs
+front/dist/
+front/build/
+dist/
+.cache/
+.next/
+.nuxt/
+.vite/
+coverage/
+
+# === Env files (keep examples) ===
+.env
+.env.*
+!.env.example
+!.env.template
+front/.env
+
+# === Logs ===
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Docker (runtime artifacts) ===
+*.pid
+*.seed
+*.pid.lock
+
+# === Misc ===
+*.swp
+*.swo
+*.tmp
+*.bak
