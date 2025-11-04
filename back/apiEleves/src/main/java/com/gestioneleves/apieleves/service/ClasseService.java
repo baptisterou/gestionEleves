@@ -5,7 +5,8 @@ import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.ClasseRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,11 @@ import java.util.Optional;
 @Service
 public class ClasseService {
 
-    @Autowired
-    private ClasseRepository classeRepository;
+    private final ClasseRepository classeRepository;
+
+    public ClasseService(ClasseRepository classeRepository) {
+        this.classeRepository = classeRepository;
+    }
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
@@ -26,7 +30,11 @@ public class ClasseService {
     }
 
     public List<Classe> getAllClasses() {
-        return (List<Classe>) classeRepository.findAll();
+        return classeRepository.findAll();
+    }
+
+    public Page<Classe> getAllClasses(Pageable pageable) {
+        return classeRepository.findAll(pageable);
     }
 
     public Classe editClasse(Long id, Classe classe){
@@ -58,10 +66,13 @@ public class ClasseService {
 
     public Classe getClasseById(Long id){
         return classeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Classe introuvable: " + id));
     }
 
     public void deleteClasse (Long id_classe) {
+        if (!classeRepository.existsById(id_classe)) {
+            throw new EntityNotFoundException("Classe introuvable: " + id_classe);
+        }
         classeRepository.deleteById(id_classe);
     }
 }
