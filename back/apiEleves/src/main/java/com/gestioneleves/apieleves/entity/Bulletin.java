@@ -34,6 +34,6 @@ public class Bulletin {
     private String commentaire;
 
     @OneToMany(mappedBy = "bulletin")
-    @JsonIgnore
+    //@JsonIgnore
     private List<Note> notes = new ArrayList<>();
 }
