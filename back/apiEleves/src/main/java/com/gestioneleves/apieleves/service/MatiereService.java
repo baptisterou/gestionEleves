@@ -22,15 +22,7 @@ public class MatiereService {
     private final MatiereRepository matiereRepository;
 
     @Autowired
-    private MatiereRepository matiereRepository;
-
-    @Autowired
     private UtilisateurRepository utilisateurRepository;
-
-    public MatiereService(MatiereRepository matiereRepository, UtilisateurRepository utilisateurRepository) {
-        this.matiereRepository = matiereRepository;
-        this.utilisateurRepository = utilisateurRepository;
-    }
 
     /**
      * Récupère la liste de toutes les matières
@@ -50,34 +42,23 @@ public class MatiereService {
     }
 
     public Matiere editMatiere(Long id, Matiere matiere) {
+        // Récupération ou exception si non trouvé
         Matiere existing = matiereRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
 
+        // Mise à jour des champs simples
         if (matiere.getIntituleMatiere() != null) {
             existing.setIntituleMatiere(matiere.getIntituleMatiere());
         }
 
+        // Mise à jour de l'objet lié
         if (matiere.getEnseignant() != null && matiere.getEnseignant().getIdUtilisateur() != null) {
             Utilisateur enseignant = utilisateurRepository.findById(matiere.getEnseignant().getIdUtilisateur())
-                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()));
+                .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()));
             existing.setEnseignant(enseignant);
         }
 
-        return matiereRepository.save(existing);
-    }
-        if (matiere.getIntituleMatiere() != null) {
-            existing.setIntituleMatiere(matiere.getIntituleMatiere());
-        }
-        if (matiere.getIntituleMatiere() != null) {
-            existing.setIntituleMatiere(matiere.getIntituleMatiere());
-        }
-
-        if (matiere.getEnseignant() != null && matiere.getEnseignant().getIdUtilisateur() != null) {
-            Utilisateur enseignant = utilisateurRepository.findById(matiere.getEnseignant().getIdUtilisateur())
-                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + matiere.getEnseignant().getIdUtilisateur()));
-            existing.setEnseignant(enseignant);
-        }
-
+        // Sauvegarde et retour
         return matiereRepository.save(existing);
     }
 

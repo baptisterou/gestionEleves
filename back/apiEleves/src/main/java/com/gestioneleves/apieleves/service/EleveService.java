@@ -21,10 +21,15 @@ public class EleveService {
     private final EleveRepository eleveRepository;
 
     @Autowired
-    private EleveRepository eleveRepository;
-
-    @Autowired
     private UtilisateurRepository utilisateurRepository;
+
+    /**
+     * Récupère la liste de tous les élèves
+     *
+     * @return Liste des objets Eleve contenant tous les élèves en base de données
+     */
+    public Eleve createEleve(Eleve eleve) {
+
     public Eleve createEleve(Eleve eleve) {
         return eleveRepository.save(eleve);
     }
@@ -52,12 +57,16 @@ public class EleveService {
         if (eleve.getDateNaissance() != null) {
             eleve.setDateNaissance(eleve.getDateNaissance());
         }
+
+        // Mise à jour de l'objet lié
         if (eleve.getUtilisateur() != null && eleve.getUtilisateur().getIdUtilisateur() != null) {
             Utilisateur representant = utilisateurRepository.findById(eleve.getUtilisateur().getIdUtilisateur())
                     .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getUtilisateur().getIdUtilisateur()));
-            entite.get().setUtilisateur(representant);
+            existing.setUtilisateur(representant);
         }
-        return eleveRepository.save(entite.get());
+
+        // Sauvegarde et retour
+        return eleveRepository.save(existing);
     }
 
     public Eleve getEleveById(Long id){
