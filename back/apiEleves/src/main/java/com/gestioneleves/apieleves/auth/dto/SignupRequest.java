@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class SignupRequest {
@@ -19,7 +19,7 @@ public class SignupRequest {
     @NotBlank @Size(min = 8)
     private String password;
     @NotNull
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
     @NotBlank
     private String numTel;
 }

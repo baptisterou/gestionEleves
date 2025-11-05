@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Configuration
 public class DataInitializer {
@@ -26,7 +26,7 @@ public class DataInitializer {
                 admin.setPrenom("Admin");
                 admin.setEmail(adminEmail);
                 admin.setMotDePasse(passwordEncoder.encode(adminPassword));
-                admin.setDateNaissance(new Date());
+                admin.setDateNaissance(LocalDate.now());
                 admin.setNumTel("0000000000");
                 admin.setRole(Role.ADMIN);
                 utilisateurRepository.save(admin);
