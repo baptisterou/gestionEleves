@@ -1,14 +1,14 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Bulletin;
-import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.BulletinRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service pour la gestion des bulletins
@@ -17,42 +17,44 @@ import java.util.Optional;
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
 public class BulletinService {
 
-    // Injection du repository pour accéder aux données des bulletins
-    // Spring fournit automatiquement une instance de BulletinRepository
-    @Autowired
-    private BulletinRepository bulletinRepository;
+    private final BulletinRepository bulletinRepository;
+
+    public BulletinService(BulletinRepository bulletinRepository) {
+        this.bulletinRepository = bulletinRepository;
+    }
 
     /**
-     * Récupère la liste de tous les bulletins
-     * @return Liste des objets Bulletin contenant tous les bulletins en base de données
+     * Création d'un bulletin avec validation métier
      */
     public Bulletin createBulletin(Bulletin bulletin) {
+        validateBulletinData(bulletin);
         return bulletinRepository.save(bulletin);
     }
 
     public List<Bulletin> getAllBulletins() {
-         return (List<Bulletin>) bulletinRepository.findAll();
+         return bulletinRepository.findAll();
+    }
+
+    public Page<Bulletin> getAllBulletins(Pageable pageable) {
+        return bulletinRepository.findAll(pageable);
     }
 
     public Bulletin editBulletin(Long id, Bulletin bulletin){
-        Optional<Bulletin> entite = bulletinRepository.findById(id);
-        if (!entite.isPresent()) {
-            throw new EntityNotFoundException("Bulletin introuvable: " + id);
-        }
+        Bulletin entite = bulletinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable: " + id));
 
-        int currentYear = java.time.Year.now().getValue();
-
-        if (bulletin.getTrimestreBulletin()==1||bulletin.getTrimestreBulletin()==2||bulletin.getTrimestreBulletin()==3) {
-            entite.get().setTrimestreBulletin(bulletin.getTrimestreBulletin());
+        if (bulletin.getTrimestreBulletin() != 0) {
+            validateTrimestre(bulletin.getTrimestreBulletin());
+            entite.setTrimestreBulletin(bulletin.getTrimestreBulletin());
         }
-        if (bulletin.getAnneeBulletin() == currentYear || bulletin.getAnneeBulletin() == currentYear +1 ) {
-            entite.get().setAnneeBulletin(bulletin.getAnneeBulletin());
+        if (bulletin.getAnneeBulletin() != 0) {
+            validateAnnee(bulletin.getAnneeBulletin());
+            entite.setAnneeBulletin(bulletin.getAnneeBulletin());
         }
         if (bulletin.getCommentaire() != null) {
-            entite.get().setCommentaire(bulletin.getCommentaire());
+            entite.setCommentaire(bulletin.getCommentaire());
         }
-
-        return bulletinRepository.save(entite.get());
+        return bulletinRepository.save(entite);
     }
 
     public Bulletin getBulletinById(Long id){
@@ -60,7 +62,28 @@ public class BulletinService {
                 .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable: " + id));
     }
 
-    public void deleteBulletin(Long id_bulletin) {
-        bulletinRepository.deleteById(id_bulletin);
+    public void deleteBulletin(Long idBulletin) {
+        if (!bulletinRepository.existsById(idBulletin)) {
+            throw new EntityNotFoundException("Bulletin introuvable: " + idBulletin);
+        }
+        bulletinRepository.deleteById(idBulletin);
+    }
+
+    private void validateBulletinData(Bulletin b) {
+        validateTrimestre(b.getTrimestreBulletin());
+        validateAnnee(b.getAnneeBulletin());
+    }
+
+    private void validateTrimestre(int trimestre) {
+        if (trimestre < 1 || trimestre > 3) {
+            throw new IllegalArgumentException("Le trimestre doit être dans {1,2,3}");
+        }
+    }
+
+    private void validateAnnee(int annee) {
+        int currentYear = Year.now().getValue();
+        if (annee != currentYear && annee != currentYear + 1) {
+            throw new IllegalArgumentException("L'année du bulletin doit être l'année courante ou l'année suivante");
+        }
     }
 }

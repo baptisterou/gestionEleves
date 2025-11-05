@@ -1,15 +1,14 @@
 package com.gestioneleves.apieleves.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class EleveDTO {
     private Long idEleve;
-    private String nomEleve;
-    private String prenomEleve;
-    private String naissanceEleve;
+    private String nom;
+    private String prenom;
+    private Date dateNaissance;
+    private Long utilisateurId; // responsable id (optionnel)
 }

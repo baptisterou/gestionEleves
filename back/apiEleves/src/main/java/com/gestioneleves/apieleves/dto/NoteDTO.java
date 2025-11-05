@@ -1,18 +1,16 @@
 package com.gestioneleves.apieleves.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class NoteDTO {
     private Long idNote;
     private Date dateNote;
-    private Float valeurNote;
-    private Float coefNote;
-    private String matiere;
+    private float coefNote;
+    private float valeurNote;
+    private Long eleveId;
+    private Long matiereId;
+    private Long bulletinId;
 }

@@ -1,16 +1,11 @@
 package com.gestioneleves.apieleves.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class BulletinDTO {
     private Long idBulletin;
-    private Double moyenneGenerale;
-    private Integer trimestreBulletin;
-    private Integer anneeBulletin;
+    private int trimestreBulletin;
+    private int anneeBulletin;
     private String commentaire;
 }

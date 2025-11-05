@@ -1,54 +1,45 @@
 package com.gestioneleves.apieleves.mapper;
 
-import com.gestioneleves.apieleves.dto.BulletinDTO;
+import com.gestioneleves.apieleves.dto.ClasseCreateRequest;
 import com.gestioneleves.apieleves.dto.ClasseDTO;
-import com.gestioneleves.apieleves.entity.Bulletin;
+import com.gestioneleves.apieleves.dto.ClasseUpdateRequest;
 import com.gestioneleves.apieleves.entity.Classe;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+public class ClasseMapper {
 
-public final class ClasseMapper {
-    private ClasseMapper() {}
-
-    public static ClasseDTO toDto(Classe entity) {
-        if (entity == null) return null;
-        ClasseDTO dto = new ClasseDTO();
-        dto.setIdClasse(entity.getIdClasse());
-        dto.setNomClasse(entity.getNomClasse());
-        dto.setNiveauClasse(entity.getNiveauClasse());
-        dto.setAnneeScolaire(entity.getAnneeScolaire());
-        return dto;
-    }
-
-    public static List<ClasseDTO> toDtoList(List<Classe> list) {
-        if (list == null) return List.of();
-        return list.stream().filter(Objects::nonNull).map(ClasseMapper::toDto).collect(Collectors.toList());
-    }
-
-    public static Classe fromCreate(ClasseDTO req) {
-        if (req == null) return null;
+    public static Classe fromCreate(ClasseCreateRequest req) {
         Classe c = new Classe();
-        c.setAnneeScolaire(req.getAnneeScolaire());
-        c.setNiveauClasse(req.getNiveauClasse());
         c.setNomClasse(req.getNomClasse());
+        c.setNiveauClasse(req.getNiveauClasse());
+        c.setAnneeScolaire(req.getAnneeScolaire());
+        if (req.getEnseignantId() != null) {
+            Utilisateur u = new Utilisateur();
+            u.setIdUtilisateur(req.getEnseignantId());
+            c.setEnseignant(u);
+        }
         return c;
     }
 
-    public static void applyUpdate(ClasseDTO req, Classe target) {
-        if (req == null || target == null) return;
-        if (req.getAnneeScolaire() != null) target.setAnneeScolaire(req.getAnneeScolaire());
-        if (req.getNiveauClasse() != null) target.setNiveauClasse(req.getNiveauClasse());
+    public static Classe applyUpdate(Classe target, ClasseUpdateRequest req) {
         if (req.getNomClasse() != null) target.setNomClasse(req.getNomClasse());
+        if (req.getNiveauClasse() != null) target.setNiveauClasse(req.getNiveauClasse());
+        if (req.getAnneeScolaire() != null) target.setAnneeScolaire(req.getAnneeScolaire());
+        if (req.getEnseignantId() != null) {
+            Utilisateur u = new Utilisateur();
+            u.setIdUtilisateur(req.getEnseignantId());
+            target.setEnseignant(u);
+        }
+        return target;
     }
 
-    public static Classe fromUpdate(ClasseDTO req) {
-        if (req == null) return null;
-        Classe c = new Classe();
-        if (req.getAnneeScolaire() != null) c.setAnneeScolaire(req.getAnneeScolaire());
-        if (req.getNiveauClasse() != null) c.setNiveauClasse(req.getNiveauClasse());
-        if (req.getNomClasse() != null) c.setNomClasse(req.getNomClasse());
-        return c;
+    public static ClasseDTO toDto(Classe c) {
+        ClasseDTO dto = new ClasseDTO();
+        dto.setIdClasse(c.getIdClasse());
+        dto.setNomClasse(c.getNomClasse());
+        dto.setNiveauClasse(c.getNiveauClasse());
+        dto.setAnneeScolaire(c.getAnneeScolaire());
+        if (c.getEnseignant() != null) dto.setEnseignantId(c.getEnseignant().getIdUtilisateur());
+        return dto;
     }
 }
