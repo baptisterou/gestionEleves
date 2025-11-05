@@ -3,7 +3,6 @@ package com.gestioneleves.apieleves.controller;
 import com.gestioneleves.apieleves.dto.ClasseCreateRequest;
 import com.gestioneleves.apieleves.dto.ClasseDTO;
 import com.gestioneleves.apieleves.dto.ClasseUpdateRequest;
-import com.gestioneleves.apieleves.entity.Classe;
 import com.gestioneleves.apieleves.mapper.ClasseMapper;
 import com.gestioneleves.apieleves.service.ClasseService;
 import jakarta.validation.Valid;
@@ -25,9 +24,7 @@ public class ClasseController {
 
     @PostMapping()
     public ResponseEntity<ClasseDTO> createClasse(@Valid @RequestBody ClasseCreateRequest request) {
-        Classe toSave = ClasseMapper.fromCreate(request);
-        Classe saved = classeService.createClasse(toSave);
-        ClasseDTO dto = ClasseMapper.toDto(saved);
+        ClasseDTO dto = classeService.createClasse(request);
         return ResponseEntity.created(URI.create("/api/classe/" + dto.getIdClasse())).body(dto);
     }
 
@@ -42,11 +39,8 @@ public class ClasseController {
     }
 
     @PutMapping("/{id}")
-    public ClasseDTO editClasse(@PathVariable Long id, @RequestBody ClasseUpdateRequest request) {
-        Classe current = classeService.getClasseById(id);
-        Classe updated = ClasseMapper.applyUpdate(current, request);
-        Classe saved = classeService.editClasse(id, updated);
-        return ClasseMapper.toDto(saved);
+    public ClasseDTO editClasse(@PathVariable Long id, @Valid @RequestBody ClasseUpdateRequest request) {
+        return classeService.editClasse(id, request);
     }
 
     @DeleteMapping("/{id}")

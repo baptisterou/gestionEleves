@@ -1,7 +1,11 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.EleveCreateRequest;
+import com.gestioneleves.apieleves.dto.EleveDTO;
+import com.gestioneleves.apieleves.dto.EleveUpdateRequest;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.mapper.EleveMapper;
 import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +32,13 @@ public class EleveService {
         this.eleveRepository = eleveRepository;
     }
 
+    // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
+    public EleveDTO createEleve(EleveCreateRequest request) {
+        Eleve toSave = EleveMapper.fromCreate(request);
+        Eleve saved = createEleve(toSave);
+        return EleveMapper.toDto(saved);
+    }
+
     public Eleve createEleve(Eleve eleve) {
         return eleveRepository.save(eleve);
     }
@@ -38,6 +49,14 @@ public class EleveService {
 
     public Page<Eleve> getAllEleves(Pageable pageable) {
         return eleveRepository.findAll(pageable);
+    }
+
+    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    public EleveDTO editEleve(Long id, EleveUpdateRequest request) {
+        Eleve current = getEleveById(id);
+        Eleve updatedEntity = EleveMapper.applyUpdate(current, request);
+        Eleve saved = editEleve(id, updatedEntity);
+        return EleveMapper.toDto(saved);
     }
 
     public Eleve editEleve(Long id, Eleve eleve){

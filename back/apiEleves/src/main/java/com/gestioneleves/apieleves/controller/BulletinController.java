@@ -3,7 +3,6 @@ package com.gestioneleves.apieleves.controller;
 import com.gestioneleves.apieleves.dto.BulletinCreateRequest;
 import com.gestioneleves.apieleves.dto.BulletinDTO;
 import com.gestioneleves.apieleves.dto.BulletinUpdateRequest;
-import com.gestioneleves.apieleves.entity.Bulletin;
 import com.gestioneleves.apieleves.mapper.BulletinMapper;
 import com.gestioneleves.apieleves.service.BulletinService;
 import jakarta.validation.Valid;
@@ -25,9 +24,7 @@ public class BulletinController {
 
     @PostMapping()
     public ResponseEntity<BulletinDTO> createBulletin(@Valid @RequestBody BulletinCreateRequest request) {
-        Bulletin toSave = BulletinMapper.fromCreate(request);
-        Bulletin saved = bulletinService.createBulletin(toSave);
-        BulletinDTO dto = BulletinMapper.toDto(saved);
+        BulletinDTO dto = bulletinService.createBulletin(request);
         return ResponseEntity.created(URI.create("/api/bulletin/" + dto.getIdBulletin())).body(dto);
     }
 
@@ -42,11 +39,8 @@ public class BulletinController {
     }
 
     @PutMapping("/{id}")
-    public BulletinDTO editBulletin(@PathVariable Long id, @RequestBody BulletinUpdateRequest request) {
-        Bulletin current = bulletinService.getBulletinById(id);
-        Bulletin updated = BulletinMapper.applyUpdate(current, request);
-        Bulletin saved = bulletinService.editBulletin(id, updated);
-        return BulletinMapper.toDto(saved);
+    public BulletinDTO editBulletin(@PathVariable Long id, @Valid @RequestBody BulletinUpdateRequest request) {
+        return bulletinService.editBulletin(id, request);
     }
 
     @DeleteMapping("/{id}")

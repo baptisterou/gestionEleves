@@ -8,11 +8,24 @@ import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Note;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class NoteMapper {
+
+    private static LocalDate toLocalDate(Date date) {
+        if (date == null) return null;
+        return new java.sql.Date(date.getTime()).toLocalDate();
+    }
+
+    private static Date toDate(LocalDate localDate) {
+        if (localDate == null) return null;
+        return java.sql.Date.valueOf(localDate);
+    }
 
     public static Note fromCreate(NoteCreateRequest req) {
         Note n = new Note();
-        n.setDateNote(req.getDateNote());
+        n.setDateNote(toDate(req.getDateNote()));
         n.setCoefNote(req.getCoefNote());
         n.setValeurNote(req.getValeurNote());
         if (req.getEleveId() != null) {
@@ -34,7 +47,7 @@ public class NoteMapper {
     }
 
     public static Note applyUpdate(Note target, NoteUpdateRequest req) {
-        if (req.getDateNote() != null) target.setDateNote(req.getDateNote());
+        if (req.getDateNote() != null) target.setDateNote(toDate(req.getDateNote()));
         if (req.getCoefNote() != null) target.setCoefNote(req.getCoefNote());
         if (req.getValeurNote() != null) target.setValeurNote(req.getValeurNote());
         if (req.getEleveId() != null) {
@@ -58,7 +71,7 @@ public class NoteMapper {
     public static NoteDTO toDto(Note n) {
         NoteDTO dto = new NoteDTO();
         dto.setIdNote(n.getIdNote());
-        dto.setDateNote(n.getDateNote());
+        dto.setDateNote(toLocalDate(n.getDateNote()));
         dto.setCoefNote(n.getCoefNote());
         dto.setValeurNote(n.getValeurNote());
         if (n.getEleve() != null) dto.setEleveId(n.getEleve().getIdEleve());

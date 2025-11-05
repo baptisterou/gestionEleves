@@ -2,7 +2,6 @@ package com.gestioneleves.apieleves.controller;
 
 import com.gestioneleves.apieleves.dto.InscriptionCreateRequest;
 import com.gestioneleves.apieleves.dto.InscriptionDTO;
-import com.gestioneleves.apieleves.entity.Inscrire;
 import com.gestioneleves.apieleves.entity.InscrireId;
 import com.gestioneleves.apieleves.mapper.InscrireMapper;
 import com.gestioneleves.apieleves.service.InscrireService;
@@ -29,9 +28,7 @@ public class InscrireController {
 
     @PostMapping
     public ResponseEntity<InscriptionDTO> createInscription(@Valid @RequestBody InscriptionCreateRequest request) {
-        Inscrire toSave = InscrireMapper.fromCreate(request);
-        Inscrire saved = inscrireService.createInscription(toSave);
-        InscriptionDTO dto = InscrireMapper.toDto(saved);
+        InscriptionDTO dto = inscrireService.createInscription(request);
         URI location = URI.create(String.format("/api/inscription/%d/%d", dto.getEleveId(), dto.getUtilisateurId()));
         return ResponseEntity.created(location).body(dto);
     }

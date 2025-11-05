@@ -3,7 +3,6 @@ package com.gestioneleves.apieleves.controller;
 import com.gestioneleves.apieleves.dto.MatiereCreateRequest;
 import com.gestioneleves.apieleves.dto.MatiereDTO;
 import com.gestioneleves.apieleves.dto.MatiereUpdateRequest;
-import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.mapper.MatiereMapper;
 import com.gestioneleves.apieleves.service.MatiereService;
 import jakarta.validation.Valid;
@@ -25,9 +24,7 @@ public class MatiereController {
 
     @PostMapping
     public ResponseEntity<MatiereDTO> createMatiere(@Valid @RequestBody MatiereCreateRequest request) {
-        Matiere toSave = MatiereMapper.fromCreate(request);
-        Matiere saved = matiereService.createMatiere(toSave);
-        MatiereDTO dto = MatiereMapper.toDto(saved);
+        MatiereDTO dto = matiereService.createMatiere(request);
         return ResponseEntity.created(URI.create("/api/matiere/" + dto.getIdMatiere())).body(dto);
     }
 
@@ -42,11 +39,8 @@ public class MatiereController {
     }
 
     @PutMapping("/{id}")
-    public MatiereDTO editMatiere(@PathVariable Long id, @RequestBody MatiereUpdateRequest request) {
-        Matiere current = matiereService.getMatiereById(id);
-        Matiere updated = MatiereMapper.applyUpdate(current, request);
-        Matiere saved = matiereService.editMatiere(id, updated);
-        return MatiereMapper.toDto(saved);
+    public MatiereDTO editMatiere(@PathVariable Long id, @Valid @RequestBody MatiereUpdateRequest request) {
+        return matiereService.editMatiere(id, request);
     }
 
     @DeleteMapping("/{id}")
