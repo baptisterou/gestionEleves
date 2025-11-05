@@ -6,23 +6,12 @@ import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class UtilisateurMapper {
     private UtilisateurMapper() {}
-
-    private static LocalDate toLocalDate(Date date) {
-        if (date == null) return null;
-        return new java.sql.Date(date.getTime()).toLocalDate();
-    }
-
-    private static Date toDate(LocalDate localDate) {
-        if (localDate == null) return null;
-        return java.sql.Date.valueOf(localDate);
-    }
 
     public static UtilisateurDTO toDto(Utilisateur entity) {
         if (entity == null) return null;
@@ -32,7 +21,7 @@ public final class UtilisateurMapper {
         dto.prenom = entity.getPrenom();
         dto.email = entity.getEmail();
         dto.numTel = entity.getNumTel();
-        dto.dateNaissance = toLocalDate(entity.getDateNaissance());
+        dto.dateNaissance = entity.getDateNaissance();
         return dto;
     }
 
@@ -48,7 +37,7 @@ public final class UtilisateurMapper {
         u.setPrenom(req.prenom);
         u.setEmail(req.email);
         u.setMotDePasse(req.motDePasse);
-        u.setDateNaissance(toDate(req.dateNaissance));
+        u.setDateNaissance(req.dateNaissance);
         u.setNumTel(req.numTel);
         return u;
     }
@@ -59,7 +48,7 @@ public final class UtilisateurMapper {
         if (req.prenom != null) target.setPrenom(req.prenom);
         if (req.email != null) target.setEmail(req.email);
         if (req.motDePasse != null) target.setMotDePasse(req.motDePasse);
-        if (req.dateNaissance != null) target.setDateNaissance(toDate(req.dateNaissance));
+        if (req.dateNaissance != null) target.setDateNaissance(req.dateNaissance);
         if (req.numTel != null) target.setNumTel(req.numTel);
     }
 
@@ -70,7 +59,7 @@ public final class UtilisateurMapper {
         if (req.prenom != null) u.setPrenom(req.prenom);
         if (req.email != null) u.setEmail(req.email);
         if (req.motDePasse != null) u.setMotDePasse(req.motDePasse);
-        if (req.dateNaissance != null) u.setDateNaissance(toDate(req.dateNaissance));
+        if (req.dateNaissance != null) u.setDateNaissance(req.dateNaissance);
         if (req.numTel != null) u.setNumTel(req.numTel);
         return u;
     }

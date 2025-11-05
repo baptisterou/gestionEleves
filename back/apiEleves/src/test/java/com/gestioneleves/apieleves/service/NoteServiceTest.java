@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ public class NoteServiceTest {
     @Test
     void createNote_ok_whenValid() {
         Note n = new Note();
-        n.setDateNote(new Date());
+        n.setDateNote(LocalDate.now());
         n.setCoefNote(2f);
         n.setValeurNote(15f);
         when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -40,7 +40,7 @@ public class NoteServiceTest {
     @Test
     void createNote_throws_whenCoefInvalid() {
         Note n = new Note();
-        n.setDateNote(new Date());
+        n.setDateNote(LocalDate.now());
         n.setCoefNote(0f);
         n.setValeurNote(10f);
         assertThrows(IllegalArgumentException.class, () -> service.createNote(n));
@@ -49,7 +49,7 @@ public class NoteServiceTest {
     @Test
     void createNote_throws_whenValeurInvalid() {
         Note n = new Note();
-        n.setDateNote(new Date());
+        n.setDateNote(LocalDate.now());
         n.setCoefNote(1f);
         n.setValeurNote(25f);
         assertThrows(IllegalArgumentException.class, () -> service.createNote(n));
@@ -58,7 +58,7 @@ public class NoteServiceTest {
     @Test
     void editNote_updatesFields_whenValidAndExists() {
         Note current = new Note();
-        current.setDateNote(new Date());
+        current.setDateNote(LocalDate.now());
         current.setCoefNote(1f);
         current.setValeurNote(10f);
         when(repository.findById(5L)).thenReturn(Optional.of(current));
