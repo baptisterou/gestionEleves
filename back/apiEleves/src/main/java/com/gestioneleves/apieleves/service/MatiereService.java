@@ -5,12 +5,12 @@ import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service pour la gestion des matières
@@ -24,10 +24,9 @@ public class MatiereService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    /**
-     * Récupère la liste de toutes les matières
-     * @return Liste des objets Matiere contenant toutes les matières en base de données
-     */
+    public MatiereService(MatiereRepository matiereRepository) {
+        this.matiereRepository = matiereRepository;
+    }
 
     public Matiere createMatiere(Matiere matiere) {
         return matiereRepository.save(matiere);

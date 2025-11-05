@@ -9,6 +9,7 @@ import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.NoteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class NoteService {
     public Note editNote(Long id, Note note){
         // Récupération ou exception si non trouvé
         Note existing = noteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Note introuvable : " + id));
 
         // Mise à jour des champs simples
         if (note.getDateNote() != null) {
@@ -50,7 +51,7 @@ public class NoteService {
         if (note.getCoefNote() > 0) {
             existing.setCoefNote(note.getCoefNote());
         }
-        if (note.getValeurNote() >=  0 || note.getValeurNote() <= 20) {
+        if (note.getValeurNote() >=  0 && note.getValeurNote() <= 20) {
             existing.setValeurNote(note.getValeurNote());
         }
 
