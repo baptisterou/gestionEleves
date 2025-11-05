@@ -1,15 +1,16 @@
 package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Eleve;
+import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service pour la gestion des élèves
@@ -23,12 +24,9 @@ public class EleveService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    /**
-     * Récupère la liste de tous les élèves
-     *
-     * @return Liste des objets Eleve contenant tous les élèves en base de données
-     */
-    public Eleve createEleve(Eleve eleve) {
+    public EleveService(EleveRepository eleveRepository) {
+        this.eleveRepository = eleveRepository;
+    }
 
     public Eleve createEleve(Eleve eleve) {
         return eleveRepository.save(eleve);
@@ -49,13 +47,13 @@ public class EleveService {
 
         // Mise à jour des champs simples
         if (eleve.getNom() != null) {
-            eleve.setNom(eleve.getNom());
+            existing.setNom(eleve.getNom());
         }
         if (eleve.getPrenom() != null) {
-            eleve.setPrenom(eleve.getPrenom());
+            existing.setPrenom(eleve.getPrenom());
         }
         if (eleve.getDateNaissance() != null) {
-            eleve.setDateNaissance(eleve.getDateNaissance());
+            existing.setDateNaissance(eleve.getDateNaissance());
         }
 
         // Mise à jour de l'objet lié

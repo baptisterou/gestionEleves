@@ -18,7 +18,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gestioneleves
       - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=e2ce7969b6
+      - SPRING_DATASOURCE_PASSWORD=admin
 
   adminer:
     image: "adminer:latest"

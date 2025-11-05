@@ -5,25 +5,24 @@ import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.repository.ClasseRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClasseService {
 
     private final ClasseRepository classeRepository;
 
-    public ClasseService(ClasseRepository classeRepository) {
-        this.classeRepository = classeRepository;
-    }
-
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    public ClasseService(ClasseRepository classeRepository) {
+        this.classeRepository = classeRepository;
+    }
 
     public Classe createClasse(Classe classe) {
         return classeRepository.save(classe);
@@ -44,13 +43,13 @@ public class ClasseService {
 
         // Mise à jour des champs simples
         if (classe.getNomClasse() != null) {
-            classe.setNomClasse(classe.getNomClasse());
+            existing.setNomClasse(classe.getNomClasse());
         }
         if (classe.getNiveauClasse() != null) {
-            classe.setNiveauClasse(classe.getNiveauClasse());
+            existing.setNiveauClasse(classe.getNiveauClasse());
         }
         if (classe.getAnneeScolaire() != null) {
-            classe.setAnneeScolaire(classe.getAnneeScolaire());
+            existing.setAnneeScolaire(classe.getAnneeScolaire());
         }
 
         // Mise à jour de l'objet lié
@@ -60,7 +59,6 @@ public class ClasseService {
             existing.setEnseignant(enseignant);
         }
 
-        // Sauvegarde et retour
         return classeRepository.save(existing);
     }
 
