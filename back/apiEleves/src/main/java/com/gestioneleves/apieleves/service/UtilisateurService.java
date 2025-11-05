@@ -1,7 +1,11 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
+import com.gestioneleves.apieleves.dto.UtilisateurDTO;
+import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
 import com.gestioneleves.apieleves.entity.Role;
 import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.mapper.UtilisateurMapper;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UtilisateurService {
@@ -32,8 +35,20 @@ public class UtilisateurService {
         return utilisateurRepository.findAll(pageable);
     }
 
+    // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
+    @Transactional
+    public UtilisateurDTO createUtilisateur(UtilisateurCreateRequest request) {
+        Utilisateur toSave = UtilisateurMapper.fromCreate(request);
+        Utilisateur saved = createUtilisateur(toSave); // réutilise la logique existante
+        return UtilisateurMapper.toDto(saved);
+    }
+
     @Transactional
     public Utilisateur createUtilisateur (Utilisateur utilisateur){
+        // normaliser email
+        if (utilisateur.getEmail() != null) {
+            utilisateur.setEmail(utilisateur.getEmail().trim().toLowerCase());
+        }
         // unicité email
         utilisateurRepository.findByEmail(utilisateur.getEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("Email déjà utilisé");
@@ -42,18 +57,25 @@ public class UtilisateurService {
         if (utilisateur.getMotDePasse() != null) {
             utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
         }
-        // rôle par défaut
-        if (utilisateur.getRole() == null) {
-            utilisateur.setRole(Role.RESPONSABLE);
-        }
+        // Forcer le rôle par défaut (ne pas faire confiance à l'entrée client)
+        utilisateur.setRole(Role.RESPONSABLE);
         return utilisateurRepository.save(utilisateur);
+    }
+
+    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    @Transactional
+    public UtilisateurDTO modifierUtilisateur(Long id, UtilisateurUpdateRequest request) {
+        // Construire un "partial" à partir de la request et réutiliser la logique existante
+        Utilisateur part = UtilisateurMapper.fromUpdate(request);
+        Utilisateur updated = modifierUtilisateur(id, part);
+        return UtilisateurMapper.toDto(updated);
     }
 
     @Transactional
     public Utilisateur modifierUtilisateur(Long id, Utilisateur utilisateur){
         // Récupération ou exception si non trouvé
         Utilisateur existing = utilisateurRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable : " + id));
 
         // Mise à jour des champs simples
         if (utilisateur.getNom() != null) {
@@ -63,10 +85,14 @@ public class UtilisateurService {
             existing.setPrenom(utilisateur.getPrenom());
         }
         if (utilisateur.getEmail() != null) {
-            existing.setEmail(utilisateur.getEmail());
+            String newEmail = utilisateur.getEmail().trim().toLowerCase();
+            utilisateurRepository.findByEmail(newEmail)
+                    .filter(u -> !u.getIdUtilisateur().equals(id))
+                    .ifPresent(u -> { throw new IllegalArgumentException("Email déjà utilisé"); });
+            existing.setEmail(newEmail);
         }
         if (utilisateur.getMotDePasse() != null) {
-            existing.setMotDePasse(utilisateur.getMotDePasse());
+            existing.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
         }
         if (utilisateur.getNumTel() != null) {
             existing.setNumTel(utilisateur.getNumTel());
@@ -74,9 +100,7 @@ public class UtilisateurService {
         if (utilisateur.getDateNaissance() != null) {
             existing.setDateNaissance(utilisateur.getDateNaissance());
         }
-        if (utilisateur.getRole() != null) {
-            existing.setRole(utilisateur.getRole());
-        }
+        // Ne pas permettre le changement de rôle via cet endpoint standard
         return utilisateurRepository.save(existing);
     }
 

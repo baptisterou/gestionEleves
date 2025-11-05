@@ -5,12 +5,12 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class NoteUpdateRequest {
     // Tous optionnels pour un patch-style update
-    private Date dateNote;
+    private LocalDate dateNote;
 
     @Positive(message = "Le coefficient doit être > 0")
     private Float coefNote; // wrapper pour pouvoir être null

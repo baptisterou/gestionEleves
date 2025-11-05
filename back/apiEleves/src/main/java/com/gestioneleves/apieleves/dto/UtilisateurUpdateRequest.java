@@ -1,8 +1,11 @@
 package com.gestioneleves.apieleves.dto;
 
-import com.gestioneleves.apieleves.entity.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Payload pour la mise à jour partielle d'un utilisateur.
@@ -11,9 +14,12 @@ import java.util.Date;
 public class UtilisateurUpdateRequest {
     public String nom;
     public String prenom;
+    @Email
     public String email;
+    @Size(min = 8)
     public String motDePasse;
-    public Date dateNaissance;
+    @Past
+    public LocalDate dateNaissance;
+    @Pattern(regexp = "^[0-9+ .-]{8,20}$")
     public String numTel;
-    public Role role;
 }

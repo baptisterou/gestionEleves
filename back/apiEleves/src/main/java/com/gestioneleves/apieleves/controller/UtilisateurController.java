@@ -3,7 +3,6 @@ package com.gestioneleves.apieleves.controller;
 import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
-import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.mapper.UtilisateurMapper;
 import com.gestioneleves.apieleves.service.UtilisateurService;
 import jakarta.validation.Valid;
@@ -22,9 +21,7 @@ public class UtilisateurController {
 
     @PostMapping
     public UtilisateurDTO ajouterUtilisateur(@Valid @RequestBody UtilisateurCreateRequest request){
-        Utilisateur toSave = UtilisateurMapper.fromCreate(request);
-        Utilisateur saved = service.createUtilisateur(toSave);
-        return UtilisateurMapper.toDto(saved);
+        return service.createUtilisateur(request);
     }
 
     @GetMapping
@@ -38,10 +35,8 @@ public class UtilisateurController {
     }
 
     @PutMapping("/{id}")
-    public UtilisateurDTO modifierUtilisateur (@PathVariable Long id, @RequestBody UtilisateurUpdateRequest request){
-        Utilisateur part = UtilisateurMapper.fromUpdate(request);
-        Utilisateur updated = service.modifierUtilisateur(id, part);
-        return UtilisateurMapper.toDto(updated);
+    public UtilisateurDTO modifierUtilisateur (@PathVariable Long id, @Valid @RequestBody UtilisateurUpdateRequest request){
+        return service.modifierUtilisateur(id, request);
     }
 
     @DeleteMapping("/{id}")

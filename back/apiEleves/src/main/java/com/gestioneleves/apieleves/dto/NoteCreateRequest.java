@@ -3,12 +3,12 @@ package com.gestioneleves.apieleves.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class NoteCreateRequest {
     @NotNull
-    private Date dateNote;
+    private LocalDate dateNote;
 
     @Positive(message = "Le coefficient doit être > 0")
     private float coefNote;
