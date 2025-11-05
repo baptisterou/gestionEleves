@@ -6,10 +6,11 @@ import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service pour la gestion des matières
@@ -18,29 +19,26 @@ import java.util.Optional;
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
 public class MatiereService {
 
-    // Injection du repository pour accéder aux données des matières
-    // Spring fournit automatiquement une instance de MatiereRepository
-    @Autowired
-    private MatiereRepository matiereRepository;
+    private final MatiereRepository matiereRepository;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    /**
-     * Récupère la liste de toutes les matières
-     * @return Liste des objets Matiere contenant toutes les matières en base de données
-     */
+    public MatiereService(MatiereRepository matiereRepository) {
+        this.matiereRepository = matiereRepository;
+    }
 
     public Matiere createMatiere(Matiere matiere) {
         return matiereRepository.save(matiere);
     }
 
     public List<Matiere> getAllMatieres() {
-        // Appel au repository pour récupérer toutes les matières
-        // Le cast en List<Matiere> est nécessaire car findAll() retourne un Iterable
-        return (List<Matiere>) matiereRepository.findAll();
+        return matiereRepository.findAll();
     }
 
+    public Page<Matiere> getAllMatieres(Pageable pageable) {
+        return matiereRepository.findAll(pageable);
+    }
 
     public Matiere editMatiere(Long id, Matiere matiere) {
         // Récupération ou exception si non trouvé
@@ -69,7 +67,9 @@ public class MatiereService {
     }
 
     public void deleteMatiere(Long id_matiere) {
-
+        if (!matiereRepository.existsById(id_matiere)) {
+            throw new EntityNotFoundException("Matiere introuvable: " + id_matiere);
+        }
         matiereRepository.deleteById(id_matiere);
     }
 }

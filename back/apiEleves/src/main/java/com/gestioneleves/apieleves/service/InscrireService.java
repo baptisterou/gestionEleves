@@ -3,7 +3,6 @@ package com.gestioneleves.apieleves.service;
 import com.gestioneleves.apieleves.entity.*;
 import com.gestioneleves.apieleves.repository.InscrireRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class InscrireService {
 
-    @Autowired
-    private InscrireRepository inscrireRepository;
+    private final InscrireRepository inscrireRepository;
+
+    public InscrireService(InscrireRepository inscrireRepository) {
+        this.inscrireRepository = inscrireRepository;
+    }
 
     public List<Inscrire> getAllInscriptions(){ return inscrireRepository.findAll(); }
 
@@ -31,7 +33,12 @@ public class InscrireService {
         //Sauvegarde et retour
         return inscrireRepository.save(inscription); }
 
-    public void deleteInscription(InscrireId id){ inscrireRepository.deleteById(id); }
+    public void deleteInscription(InscrireId id){
+        if (!inscrireRepository.existsById(id)) {
+            throw new EntityNotFoundException("Inscription introuvable: eleve=" + id.getIdEleve() + ", utilisateur=" + id.getIdUtilisateur());
+        }
+        inscrireRepository.deleteById(id);
+    }
 
     // Récupérer toutes les inscriptions d’un élève
     public List<Inscrire> getInscriptionsByEleve(Eleve eleve) {

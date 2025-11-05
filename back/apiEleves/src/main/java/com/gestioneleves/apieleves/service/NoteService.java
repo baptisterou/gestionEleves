@@ -17,8 +17,7 @@ import java.util.List;
 @Service
 public class NoteService {
 
-    @Autowired
-    private NoteRepository noteRepository;
+    private final NoteRepository noteRepository;
 
     @Autowired
     private BulletinRepository bulletinRepository;
@@ -36,13 +35,14 @@ public class NoteService {
     }
 
     public Note createNote (Note note){
+        validateNote(note);
         return noteRepository.save(note);
     }
 
     public Note editNote(Long id, Note note){
         // Récupération ou exception si non trouvé
         Note existing = noteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Matière introuvable : " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Note introuvable : " + id));
 
         // Mise à jour des champs simples
         if (note.getDateNote() != null) {
@@ -51,7 +51,7 @@ public class NoteService {
         if (note.getCoefNote() > 0) {
             existing.setCoefNote(note.getCoefNote());
         }
-        if (note.getValeurNote() >=  0 || note.getValeurNote() <= 20) {
+        if (note.getValeurNote() >=  0 && note.getValeurNote() <= 20) {
             existing.setValeurNote(note.getValeurNote());
         }
 
@@ -88,5 +88,14 @@ public class NoteService {
     public Note getNoteById(Long id){
         return noteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Note introuvable: " + id));
+    }
+
+    private void validateNote(Note n) {
+        if (n.getCoefNote() <= 0) {
+            throw new IllegalArgumentException("Le coefficient doit être > 0");
+        }
+        if (n.getValeurNote() < 0 || n.getValeurNote() > 20) {
+            throw new IllegalArgumentException("La note doit être entre 0 et 20");
+        }
     }
 }
