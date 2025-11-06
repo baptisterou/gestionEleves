@@ -18,10 +18,10 @@ public class NoteCreateRequest {
     private float valeurNote;
 
     @NotNull
-    private Long eleveId;
+    private Long idEleve;
 
     @NotNull
-    private Long matiereId;
+    private Long idMatiere;
 
-    private Long bulletinId; // optionnel
+    private Long idBulletin; // optionnel
 }

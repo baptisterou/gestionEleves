@@ -7,5 +7,5 @@ public class ClasseUpdateRequest {
     private String nomClasse;
     private String niveauClasse;
     private String anneeScolaire;
-    private Long enseignantId;
+    private Long idEnseignant;
 }

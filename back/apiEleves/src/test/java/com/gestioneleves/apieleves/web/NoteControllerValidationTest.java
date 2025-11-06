@@ -29,7 +29,7 @@ class NoteControllerValidationTest {
 
     @Test
     void postNote_invalidPayload_returns400ValidationError() throws Exception {
-        String body = "{}"; // missing fields: dateNote, coefNote (>0), eleveId, matiereId
+        String body = "{}"; // missing fields: dateNote, coefNote (>0), eleveId, idMatiere
 
         mockMvc.perform(post("/api/note")
                         .contentType(MediaType.APPLICATION_JSON)

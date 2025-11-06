@@ -72,7 +72,7 @@ public class ClasseService {
         }
 
         // Mise à jour de l'objet lié
-        if (classe.getEnseignant() != null && classe.getEnseignant().getIdUtilisateur() != null) {
+        if (classe.getEnseignant().getIdUtilisateur() != null) {
             Utilisateur enseignant = utilisateurRepository.findById(classe.getEnseignant().getIdUtilisateur())
                     .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + classe.getEnseignant().getIdUtilisateur()));
             existing.setEnseignant(enseignant);

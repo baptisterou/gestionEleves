@@ -19,7 +19,7 @@ public class NoteUpdateRequest {
     @DecimalMax(value = "20.0", inclusive = true, message = "La note doit être <= 20")
     private Float valeurNote;
 
-    private Long eleveId;
-    private Long matiereId;
-    private Long bulletinId;
+    private Long idEleve;
+    private Long idMatiere;
+    private Long idBulletin;
 }

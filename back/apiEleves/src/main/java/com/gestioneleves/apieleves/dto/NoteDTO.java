@@ -10,7 +10,7 @@ public class NoteDTO {
     private LocalDate dateNote;
     private float coefNote;
     private float valeurNote;
-    private Long eleveId;
-    private Long matiereId;
-    private Long bulletinId;
+    private Long idEleve;
+    private Long idMatiere;
+    private Long idBulletin;
 }
