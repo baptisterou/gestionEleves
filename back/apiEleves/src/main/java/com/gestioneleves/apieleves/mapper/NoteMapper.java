@@ -8,6 +8,8 @@ import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Note;
 
+import java.time.LocalDate;
+
 public class NoteMapper {
 
     public static Note fromCreate(NoteCreateRequest req) {

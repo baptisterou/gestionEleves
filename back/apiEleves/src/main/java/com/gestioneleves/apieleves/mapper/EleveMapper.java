@@ -6,6 +6,8 @@ import com.gestioneleves.apieleves.dto.EleveUpdateRequest;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
+import java.time.LocalDate;
+
 public class EleveMapper {
 
     public static Eleve fromCreate(EleveCreateRequest req) {

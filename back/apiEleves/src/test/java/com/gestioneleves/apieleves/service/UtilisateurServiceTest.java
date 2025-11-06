@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +39,7 @@ public class UtilisateurServiceTest {
         u.setPrenom("John");
         u.setEmail("john@ex.com");
         u.setMotDePasse("plain");
-        u.setDateNaissance(new Date());
+        u.setDateNaissance(LocalDate.now());
         u.setNumTel("0102030405");
 
         when(repository.findByEmail("john@ex.com")).thenReturn(Optional.empty());

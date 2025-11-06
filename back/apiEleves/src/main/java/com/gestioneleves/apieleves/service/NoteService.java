@@ -1,9 +1,13 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.NoteCreateRequest;
+import com.gestioneleves.apieleves.dto.NoteDTO;
+import com.gestioneleves.apieleves.dto.NoteUpdateRequest;
 import com.gestioneleves.apieleves.entity.Bulletin;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Note;
+import com.gestioneleves.apieleves.mapper.NoteMapper;
 import com.gestioneleves.apieleves.repository.BulletinRepository;
 import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
@@ -30,6 +34,13 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
+    // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
+    public NoteDTO createNote(NoteCreateRequest request){
+        Note toSave = NoteMapper.fromCreate(request);
+        Note saved = createNote(toSave);
+        return NoteMapper.toDto(saved);
+    }
+
     public List<Note> getAllNotes(){
         return noteRepository.findAll();
     }
@@ -37,6 +48,14 @@ public class NoteService {
     public Note createNote (Note note){
         validateNote(note);
         return noteRepository.save(note);
+    }
+
+    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    public NoteDTO editNote(Long id, NoteUpdateRequest request){
+        Note current = getNoteById(id);
+        Note updated = NoteMapper.applyUpdate(current, request);
+        Note saved = editNote(id, updated);
+        return NoteMapper.toDto(saved);
     }
 
     public Note editNote(Long id, Note note){

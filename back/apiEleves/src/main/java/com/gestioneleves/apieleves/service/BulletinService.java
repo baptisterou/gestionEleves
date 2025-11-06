@@ -1,6 +1,10 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.BulletinCreateRequest;
+import com.gestioneleves.apieleves.dto.BulletinDTO;
+import com.gestioneleves.apieleves.dto.BulletinUpdateRequest;
 import com.gestioneleves.apieleves.entity.Bulletin;
+import com.gestioneleves.apieleves.mapper.BulletinMapper;
 import com.gestioneleves.apieleves.repository.BulletinRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -23,6 +27,13 @@ public class BulletinService {
         this.bulletinRepository = bulletinRepository;
     }
 
+    // Variante contrôleur-friendly
+    public BulletinDTO createBulletin(BulletinCreateRequest request) {
+        Bulletin toSave = BulletinMapper.fromCreate(request);
+        Bulletin saved = createBulletin(toSave);
+        return BulletinMapper.toDto(saved);
+    }
+
     /**
      * Création d'un bulletin avec validation métier
      */
@@ -37,6 +48,14 @@ public class BulletinService {
 
     public Page<Bulletin> getAllBulletins(Pageable pageable) {
         return bulletinRepository.findAll(pageable);
+    }
+
+    // Variante contrôleur-friendly
+    public BulletinDTO editBulletin(Long id, BulletinUpdateRequest request) {
+        Bulletin current = getBulletinById(id);
+        Bulletin updated = BulletinMapper.applyUpdate(current, request);
+        Bulletin saved = editBulletin(id, updated);
+        return BulletinMapper.toDto(saved);
     }
 
     public Bulletin editBulletin(Long id, Bulletin bulletin){

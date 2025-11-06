@@ -1,7 +1,11 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.ClasseCreateRequest;
+import com.gestioneleves.apieleves.dto.ClasseDTO;
+import com.gestioneleves.apieleves.dto.ClasseUpdateRequest;
 import com.gestioneleves.apieleves.entity.Classe;
 import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.mapper.ClasseMapper;
 import com.gestioneleves.apieleves.repository.ClasseRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +28,13 @@ public class ClasseService {
         this.classeRepository = classeRepository;
     }
 
+    // Variante contrôleur-friendly
+    public ClasseDTO createClasse(ClasseCreateRequest request) {
+        Classe toSave = ClasseMapper.fromCreate(request);
+        Classe saved = createClasse(toSave);
+        return ClasseMapper.toDto(saved);
+    }
+
     public Classe createClasse(Classe classe) {
         return classeRepository.save(classe);
     }
@@ -34,6 +45,14 @@ public class ClasseService {
 
     public Page<Classe> getAllClasses(Pageable pageable) {
         return classeRepository.findAll(pageable);
+    }
+
+    // Variante contrôleur-friendly
+    public ClasseDTO editClasse(Long id, ClasseUpdateRequest request) {
+        Classe current = getClasseById(id);
+        Classe updated = ClasseMapper.applyUpdate(current, request);
+        Classe saved = editClasse(id, updated);
+        return ClasseMapper.toDto(saved);
     }
 
     public Classe editClasse(Long id, Classe classe){

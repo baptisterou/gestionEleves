@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +43,7 @@ public class EleveServiceTest {
         current.setIdEleve(10L);
         current.setNom("Old");
         current.setPrenom("Name");
-        current.setDateNaissance(new Date());
+        current.setDateNaissance(LocalDate.now());
         when(repository.findById(10L)).thenReturn(Optional.of(current));
         when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 

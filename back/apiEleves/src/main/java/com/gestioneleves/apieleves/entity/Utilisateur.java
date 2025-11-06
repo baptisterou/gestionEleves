@@ -15,7 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -42,7 +43,7 @@ public class Utilisateur implements UserDetails {
     @JsonIgnore
     private String motDePasse;
     @Column(name="date_naissance", nullable = false)
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
     @Column(name="num_tel", nullable = false)
     private String numTel;
     @Enumerated(EnumType.STRING)
@@ -50,10 +51,10 @@ public class Utilisateur implements UserDetails {
     private Role role;
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "utilisateur")
     @JsonIgnore

@@ -1,6 +1,9 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.InscriptionCreateRequest;
+import com.gestioneleves.apieleves.dto.InscriptionDTO;
 import com.gestioneleves.apieleves.entity.*;
+import com.gestioneleves.apieleves.mapper.InscrireMapper;
 import com.gestioneleves.apieleves.repository.InscrireRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,13 @@ public class InscrireService {
 
     public List<Inscrire> getAllInscriptions(){ return inscrireRepository.findAll(); }
 
+    // Variante contrôleur-friendly
+    public InscriptionDTO createInscription(InscriptionCreateRequest request){
+        Inscrire toSave = InscrireMapper.fromCreate(request);
+        Inscrire saved = createInscription(toSave);
+        return InscrireMapper.toDto(saved);
+    }
+
     public Inscrire createInscription(Inscrire inscription){ return inscrireRepository.save(inscription); }
 
     public Inscrire editInscription(InscrireId id, Inscrire inscription){
@@ -31,7 +41,7 @@ public class InscrireService {
         }
 
         //Sauvegarde et retour
-        return inscrireRepository.save(inscription); }
+        return inscrireRepository.save(existing); }
 
     public void deleteInscription(InscrireId id){
         if (!inscrireRepository.existsById(id)) {
