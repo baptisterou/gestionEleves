@@ -12,5 +12,5 @@ public class ClasseCreateRequest {
     @NotBlank
     private String anneeScolaire;
     // Optionnel: rattacher un enseignant
-    private Long enseignantId;
+    private Long idEnseignant;
 }

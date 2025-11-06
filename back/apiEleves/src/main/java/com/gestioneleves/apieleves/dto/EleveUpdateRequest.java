@@ -11,5 +11,5 @@ public class EleveUpdateRequest {
     private String prenom;
     @Past
     private LocalDate dateNaissance;
-    private Long utilisateurId;
+    private Long idUtilisateur;
 }

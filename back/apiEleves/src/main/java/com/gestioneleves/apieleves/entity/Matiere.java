@@ -47,6 +47,5 @@ public class Matiere {
     private Utilisateur enseignant;
 
     @OneToMany(mappedBy = "matiere")
-    @JsonIgnore
     private List<Note> notes = new ArrayList<>();
 }

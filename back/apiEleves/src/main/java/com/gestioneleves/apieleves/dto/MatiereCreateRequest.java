@@ -8,5 +8,5 @@ public class MatiereCreateRequest {
     @NotBlank
     private String intituleMatiere;
     // optionnel: rattacher à un enseignant existant
-    private Long enseignantId;
+    private Long idEnseignant;
 }

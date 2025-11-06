@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class MatiereUpdateRequest {
     private String intituleMatiere;
-    private Long enseignantId; // optionnel
+    private Long idEnseignant; // optionnel
 }

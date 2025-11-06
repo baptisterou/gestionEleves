@@ -6,5 +6,5 @@ import lombok.Data;
 public class MatiereDTO {
     private Long idMatiere;
     private String intituleMatiere;
-    private Long enseignantId; // optionnel
+    private Long idEnseignant; // optionnel
 }
