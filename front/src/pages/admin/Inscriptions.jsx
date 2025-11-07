@@ -11,26 +11,41 @@ function isValidSchoolYear(value) {
   const [a, b] = value.split('/').map(Number)
   return b === a + 1
 }
+function currentSchoolYear() {
+  const d = new Date()
+  const y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1
+  return `${y}/${y + 1}`
+}
+function schoolYears(count = 5) {
+  const now = new Date()
+  const start = now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1
+  return Array.from({ length: count }, (_, i) => `${start + i}/${start + i + 1}`)
+}
+function yearToCanonicalDate(annee) {
+  // map "YYYY/YYYY+1" -> YYYY-09-01
+  const [left] = annee.split('/')
+  return `${left}-09-01`
+}
 
 export default function Inscriptions() {
   const [page, setPage] = useState(0)
   const [size] = useState(Number(import.meta.env.VITE_PAGE_SIZE || 20))
-  const [classeId, setClasseId] = useState('')
-  const [annee, setAnnee] = useState('')
+  const [annee, setAnnee] = useState(currentSchoolYear())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState({ content: [], totalElements: 0, number: 0, size })
 
   const { show } = useToast()
-    
-  const [classes, setClasses] = useState([])
+
   const [eleves, setEleves] = useState([])
-    
+  const [me, setMe] = useState(null)
+  const [users, setUsers] = useState([])
+
   const [openModal, setOpenModal] = useState(false)
-  const [form, setForm] = useState({ eleveId: '', classeId: '', annee: '' })
+  const [form, setForm] = useState({ eleveId: '', annee: currentSchoolYear() })
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
-    
+
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [toDelete, setToDelete] = useState(null)
 
@@ -38,8 +53,18 @@ export default function Inscriptions() {
     setLoading(true)
     setError('')
     try {
-      const res = await api.listInscriptions({ page, size, ...(classeId ? { classeId } : {}), ...(annee ? { annee } : {}) })
-      setData(res)
+      const res = await api.listInscriptions({}) // backend returns a simple list
+      const list = Array.isArray(res) ? res : res?.content || []
+      // compute school year from dateInscrip for filtering
+      const withYear = list.map((it) => {
+        const d = it.dateInscrip ? new Date(it.dateInscrip) : null
+        const y = d ? `${d.getFullYear()}/${d.getFullYear() + 1}` : ''
+        return { ...it, _annee: y }
+      })
+      const filtered = annee ? withYear.filter((it) => it._annee === annee) : withYear
+      const start = page * size
+      const end = start + size
+      setData({ content: filtered.slice(start, end), totalElements: filtered.length, number: page, size })
     } catch (e) {
       setError(e?.message || 'Erreur de chargement')
     } finally {
@@ -49,29 +74,53 @@ export default function Inscriptions() {
 
   async function loadOptions() {
     try {
-      const [cls, els] = await Promise.all([
-        api.listClasses({ page: 0, size: 100 }),
-        api.listEleves({ page: 0, size: 100 }),
+      const [els, meRes, usrs] = await Promise.all([
+        api.listEleves({ page: 0, size: 1000 }),
+        api.me(),
+        api.listUsers({ page: 0, size: 1000 }),
       ])
-      setClasses(cls?.content || [])
       setEleves(els?.content || [])
+      setMe(meRes)
+      setUsers(usrs?.content || [])
     } catch (e) {
     }
   }
 
   useEffect(() => {
     load()
-  }, [page, size, classeId, annee])
+  }, [page, size, annee])
 
   useEffect(() => {
     loadOptions()
   }, [])
 
+  const eleveNameById = useMemo(() => {
+    const map = new Map()
+    for (const e of eleves || []) {
+      const label = [e.prenom, e.nom].filter(Boolean).join(' ').trim()
+      map.set(e.idEleve, label || `#${e.idEleve}`)
+    }
+    return map
+  }, [eleves])
+
+  const userNameById = useMemo(() => {
+    const map = new Map()
+    for (const u of users || []) {
+      const label = [u.prenom, u.nom].filter(Boolean).join(' ').trim()
+      map.set(u.idUtilisateur, label || `#${u.idUtilisateur}`)
+    }
+    if (me?.idUtilisateur && me?.prenom) {
+      const label = [me.prenom, me.nom].filter(Boolean).join(' ').trim()
+      map.set(me.idUtilisateur, label || `#${me.idUtilisateur}`)
+    }
+    return map
+  }, [users, me])
+
   const columns = useMemo(() => ([
-    { key: 'id', header: 'ID' },
-    { key: 'eleve', header: 'Élève', accessor: (row) => row?.eleve?.prenom && row?.eleve?.nom ? `${row.eleve.prenom} ${row.eleve.nom}` : (row?.eleveId ?? '') },
-    { key: 'classe', header: 'Classe', accessor: (row) => row?.classe?.nom ?? row?.classeId ?? '' },
-    { key: 'annee', header: 'Année' },
+    { key: 'eleve', header: 'Élève', render: (_v, row) => eleveNameById.get(row.eleveId) ?? row.eleveId },
+    { key: 'utilisateur', header: 'Inscrit par', render: (_v, row) => userNameById.get(row.utilisateurId) ?? row.utilisateurId },
+    { key: 'dateInscrip', header: 'Date' },
+    { key: 'annee', header: 'Année', accessor: (row) => row._annee || '' },
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
@@ -79,10 +128,10 @@ export default function Inscriptions() {
         </div>
       )
     }
-  ]), [])
+  ]), [eleveNameById, userNameById])
 
   function startCreate() {
-    setForm({ eleveId: '', classeId: classeId || '', annee: annee || '' })
+    setForm({ eleveId: '', annee })
     setFormError('')
     setOpenModal(true)
   }
@@ -94,7 +143,6 @@ export default function Inscriptions() {
 
   function validate(values) {
     if (!values.eleveId) return "L'élève est requis"
-    if (!values.classeId) return 'La classe est requise'
     if (!values.annee) return "L'année est requise"
     if (!isValidSchoolYear(values.annee)) return "L'année doit être au format 2024/2025 (année droite = année gauche + 1)"
     return ''
@@ -109,7 +157,7 @@ export default function Inscriptions() {
     }
     setSaving(true)
     try {
-      const payload = { eleveId: Number(form.eleveId), classeId: Number(form.classeId), annee: form.annee }
+      const payload = { eleveId: Number(form.eleveId), utilisateurId: me?.idUtilisateur, dateInscrip: yearToCanonicalDate(form.annee) }
       await api.createInscription(payload)
       show('Inscription créée', { type: 'success' })
       setOpenModal(false)
@@ -125,8 +173,7 @@ export default function Inscriptions() {
   async function confirmDelete() {
     if (!toDelete) return
     try {
-      const id = toDelete.id ?? toDelete.idInscription ?? toDelete.idInscrire
-      await api.deleteInscription(id)
+      await api.deleteInscription(toDelete.eleveId, toDelete.utilisateurId)
       show('Inscription supprimée', { type: 'success' })
       await load()
     } catch (e) {
@@ -145,20 +192,11 @@ export default function Inscriptions() {
           <p className="text-sm text-gray-600">Affectez des élèves aux classes pour une année scolaire (format 2024/2025).</p>
         </div>
         <div className="flex items-center gap-2">
-          <select className="input" value={classeId} onChange={(e) => { setPage(0); setClasseId(e.target.value) }}>
-            <option value="">Toutes les classes</option>
-            {classes.map(c => (
-              <option key={c.idClasse} value={c.idClasse}>
-                {(c.nomClasse ?? c.nom) + ((c.niveauClasse || c.niveau) ? ` (${c.niveauClasse ?? c.niveau})` : '')}
-              </option>
+          <select className="input w-40" value={annee} onChange={(e) => { setPage(0); setAnnee(e.target.value) }}>
+            {schoolYears(5).map(y => (
+              <option key={y} value={y}>{y}</option>
             ))}
           </select>
-          <input
-            className="input w-40"
-            placeholder="Année (2024/2025)"
-            value={annee}
-            onChange={(e) => { setPage(0); setAnnee(e.target.value) }}
-          />
           <button className="btn btn-primary" onClick={startCreate}>
             Nouvelle inscription
           </button>
@@ -203,26 +241,12 @@ export default function Inscriptions() {
             </select>
           </div>
           <div>
-            <label className="label">Classe</label>
-            <select className="input" value={form.classeId} onChange={(e) => setForm({ ...form, classeId: e.target.value })} required>
-              <option value="">Sélectionner une classe</option>
-              {classes.map(c => (
-                <option key={c.idClasse} value={c.idClasse}>
-                  {(c.nomClasse ?? c.nom) + ((c.niveauClasse || c.niveau) ? ` (${c.niveauClasse ?? c.niveau})` : '')}
-                </option>
+            <label className="label">Année scolaire</label>
+            <select className="input" value={form.annee} onChange={(e) => setForm({ ...form, annee: e.target.value })} required>
+              {schoolYears(5).map(y => (
+                <option key={y} value={y}>{y}</option>
               ))}
             </select>
-          </div>
-          <div>
-            <label className="label">Année scolaire</label>
-            <input
-              className="input"
-              placeholder="2024/2025"
-              value={form.annee}
-              onChange={(e) => setForm({ ...form, annee: e.target.value })}
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">Format: YYYY/YYYY+1 (ex: 2024/2025)</p>
           </div>
         </form>
       </Modal>
