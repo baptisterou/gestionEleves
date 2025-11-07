@@ -1,7 +1,9 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.UtilisateurAdminCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
+import com.gestioneleves.apieleves.dto.UtilisateurRoleUpdateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
 import com.gestioneleves.apieleves.entity.Role;
 import com.gestioneleves.apieleves.entity.Utilisateur;
@@ -40,6 +42,26 @@ public class UtilisateurService {
     public UtilisateurDTO createUtilisateur(UtilisateurCreateRequest request) {
         Utilisateur toSave = UtilisateurMapper.fromCreate(request);
         Utilisateur saved = createUtilisateur(toSave); // réutilise la logique existante
+        return UtilisateurMapper.toDto(saved);
+    }
+
+    // Création ADMIN: permet de spécifier le rôle explicitement
+    @Transactional
+    public UtilisateurDTO createUtilisateurAsAdmin(UtilisateurAdminCreateRequest request) {
+        Utilisateur toSave = UtilisateurMapper.fromAdminCreate(request);
+        // normaliser email
+        if (toSave.getEmail() != null) {
+            toSave.setEmail(toSave.getEmail().trim().toLowerCase());
+        }
+        // unicité email
+        utilisateurRepository.findByEmail(toSave.getEmail()).ifPresent(u -> {
+            throw new IllegalArgumentException("Email déjà utilisé");
+        });
+        // encoder le mot de passe si fourni
+        if (toSave.getMotDePasse() != null) {
+            toSave.setMotDePasse(passwordEncoder.encode(toSave.getMotDePasse()));
+        }
+        Utilisateur saved = utilisateurRepository.save(toSave);
         return UtilisateurMapper.toDto(saved);
     }
 
@@ -102,6 +124,16 @@ public class UtilisateurService {
         }
         // Ne pas permettre le changement de rôle via cet endpoint standard
         return utilisateurRepository.save(existing);
+    }
+
+    // Changement de rôle ADMIN-only
+    @Transactional
+    public UtilisateurDTO updateRole(Long id, UtilisateurRoleUpdateRequest request) {
+        Utilisateur existing = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable : " + id));
+        existing.setRole(request.role);
+        Utilisateur saved = utilisateurRepository.save(existing);
+        return UtilisateurMapper.toDto(saved);
     }
 
     public void supprimerUtilisateur(Long id){

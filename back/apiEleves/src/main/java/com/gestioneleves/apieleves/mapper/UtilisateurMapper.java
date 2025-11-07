@@ -1,11 +1,12 @@
 package com.gestioneleves.apieleves.mapper;
 
+import com.gestioneleves.apieleves.dto.UtilisateurAdminCreateRequest;
+import com.gestioneleves.apieleves.dto.UtilisateurAdminDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,6 +23,21 @@ public final class UtilisateurMapper {
         dto.email = entity.getEmail();
         dto.numTel = entity.getNumTel();
         dto.dateNaissance = entity.getDateNaissance();
+        // Expose role so that admin UI (and others if needed) can display it
+        dto.role = entity.getRole();
+        return dto;
+    }
+
+    public static UtilisateurAdminDTO toAdminDto(Utilisateur entity) {
+        if (entity == null) return null;
+        UtilisateurAdminDTO dto = new UtilisateurAdminDTO();
+        dto.idUtilisateur = entity.getIdUtilisateur();
+        dto.nom = entity.getNom();
+        dto.prenom = entity.getPrenom();
+        dto.email = entity.getEmail();
+        dto.numTel = entity.getNumTel();
+        dto.dateNaissance = entity.getDateNaissance();
+        dto.role = entity.getRole();
         return dto;
     }
 
@@ -39,6 +55,19 @@ public final class UtilisateurMapper {
         u.setMotDePasse(req.motDePasse);
         u.setDateNaissance(req.dateNaissance);
         u.setNumTel(req.numTel);
+        return u;
+    }
+
+    public static Utilisateur fromAdminCreate(UtilisateurAdminCreateRequest req) {
+        if (req == null) return null;
+        Utilisateur u = new Utilisateur();
+        u.setNom(req.nom);
+        u.setPrenom(req.prenom);
+        u.setEmail(req.email);
+        u.setMotDePasse(req.motDePasse);
+        u.setDateNaissance(req.dateNaissance);
+        u.setNumTel(req.numTel);
+        u.setRole(req.role);
         return u;
     }
 
