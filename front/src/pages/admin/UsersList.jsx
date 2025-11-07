@@ -111,20 +111,26 @@ export default function UsersList() {
     }
     setSaving(true)
     try {
-      const payload = {
+      const basePayload = {
         nom: form.nom.trim(),
         prenom: form.prenom.trim(),
         email: form.email.trim(),
         numTel: form.numTel?.trim() || '',
         dateNaissance: form.dateNaissance || null,
-        role: form.role,
       }
       if (editing) {
-        await api.updateUser(editing.idUtilisateur, payload)
+        // 1) Mettre à jour les infos générales (sans le rôle)
+        await api.updateUser(editing.idUtilisateur, basePayload)
+        // 2) Si le rôle a changé, appeler l'endpoint dédié
+        const previousRole = editing.role || 'RESPONSABLE'
+        if (previousRole !== form.role) {
+          await api.updateUserRole(editing.idUtilisateur, { role: form.role })
+        }
         show('Utilisateur mis à jour', { type: 'success' })
       } else {
-        const createPayload = { ...payload, motDePasse: form.password }
-        await api.createUser(createPayload)
+        // Création ADMIN avec rôle explicite
+        const createPayload = { ...basePayload, motDePasse: form.password, role: form.role }
+        await api.createUserAdmin(createPayload)
         show('Utilisateur créé', { type: 'success' })
       }
       setOpenModal(false)

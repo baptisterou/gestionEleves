@@ -1,5 +1,6 @@
 package com.gestioneleves.apieleves.controller;
 
+import com.gestioneleves.apieleves.dto.UtilisateurAdminDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 import com.gestioneleves.apieleves.mapper.UtilisateurMapper;
@@ -21,8 +22,8 @@ public class UsersController {
     private final UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/me")
-    public UtilisateurDTO me(@AuthenticationPrincipal Utilisateur currentUser) {
-        return UtilisateurMapper.toDto(currentUser);
+    public UtilisateurAdminDTO me(@AuthenticationPrincipal Utilisateur currentUser) {
+        return UtilisateurMapper.toAdminDto(currentUser);
     }
 
     @GetMapping
