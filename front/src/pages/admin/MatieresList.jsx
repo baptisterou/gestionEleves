@@ -17,12 +17,16 @@ export default function MatieresList() {
 
   const [openModal, setOpenModal] = useState(false)
   const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ nom: '', coefficient: 1 })
+  const [form, setForm] = useState({ intituleMatiere: '', idEnseignant: '' })
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
 
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [toDelete, setToDelete] = useState(null)
+
+  // Liste des enseignants pour le dropdown
+  const [enseignants, setEnseignants] = useState([])
+  const [loadingEnseignants, setLoadingEnseignants] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -37,14 +41,41 @@ export default function MatieresList() {
     }
   }
 
+  async function loadEnseignants() {
+    setLoadingEnseignants(true)
+    try {
+      const res = await api.listUsers({ page: 0, size: 1000 })
+      const list = res?.content || []
+      const onlyTeachers = list.filter(u => u.role === 'ENSEIGNANT')
+      setEnseignants(onlyTeachers.map(u => ({ id: u.idUtilisateur, label: `${u.prenom} ${u.nom} (${u.email})` })))
+    } catch (e) {
+      // silencieux mais on pourrait afficher une erreur locale
+    } finally {
+      setLoadingEnseignants(false)
+    }
+  }
+
   useEffect(() => {
     load()
   }, [page, size])
 
+  useEffect(() => {
+    loadEnseignants()
+  }, [])
+
   const columns = useMemo(() => ([
     { key: 'idMatiere', header: 'ID' },
-    { key: 'nom', header: 'Nom' },
-    { key: 'coefficient', header: 'Coefficient' },
+    { key: 'intituleMatiere', header: 'Intitulé' },
+    {
+      key: 'enseignant',
+      header: 'Enseignant',
+      render: (_v, row) => {
+        const id = row.idEnseignant ?? row.enseignant?.idUtilisateur
+        const opt = enseignants.find((e) => e.id === id)
+        // Affiche "Prénom Nom" si connu, sinon rien (ou l'ID en secours)
+        return opt ? opt.label.replace(/\s*\([^)]*\)$/, '') : (id ?? '')
+      },
+    },
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
@@ -53,11 +84,11 @@ export default function MatieresList() {
         </div>
       )
     }
-  ]), [])
+  ]), [enseignants])
 
   function startCreate() {
     setEditing(null)
-    setForm({ nom: '', coefficient: 1 })
+    setForm({ intituleMatiere: '', idEnseignant: '' })
     setFormError('')
     setOpenModal(true)
   }
@@ -65,8 +96,8 @@ export default function MatieresList() {
   function startEdit(row) {
     setEditing(row)
     setForm({
-      nom: row.nom || '',
-      coefficient: row.coefficient ?? 1,
+      intituleMatiere: row.intituleMatiere || '',
+      idEnseignant: row.idEnseignant ? String(row.idEnseignant) : '',
     })
     setFormError('')
     setOpenModal(true)
@@ -78,9 +109,8 @@ export default function MatieresList() {
   }
 
   function validate(values) {
-    if (!values.nom?.trim()) return 'Le nom est requis'
-    const coef = Number(values.coefficient)
-    if (!Number.isFinite(coef) || coef < 1) return 'Le coefficient doit être un nombre ≥ 1'
+    if (!values.intituleMatiere?.trim()) return "L'intitulé est requis"
+    if (values.idEnseignant && !Number.isFinite(Number(values.idEnseignant))) return "L'identifiant enseignant doit être numérique"
     return ''
   }
 
@@ -94,8 +124,8 @@ export default function MatieresList() {
     setSaving(true)
     try {
       const payload = {
-        nom: form.nom.trim(),
-        coefficient: Number(form.coefficient),
+        intituleMatiere: form.intituleMatiere.trim(),
+        ...(form.idEnseignant ? { idEnseignant: Number(form.idEnseignant) } : {}),
       }
       if (editing) {
         await api.updateMatiere(editing.idMatiere, payload)
@@ -172,12 +202,17 @@ export default function MatieresList() {
         {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
         <form onSubmit={saveMatiere} className="space-y-3">
           <div>
-            <label className="label">Nom</label>
-            <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
+            <label className="label">Intitulé</label>
+            <input className="input" value={form.intituleMatiere} onChange={(e) => setForm({ ...form, intituleMatiere: e.target.value })} required />
           </div>
           <div>
-            <label className="label">Coefficient</label>
-            <input type="number" min={1} step={1} className="input" value={form.coefficient} onChange={(e) => setForm({ ...form, coefficient: e.target.value })} required />
+            <label className="label">Enseignant</label>
+            <select className="input" value={form.idEnseignant} onChange={(e) => setForm({ ...form, idEnseignant: e.target.value })} disabled={loadingEnseignants}>
+              <option value="">(Optionnel) Sélectionner un enseignant</option>
+              {enseignants.map(opt => (
+                <option key={opt.id} value={opt.id}>{opt.label}</option>
+              ))}
+            </select>
           </div>
         </form>
       </Modal>
