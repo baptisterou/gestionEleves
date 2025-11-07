@@ -122,6 +122,10 @@ public class ApplicationSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/bulletin/**").hasRole("ADMIN")
 
                         // Utilisateurs
+                        // Admin-only views with role
+                        .requestMatchers(HttpMethod.GET, "/api/utilisateur/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/utilisateur/*/admin").hasRole("ADMIN")
+                        // General user listing/details (public DTO)
                         .requestMatchers(HttpMethod.GET, "/api/utilisateur/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/utilisateur/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/utilisateur/**").hasRole("ADMIN")
