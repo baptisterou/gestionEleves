@@ -17,5 +17,5 @@ public class EleveCreateRequest {
     @Past
     private LocalDate dateNaissance;
     // Lier éventuellement à un utilisateur (responsable) existant
-    private Long utilisateurId;
+    private Long idUtilisateur;
 }

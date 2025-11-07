@@ -10,5 +10,5 @@ public class EleveDTO {
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
-    private Long utilisateurId; // responsable id (optionnel)
+    private Long idUtilisateur; // responsable id (optionnel)
 }
