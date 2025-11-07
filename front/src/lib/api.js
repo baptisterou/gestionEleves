@@ -104,7 +104,7 @@ export const api = {
 
   listInscriptions: (params) => request('/api/inscription', { method: 'GET', body: params }),
   createInscription: (payload) => request('/api/inscription', { method: 'POST', body: payload }),
-  deleteInscription: (id) => request(`/api/inscription/${id}`, { method: 'DELETE' }),
+  deleteInscription: (eleveId, utilisateurId) => request(`/api/inscription/${eleveId}/${utilisateurId}`, { method: 'DELETE' }),
 
   listNotes: (params) => request('/api/note', { method: 'GET', body: params }),
   createNote: (payload) => request('/api/note', { method: 'POST', body: payload }),
