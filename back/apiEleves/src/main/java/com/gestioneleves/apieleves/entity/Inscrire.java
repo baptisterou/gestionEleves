@@ -11,6 +11,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "inscrire")
@@ -26,6 +27,8 @@ public class Inscrire implements Serializable {
     @EmbeddedId
     @EqualsAndHashCode.Include
     private InscrireId id;
+
+    private List<String> inscriptions;
 
     @ManyToOne
     @MapsId("idEleve")
