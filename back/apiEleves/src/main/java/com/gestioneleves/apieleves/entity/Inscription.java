@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "inscription")
@@ -25,6 +26,8 @@ public class Inscription {
 
     @Column(name = "DateInscrip")
     private LocalDate dateInscrip;
+
+    private List<String> inscriptions;
 
     @ManyToOne
     @JoinColumn(name = "id_eleve")
