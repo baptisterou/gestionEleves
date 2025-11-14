@@ -55,7 +55,7 @@ function AppShell() {
             element={
               <ProtectedRoute>
                 <RoleRoute allow={["ADMIN"]}>
-                  <AdminLayout />
+                  <Outlet />
                 </RoleRoute>
               </ProtectedRoute>
             }
