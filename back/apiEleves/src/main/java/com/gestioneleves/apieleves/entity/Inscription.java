@@ -2,18 +2,12 @@ package com.gestioneleves.apieleves.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "inscrire")
+@Table(name = "inscription")
 @Getter
 @Setter
 @ToString(exclude = {"eleve", "utilisateur"})
@@ -21,22 +15,24 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-public class Inscrire implements Serializable {
+public class Inscription {
 
-    @EmbeddedId
+    @Id // Marque ce champ comme clé primaire
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
     @EqualsAndHashCode.Include
-    private InscrireId id;
+    @Column(name = "id_inscription")
+    private Long idInscription;
+
+    @Column(name = "DateInscrip")
+    private LocalDate dateInscrip;
 
     @ManyToOne
-    @MapsId("idEleve")
     @JoinColumn(name = "id_eleve")
     private Eleve eleve;
 
     @ManyToOne
-    @MapsId("idUtilisateur")
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
 
-    @Column(name = "DateInscrip")
-    private LocalDate dateInscrip;
+
 }
