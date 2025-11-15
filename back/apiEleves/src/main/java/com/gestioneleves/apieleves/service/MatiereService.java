@@ -21,6 +21,7 @@ import java.util.List;
  * Contient la logique métier relative aux opérations sur les matières
  */
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
+
 public class MatiereService {
 
     private final MatiereRepository matiereRepository;

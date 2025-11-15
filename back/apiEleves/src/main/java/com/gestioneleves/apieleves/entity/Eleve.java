@@ -47,10 +47,14 @@ public class Eleve {
 
     @OneToMany(mappedBy = "eleve")
     @JsonIgnore
-    private List<Inscrire> inscriptions = new ArrayList<>();
+    private List<Inscription> inscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "eleve")
     @JsonIgnore
     private List<Note> notes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
+    private List<Representation> representations = new ArrayList<>();
 
 }

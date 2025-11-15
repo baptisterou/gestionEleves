@@ -70,7 +70,11 @@ public class Utilisateur implements UserDetails {
 
     @OneToMany(mappedBy = "utilisateur")
     @JsonIgnore
-    private List<Inscrire> inscriptionEffectuees = new ArrayList<>();
+    private List<Inscription> inscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utilisateur")
+    //@JsonIgnore
+    private List<Representation> representations = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
