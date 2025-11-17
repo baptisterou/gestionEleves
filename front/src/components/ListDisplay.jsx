@@ -11,14 +11,12 @@ export default function List( {category} ) {
             return <UsersList/>
         case "Eleves":
             return <ElevesList/>
-        case "Classes":
-            return <ClassesList/>
         case "Matieres":
             return <MatieresList/>
+        case "Classes":
+            return <ClassesList/>            
         case "Inscriptions":
             return <Inscriptions/>
-        case "Statistiques":
-            return <AdminStats/>
         default:
             return <UsersList/>;
     }

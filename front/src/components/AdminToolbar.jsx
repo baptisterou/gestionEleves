@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ChevronDown, ChevronRight, Users, GraduationCap, BookOpen, BarChart, FileText } from 'lucide-react'
+import { ChevronDown, ChevronRight, Users, GraduationCap, BookOpen, FileText, School } from 'lucide-react'
 
 export default function AdminToolbar({ 
   category, 
@@ -11,7 +11,7 @@ export default function AdminToolbar({
     { name: 'Utilisateurs', icon: <Users size={16} /> },
     { name: 'Eleves', icon: <GraduationCap size={16} /> },
     { name: 'Matieres', icon: <BookOpen size={16} /> },
-    { name: 'Statistiques', icon: <BarChart size={16} /> },
+    { name: 'Classes', icon: <School size={16} /> },
     { name: 'Inscriptions', icon: <FileText size={16} /> }
   ]
 

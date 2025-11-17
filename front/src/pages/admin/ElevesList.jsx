@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { UserRoundPlus } from 'lucide-react'
+import { Pencil, Trash2, UserRoundPlus } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
@@ -72,8 +72,8 @@ useEffect(() => {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-primary" onClick={() => startEdit(row)}>Éditer</button>
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button onClick={() => startEdit(row)}><Pencil className="text-gray-500"/></button>
+          <button onClick={() => askDelete(row)}><Trash2 className="text-red-600"/></button>
         </div>
       )
     }
@@ -168,7 +168,7 @@ useEffect(() => {
             <label className="label">Classe</label>
             <select className="input w-40" value={classe} onChange={(e) => { setPage(0); setClasse(e.target.value) }}>
               <option value="">Tous</option>
-              {classes.map(c => <option key={c} value={c}>{c}</option>)}
+              {classes.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
             </select>
             <button className="btn btn-primary" onClick={startCreate}>
               <UserRoundPlus className="mr-2" />Nouveau
