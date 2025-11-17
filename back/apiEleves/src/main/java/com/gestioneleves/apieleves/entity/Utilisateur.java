@@ -57,24 +57,17 @@ public class Utilisateur implements UserDetails {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "utilisateur")
-    @JsonIgnore
     private List<Eleve> eleves = new ArrayList<>();
 
-    @OneToMany(mappedBy = "enseignant")
-    @JsonIgnore
-    private List<Classe> classesEnseignant = new ArrayList<>();
-
-    @OneToMany(mappedBy = "enseignant")
-    @JsonIgnore
-    private List<Matiere> matieresEnseignant = new ArrayList<>();
-
     @OneToMany(mappedBy = "utilisateur")
-    @JsonIgnore
     private List<Inscription> inscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "utilisateur")
-    //@JsonIgnore
     private List<Representation> representations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "enseignant")
+    private List<Enseignement> enseignements = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

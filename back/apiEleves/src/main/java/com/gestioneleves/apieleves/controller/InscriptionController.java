@@ -28,8 +28,7 @@ public class InscriptionController {
     @PostMapping
     public ResponseEntity<InscriptionDTO> createInscription(@Valid @RequestBody InscriptionCreateRequest request) {
         InscriptionDTO dto = inscriptionService.createInscription(request);
-        URI location = URI.create(String.format("/api/inscription/%d/%d", dto.getIdEleve(), dto.getIdUtilisateur()));
-        return ResponseEntity.created(location).body(dto);
+        return ResponseEntity.created(URI.create("/api/inscription/" + dto.getIdInscription())).body(dto);
     }
 
     @PutMapping("/{id}")

@@ -32,8 +32,7 @@ public class RepresentationController {
     @PostMapping
     public ResponseEntity<RepresentationDTO> createRepresentation(@Valid @RequestBody RepresentationCreateRequest request) {
         RepresentationDTO dto = representationService.createRepresentation(request);
-        URI location = URI.create(String.format("/api/representation/%d/%d", dto.getIdEleve(), dto.getIdUtilisateur()));
-        return ResponseEntity.created(location).body(dto);
+        return ResponseEntity.created(URI.create("/api/representation/" + dto.getIdRepresentation())).body(dto);
     }
 
     @PutMapping("/{id}")
