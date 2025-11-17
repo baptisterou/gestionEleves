@@ -4,11 +4,19 @@ import ListDisplay from '../../components/ListDisplay'
 import AdminToolbar from '../../components/AdminToolbar'
 import { useCounters } from '../../hooks/useCounters'
 
+/*
+ * Page principale de l'administration
+ * Affiche un tableau de bord avec les compteurs et les listes de données
+ */
 export default function AdminHome() {
+  // Récupérer les informations de l'utilisateur connecté
   const { user } = useAuth()
+  // Catégorie actuellement sélectionnée (Utilisateurs, Élèves, Classes, etc.)
   const [category, setCategory] = useState('Utilisateurs')
+  // Compteurs pour les élèves, classes et matières (mis à jour en temps réel)
   const { countEleves, countClasses, countMatieres } = useCounters()
 
+  // Fonction pour créer un nouvel élément (non implémentée)
   const handleNew = () => {
     // Logique pour créer un nouvel élément
     console.log(`Créer un nouveau ${category}`)
@@ -17,7 +25,7 @@ export default function AdminHome() {
   return (
     <div className="flex flex-col gap-4 p-4">
       
-      {/* Section de bienvenue */}
+      {/* Section de bienvenue avec le nom de l'utilisateur */}
       <div className="bg-white p-8 rounded-xl">
         <h1 className="text-xl font-semibold">Espace Administrateur</h1>
         <p className="text-sm text-gray-700">
@@ -26,15 +34,16 @@ export default function AdminHome() {
         </p>
       </div>
 
+      {/* Barre d'outils pour naviguer entre les différentes catégories */}
       <AdminToolbar 
         category={category} 
         setCategory={setCategory}
       />
 
-      {/* Section avec sidebar et liste */}
+      {/* Section principale avec sidebar à gauche et liste à droite */}
       <div className="flex flex-col md:flex-row gap-4">
         
-        {/* Sidebar avec les totaux */}
+        {/* Sidebar affichant les compteurs */}
         <div className="md:w-64">
           <SidebarCard 
             countEleves={countEleves}
@@ -43,7 +52,7 @@ export default function AdminHome() {
           />
         </div>
 
-        {/* Liste qui prend toute la largeur restante */}
+        {/* Liste principale qui change selon la catégorie sélectionnée */}
         <div className="flex-1">
           <ListDisplay category={category}/>
         </div>
@@ -54,9 +63,14 @@ export default function AdminHome() {
   )
 }
 
+/*
+ * Composant affichant les compteurs dans la sidebar
+ * Montre le nombre total d'élèves, de classes et de matières
+ */
 function SidebarCard({ countEleves, countClasses, countMatieres }) {
   return (
     <div className="flex flex-col gap-4 rounded-xl bg-white p-10">
+      {/* Compteur pour les élèves avec icône et nombre */}
       <div className="flex flex-col items-center justify-center p-4 text-center rounded-md bg-white">
         <div className="">
           <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,6 +81,7 @@ function SidebarCard({ countEleves, countClasses, countMatieres }) {
         <p className="">Total Élèves</p>
         <p>{countEleves}</p>
       </div>
+      {/* Compteur pour les classes avec icône et nombre */}
       <div className="flex flex-col items-center justify-center p-4 text-center rounded-md bg-white">
         <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="39" height="39" rx="10" fill="#FEF7ED" />
@@ -75,6 +90,7 @@ function SidebarCard({ countEleves, countClasses, countMatieres }) {
         <p className="font-medium">Total Classes</p>
         <p>{countClasses}</p>
       </div>
+      {/* Compteur pour les matières avec icône et nombre */}
       <div className="flex flex-col items-center justify-center p-4 text-center rounded-md bg-white">
         <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="39" height="39" rx="10" fill="#F0FDF4" />

@@ -194,15 +194,17 @@ export default function Inscriptions() {
             <h1 className="text-lg font-semibold">Inscriptions</h1>
             <p className="text-sm text-gray-600">Affectez des élèves aux classes pour une année scolaire (format 2024/2025).</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             <select className="input w-40" value={annee} onChange={(e) => { setPage(0); setAnnee(e.target.value) }}>
               {schoolYears(5).map(y => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
+            <div className="transition-transform duration-300 hover:scale-105">
             <button className="btn btn-primary" onClick={startCreate}>
-               <FilePlusCorner className="mr-2"/> Nouveau
+               <FilePlusCorner className="mr-2 "/> Nouveau
             </button>
+          </div>
           </div>
         </header>
 

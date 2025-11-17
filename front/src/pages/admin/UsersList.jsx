@@ -173,9 +173,11 @@ export default function UsersList() {
               <option value="">Tous</option>
               {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
+            <div className="transition-transform duration-300 hover:scale-105">
             <button className="btn btn-primary" onClick={startCreate}>
               <UserRoundPlus className="mr-2"/>Nouveau
             </button>
+            </div>
           </div>
         </header>
 
