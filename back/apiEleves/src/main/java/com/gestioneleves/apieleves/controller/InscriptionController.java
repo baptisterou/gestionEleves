@@ -2,8 +2,9 @@ package com.gestioneleves.apieleves.controller;
 
 import com.gestioneleves.apieleves.dto.InscriptionCreateRequest;
 import com.gestioneleves.apieleves.dto.InscriptionDTO;
-import com.gestioneleves.apieleves.mapper.InscriptionMapper;
-import com.gestioneleves.apieleves.service.InscriptionService;
+import com.gestioneleves.apieleves.entity.InscrireId;
+import com.gestioneleves.apieleves.mapper.InscrireMapper;
+import com.gestioneleves.apieleves.service.InscrireService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,31 +17,26 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/inscription")
 @RequiredArgsConstructor
-public class InscriptionController {
+public class InscrireController {
 
-    private final InscriptionService inscriptionService;
+    private final InscrireService inscrireService;
 
     @GetMapping
     public List<InscriptionDTO> getAllInscriptions() {
-        return inscriptionService.getAllInscriptions().stream().map(InscriptionMapper::toDto).collect(Collectors.toList());
+        return inscrireService.getAllInscriptions().stream().map(InscrireMapper::toDto).collect(Collectors.toList());
     }
 
     @PostMapping
     public ResponseEntity<InscriptionDTO> createInscription(@Valid @RequestBody InscriptionCreateRequest request) {
-        InscriptionDTO dto = inscriptionService.createInscription(request);
-        URI location = URI.create(String.format("/api/inscription/%d/%d", dto.getIdEleve(), dto.getIdUtilisateur()));
+        InscriptionDTO dto = inscrireService.createInscription(request);
+        URI location = URI.create(String.format("/api/inscription/%d/%d", dto.getEleveId(), dto.getUtilisateurId()));
         return ResponseEntity.created(location).body(dto);
     }
 
-    @PutMapping("/{id}")
-    public InscriptionDTO editInscription(@PathVariable Long id, @Valid @RequestBody InscriptionDTO request) {
-        return inscriptionService.editInscription(id, request);
-    }
-
     // Chemin explicite avec 2 IDs
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInscription(@PathVariable Long id) {
-        inscriptionService.deleteInscription(id);
+    @DeleteMapping("/{eleveId}/{utilisateurId}")
+    public ResponseEntity<Void> deleteInscription(@PathVariable Long eleveId, @PathVariable Long utilisateurId) {
+        inscrireService.deleteInscription(new InscrireId(eleveId, utilisateurId));
         return ResponseEntity.noContent().build();
     }
 }

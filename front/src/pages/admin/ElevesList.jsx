@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { Pencil, Trash2, UserRoundPlus } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
@@ -13,7 +14,8 @@ export default function ElevesList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState({ content: [], totalElements: 0, number: 0, size })
-
+  const [classe, setClasse] = useState('')
+  const [classes, setClasses] = useState([])
   const { show } = useToast()
 
 
@@ -30,7 +32,12 @@ export default function ElevesList() {
     setLoading(true)
     setError('')
     try {
-      const res = await api.listEleves({ page, size, ...(q ? { q } : {}) })
+      const res = await api.listEleves({
+        page,
+        size,
+        ...(q ? { q } : {}),
+        ...(classe ? { classe } : {})
+      })
       setData(res)
     } catch (e) {
       setError(e?.message || 'Erreur de chargement')
@@ -38,6 +45,20 @@ export default function ElevesList() {
       setLoading(false)
     }
   }
+
+
+useEffect(() => {
+  async function loadClasses() {
+    try {
+      const res = await api.listClasses();
+      setClasses(res.content || []);
+    } catch (e) {
+      console.error('Erreur lors du chargement des classes', e);
+      setClasses([]);
+    }
+  }
+  loadClasses();
+}, []);
 
   useEffect(() => {
     load()
@@ -51,8 +72,8 @@ export default function ElevesList() {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-primary" onClick={() => startEdit(row)}>Éditer</button>
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button onClick={() => startEdit(row)}><Pencil className="text-gray-500"/></button>
+          <button onClick={() => askDelete(row)}><Trash2 className="text-red-600"/></button>
         </div>
       )
     }
@@ -135,77 +156,81 @@ export default function ElevesList() {
   }
 
   return (
-    <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Élèves</h1>
-          <p className="text-sm text-gray-600">Liste des élèves. Recherchez par nom/prénom.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            className="input"
-            placeholder="Rechercher (nom/prénom)"
-            value={q}
-            onChange={(e) => { setPage(0); setQ(e.target.value) }}
-          />
-          <button className="btn btn-primary" onClick={startCreate}>
-            Nouveau
-          </button>
-        </div>
-      </header>
+    <div className="bg-white rounded-xl p-6 ">
+      <div className="space-y-4">
 
-      {loading && <div className="text-sm text-gray-500">Chargement…</div>}
-      {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-lg font-semibold">Elèves</h1>
+            <p className="text-sm text-gray-600">Liste des Elèves. Filtrez par classes si nécessaire.</p>
+          </div>
+          <div className="flex items-center gap-2 ">
+            <label className="label">Classe</label>
+            <select className="input w-40" value={classe} onChange={(e) => { setPage(0); setClasse(e.target.value) }}>
+              <option value="">Tous</option>
+              {classes.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
+            </select>
+            <button className="btn btn-primary" onClick={startCreate}>
+              <UserRoundPlus className="mr-2" />Nouveau
+            </button>
+          </div>
+        </header>
 
-      {!loading && !error && (
-        <>
-          <Table columns={columns} data={data?.content || []} keyField="idEleve" />
-          <Pagination
-            page={data?.number ?? page}
-            size={data?.size ?? size}
-            totalElements={data?.totalElements ?? 0}
-            onPageChange={(p) => setPage(p)}
-          />
-        </>
-      )}
+        {loading && <div className="text-sm text-gray-500">Chargement…</div>}
+        {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
-      <Modal
-        open={openModal}
-        onClose={() => { if (!saving) setOpenModal(false) }}
-        title={editing ? 'Éditer un élève' : 'Créer un élève'}
-        actions={(
+        {!loading && !error && (
           <>
-            <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
-            <button className="btn btn-primary" onClick={saveEleve} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+            <Table columns={columns} data={data?.content || []} keyField="idEleve" />
+            <Pagination
+              page={data?.number ?? page}
+              size={data?.size ?? size}
+              totalElements={data?.totalElements ?? 0}
+              onPageChange={(p) => setPage(p)}
+            />
           </>
         )}
-      >
-        {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
-        <form onSubmit={saveEleve} className="space-y-3">
-          <div>
-            <label className="label">Nom</label>
-            <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Prénom</label>
-            <input className="input" value={form.prenom} onChange={(e) => setForm({ ...form, prenom: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Date de naissance</label>
-            <input type="date" className="input" value={form.dateNaissance} onChange={(e) => setForm({ ...form, dateNaissance: e.target.value })} />
-          </div>
-        </form>
-      </Modal>
 
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Supprimer l’élève"
-        message={toDelete ? `Confirmez la suppression de ${toDelete.prenom} ${toDelete.nom} (ID ${toDelete.idEleve}) ?` : ''}
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
-        onConfirm={confirmDelete}
-        onCancel={() => setConfirmOpen(false)}
-      />
+        <Modal
+          open={openModal}
+          onClose={() => { if (!saving) setOpenModal(false) }}
+          title={editing ? 'Éditer un élève' : 'Créer un élève'}
+          actions={(
+            <>
+              <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
+              <button className="btn btn-primary" onClick={saveEleve} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+            </>
+          )}
+        >
+          {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
+          <form onSubmit={saveEleve} className="space-y-3">
+            <div>
+              <label className="label">Nom</label>
+              <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Prénom</label>
+              <input className="input" value={form.prenom} onChange={(e) => setForm({ ...form, prenom: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Date de naissance</label>
+              <input type="date" className="input" value={form.dateNaissance} onChange={(e) => setForm({ ...form, dateNaissance: e.target.value })} />
+            </div>
+          </form>
+        </Modal>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Supprimer l’élève"
+          message={toDelete ? `Confirmez la suppression de ${toDelete.prenom} ${toDelete.nom} (ID ${toDelete.idEleve}) ?` : ''}
+          confirmLabel="Supprimer"
+          cancelLabel="Annuler"
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmOpen(false)}
+        />
+
+      </div>
     </div>
   )
 }
+

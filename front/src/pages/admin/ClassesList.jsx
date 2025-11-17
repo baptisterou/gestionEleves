@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { HousePlus, Pencil, Trash2 } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
@@ -80,8 +81,8 @@ export default function ClassesList() {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-primary" onClick={() => startEdit(row)}>Éditer</button>
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button onClick={() => startEdit(row)}><Pencil className="text-gray-500"/></button>
+          <button onClick={() => askDelete(row)}><Trash2 className="text-red-600"/></button>
         </div>
       )
     }
@@ -116,7 +117,7 @@ export default function ClassesList() {
     if (!values.niveau?.trim()) return 'Le niveau est requis'
     if (!values.annee?.trim()) return "L'année est requise"
     if (!/^\d{4}\/\d{4}$/.test(values.annee)) return "L'année doit être au format 2024/2025"
-    const [a,b] = values.annee.split('/').map(Number)
+    const [a, b] = values.annee.split('/').map(Number)
     if (b !== a + 1) return "L'année doit être au format 2024/2025 (droite = gauche + 1)"
     if (values.idEnseignant && !Number.isFinite(Number(values.idEnseignant))) return "L'identifiant enseignant doit être numérique"
     return ''
@@ -170,87 +171,89 @@ export default function ClassesList() {
   }
 
   return (
-    <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Classes</h1>
-          <p className="text-sm text-gray-600">Liste des classes.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="btn btn-primary" onClick={startCreate}>
-            Nouvelle classe
-          </button>
-        </div>
-      </header>
+    <div className="bg-white rounded-xl p-6 ">
+      <div className="space-y-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-lg font-semibold">Classes</h1>
+            <p className="text-sm text-gray-600">Liste des classes.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="btn btn-primary" onClick={startCreate}>
+              <HousePlus className="mr-2" /> Nouveau
+            </button>
+          </div>
+        </header>
 
-      {loading && <div className="text-sm text-gray-500">Chargement…</div>}
-      {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+        {loading && <div className="text-sm text-gray-500">Chargement…</div>}
+        {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
-      {!loading && !error && (
-        <>
-          <Table columns={columns} data={data?.content || []} keyField="idClasse" />
-          <Pagination
-            page={data?.number ?? page}
-            size={data?.size ?? size}
-            totalElements={data?.totalElements ?? 0}
-            onPageChange={(p) => setPage(p)}
-          />
-        </>
-      )}
-
-      <Modal
-        open={openModal}
-        onClose={() => { if (!saving) setOpenModal(false) }}
-        title={editing ? 'Éditer une classe' : 'Créer une classe (nom, niveau, année)'}
-        actions={(
+        {!loading && !error && (
           <>
-            <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
-            <button className="btn btn-primary" onClick={saveClasse} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+            <Table columns={columns} data={data?.content || []} keyField="idClasse" />
+            <Pagination
+              page={data?.number ?? page}
+              size={data?.size ?? size}
+              totalElements={data?.totalElements ?? 0}
+              onPageChange={(p) => setPage(p)}
+            />
           </>
         )}
-      >
-        {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
-        <form onSubmit={saveClasse} className="space-y-3">
-          <div>
-            <label className="label">Nom</label>
-            <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Niveau</label>
-            <input className="input" value={form.niveau} onChange={(e) => setForm({ ...form, niveau: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Année scolaire</label>
-            <input
-              className="input"
-              placeholder="2024/2025"
-              value={form.annee}
-              onChange={(e) => setForm({ ...form, annee: e.target.value })}
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">Format: YYYY/YYYY+1 (ex: 2024/2025)</p>
-          </div>
-          <div>
-            <label className="label">Enseignant</label>
-            <select className="input" value={form.idEnseignant} onChange={(e) => setForm({ ...form, idEnseignant: e.target.value })} disabled={loadingEnseignants}>
-              <option value="">(Optionnel) Sélectionner un enseignant</option>
-              {enseignants.map(opt => (
-                <option key={opt.id} value={opt.id}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-        </form>
-      </Modal>
 
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Supprimer la classe"
-        message={toDelete ? `Confirmez la suppression de la classe "${toDelete.nom}" (ID ${toDelete.idClasse}) ?` : ''}
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
-        onConfirm={confirmDelete}
-        onCancel={() => setConfirmOpen(false)}
-      />
+        <Modal
+          open={openModal}
+          onClose={() => { if (!saving) setOpenModal(false) }}
+          title={editing ? 'Éditer une classe' : 'Créer une classe (nom, niveau, année)'}
+          actions={(
+            <>
+              <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
+              <button className="btn btn-primary" onClick={saveClasse} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+            </>
+          )}
+        >
+          {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
+          <form onSubmit={saveClasse} className="space-y-3">
+            <div>
+              <label className="label">Nom</label>
+              <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Niveau</label>
+              <input className="input" value={form.niveau} onChange={(e) => setForm({ ...form, niveau: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Année scolaire</label>
+              <input
+                className="input"
+                placeholder="2024/2025"
+                value={form.annee}
+                onChange={(e) => setForm({ ...form, annee: e.target.value })}
+                required
+              />
+              <p className="mt-1 text-xs text-gray-500">Format: YYYY/YYYY+1 (ex: 2024/2025)</p>
+            </div>
+            <div>
+              <label className="label">Enseignant</label>
+              <select className="input" value={form.idEnseignant} onChange={(e) => setForm({ ...form, idEnseignant: e.target.value })} disabled={loadingEnseignants}>
+                <option value="">(Optionnel) Sélectionner un enseignant</option>
+                {enseignants.map(opt => (
+                  <option key={opt.id} value={opt.id}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          </form>
+        </Modal>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Supprimer la classe"
+          message={toDelete ? `Confirmez la suppression de la classe "${toDelete.nom}" (ID ${toDelete.idClasse}) ?` : ''}
+          confirmLabel="Supprimer"
+          cancelLabel="Annuler"
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      </div>
     </div>
   )
 }
