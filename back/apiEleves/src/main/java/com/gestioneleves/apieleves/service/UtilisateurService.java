@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
+@Transactional
 public class UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
@@ -38,7 +39,6 @@ public class UtilisateurService {
     }
 
     // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
-    @Transactional
     public UtilisateurDTO createUtilisateur(UtilisateurCreateRequest request) {
         Utilisateur toSave = UtilisateurMapper.fromCreate(request);
         Utilisateur saved = createUtilisateur(toSave); // réutilise la logique existante
@@ -46,7 +46,6 @@ public class UtilisateurService {
     }
 
     // Création ADMIN: permet de spécifier le rôle explicitement
-    @Transactional
     public UtilisateurDTO createUtilisateurAsAdmin(UtilisateurAdminCreateRequest request) {
         Utilisateur toSave = UtilisateurMapper.fromAdminCreate(request);
         // normaliser email
@@ -65,7 +64,6 @@ public class UtilisateurService {
         return UtilisateurMapper.toDto(saved);
     }
 
-    @Transactional
     public Utilisateur createUtilisateur (Utilisateur utilisateur){
         // normaliser email
         if (utilisateur.getEmail() != null) {
@@ -85,7 +83,6 @@ public class UtilisateurService {
     }
 
     // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
-    @Transactional
     public UtilisateurDTO modifierUtilisateur(Long id, UtilisateurUpdateRequest request) {
         // Construire un "partial" à partir de la request et réutiliser la logique existante
         Utilisateur part = UtilisateurMapper.fromUpdate(request);
@@ -93,7 +90,6 @@ public class UtilisateurService {
         return UtilisateurMapper.toDto(updated);
     }
 
-    @Transactional
     public Utilisateur modifierUtilisateur(Long id, Utilisateur utilisateur){
         // Récupération ou exception si non trouvé
         Utilisateur existing = utilisateurRepository.findById(id)
@@ -127,7 +123,6 @@ public class UtilisateurService {
     }
 
     // Changement de rôle ADMIN-only
-    @Transactional
     public UtilisateurDTO updateRole(Long id, UtilisateurRoleUpdateRequest request) {
         Utilisateur existing = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable : " + id));

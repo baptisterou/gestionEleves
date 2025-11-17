@@ -9,6 +9,7 @@ import com.gestioneleves.apieleves.mapper.EleveMapper;
 import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.List;
  * Contient la logique métier relative aux opérations sur les élèves
  */
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
+@Transactional
 public class EleveService {
 
     private final EleveRepository eleveRepository;
