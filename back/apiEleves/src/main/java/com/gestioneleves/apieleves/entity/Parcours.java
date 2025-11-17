@@ -4,34 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "inscription")
+@Table(name = "representation")
 @Getter
 @Setter
-@ToString(exclude = {"eleve", "utilisateur"})
+@ToString(exclude = {"eleve", "classe"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Inscription {
+public class Parcours {
 
     @Id // Marque ce champ comme clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
     @EqualsAndHashCode.Include
-    @Column(name = "id_inscription")
-    private Long idInscription;
-
-    @Column(name = "DateInscrip")
-    private LocalDate dateInscrip;
+    @Column(name = "id_parcours")
+    private Long idParcours;
 
     @ManyToOne
     @JoinColumn(name = "id_eleve")
     private Eleve eleve;
 
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur")
-    private Utilisateur utilisateur;
-
-
+    @JoinColumn(name = "id_classe")
+    private Classe classe;
 }

@@ -25,7 +25,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity // Indique que cette classe est une entité JPA
 @Table(name = "matiere") // Spécifie le nom de la table en base de données
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Matiere {
 
     /**

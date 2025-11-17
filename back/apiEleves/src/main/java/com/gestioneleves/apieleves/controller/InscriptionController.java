@@ -36,7 +36,6 @@ public class InscriptionController {
         return inscriptionService.editInscription(id, request);
     }
 
-    // Chemin explicite avec 2 IDs
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInscription(@PathVariable Long id) {
         inscriptionService.deleteInscription(id);

@@ -40,7 +40,6 @@ public class RepresentationController {
         return representationService.editRepresentation(id, request);
     }
 
-    // Chemin explicite avec 2 IDs
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRepresentation(@PathVariable Long id) {
         representationService.deleteRepresentation(id);
