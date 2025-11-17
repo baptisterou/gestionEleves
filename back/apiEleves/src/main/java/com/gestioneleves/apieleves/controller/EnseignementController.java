@@ -36,7 +36,6 @@ public class EnseignementController {
         return enseignementService.editEnseignement(id, request);
     }
 
-    // Chemin explicite avec 2 IDs
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEnseignement(@PathVariable Long id) {
         enseignementService.deleteEnseignement(id);

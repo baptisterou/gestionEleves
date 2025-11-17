@@ -26,7 +26,6 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "utilisateur")
-@com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +39,6 @@ public class Utilisateur implements UserDetails {
     @Column(name="email",unique = true, length = 100, nullable = false)
     private String email;
     @Column(name="mot_de_passe", nullable = false)
-    @JsonIgnore
     private String motDePasse;
     @Column(name="date_naissance", nullable = false)
     private LocalDate dateNaissance;

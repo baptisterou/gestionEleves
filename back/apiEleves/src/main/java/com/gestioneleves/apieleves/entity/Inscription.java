@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Inscription {
 
     @Id // Marque ce champ comme clé primaire

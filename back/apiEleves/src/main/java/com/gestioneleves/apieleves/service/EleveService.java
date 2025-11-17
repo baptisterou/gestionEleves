@@ -77,13 +77,6 @@ public class EleveService {
             existing.setDateNaissance(eleve.getDateNaissance());
         }
 
-        // Mise à jour de l'objet lié
-        if (eleve.getUtilisateur() != null && eleve.getUtilisateur().getIdUtilisateur() != null) {
-            Utilisateur representant = utilisateurRepository.findById(eleve.getUtilisateur().getIdUtilisateur())
-                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getUtilisateur().getIdUtilisateur()));
-            existing.setUtilisateur(representant);
-        }
-
         // Sauvegarde et retour
         return eleveRepository.save(existing);
     }

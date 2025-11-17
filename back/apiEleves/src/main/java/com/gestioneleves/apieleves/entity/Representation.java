@@ -12,7 +12,6 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Representation {
 
     @Id // Marque ce champ comme clé primaire

@@ -6,5 +6,7 @@ import lombok.Data;
 @Data
 public class ParcoursCreateRequest {
     @NotNull
-
+    private Long idEleve;
+    @NotNull
+    private Long idClasse;
 }
