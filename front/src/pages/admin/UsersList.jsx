@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { Pencil, Trash2, UserRoundPlus } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
@@ -54,8 +55,8 @@ export default function UsersList() {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-primary" onClick={() => startEdit(row)}>Éditer</button>
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button className="text-black" onClick={() => startEdit(row)}><Pencil className="text-gray-500"/></button>
+          <button className="text-red-600" onClick={() => askDelete(row)}><Trash2 /></button>
         </div>
       )
     }
@@ -159,120 +160,124 @@ export default function UsersList() {
   }
 
   return (
-    <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Utilisateurs</h1>
-          <p className="text-sm text-gray-600">Liste des utilisateurs. Filtrez par rôle si nécessaire.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <label className="label">Rôle</label>
-          <select className="input w-40" value={role} onChange={(e) => { setPage(0); setRole(e.target.value) }}>
-            <option value="">Tous</option>
-            {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-          </select>
-          <button className="btn btn-primary" onClick={startCreate}>
-            Nouveau
-          </button>
-        </div>
-      </header>
-
-      {loading && <div className="text-sm text-gray-500">Chargement…</div>}
-      {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
-      {!loading && !error && (
-        <>
-          <Table columns={columns} data={data?.content || []} keyField="idUtilisateur" />
-          <Pagination
-            page={data?.number ?? page}
-            size={data?.size ?? size}
-            totalElements={data?.totalElements ?? 0}
-            onPageChange={(p) => setPage(p)}
-          />
-        </>
-      )}
-
-      <Modal
-        open={openModal}
-        onClose={() => { if (!saving) setOpenModal(false) }}
-        title={editing ? 'Éditer un utilisateur' : 'Créer un utilisateur'}
-        actions={(
-          <>
-            <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
-            <button className="btn btn-primary" onClick={saveUser} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
-          </>
-        )}
-      >
-        {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
-        <form onSubmit={saveUser} className="space-y-3">
+    <div className="bg-white rounded-xl p-6 ">
+      <div className="space-y-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <label className="label">Nom</label>
-            <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
+            <h1 className="text-lg font-semibold">Utilisateurs</h1>
+            <p className="text-sm text-gray-600">Liste des utilisateurs. Filtrez par rôle si nécessaire.</p>
           </div>
-          <div>
-            <label className="label">Prénom</label>
-            <input className="input" value={form.prenom} onChange={(e) => setForm({ ...form, prenom: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Email</label>
-            <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-          </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <label className="label">Téléphone</label>
-              <input className="input" value={form.numTel} onChange={(e) => setForm({ ...form, numTel: e.target.value })} />
-            </div>
-            <div>
-              <label className="label">Date de naissance</label>
-              <input type="date" className="input" value={form.dateNaissance} onChange={(e) => setForm({ ...form, dateNaissance: e.target.value })} />
-            </div>
-          </div>
-          <div>
+          <div className="flex items-center gap-2 ">
             <label className="label">Rôle</label>
-            <select className="input" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+            <select className="input w-40" value={role} onChange={(e) => { setPage(0); setRole(e.target.value) }}>
+              <option value="">Tous</option>
               {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
+            <button className="btn btn-primary" onClick={startCreate}>
+              <UserRoundPlus className="mr-2"/>Nouveau
+            </button>
           </div>
+        </header>
 
-          {!editing && (
+        {loading && <div className="text-sm text-gray-500">Chargement…</div>}
+        {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+
+        {!loading && !error && (
+          <>
+           <div className="overflow-hidden rounded-xl">
+            <Table columns={columns} data={data?.content || []} keyField="idUtilisateur" />
+            <Pagination
+              page={data?.number ?? page}
+              size={data?.size ?? size}
+              totalElements={data?.totalElements ?? 0}
+              onPageChange={(p) => setPage(p)}
+            />
+            </div>
+          </>
+        )}
+
+        <Modal
+          open={openModal}
+          onClose={() => { if (!saving) setOpenModal(false) }}
+          title={editing ? 'Éditer un utilisateur' : 'Créer un utilisateur'}
+          actions={(
             <>
-              <div>
-                <label className="label">Mot de passe</label>
-                <input
-                  type="password"
-                  className="input"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="Au moins 8 caractères, 1 lettre et 1 chiffre"
-                  required
-                />
-              </div>
-              <div>
-                <label className="label">Confirmer le mot de passe</label>
-                <input
-                  type="password"
-                  className="input"
-                  value={form.confirmPassword}
-                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                  placeholder="Retapez le mot de passe"
-                  required
-                />
-              </div>
-              <p className="text-xs text-gray-500">Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre et un chiffre.</p>
+              <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
+              <button className="btn btn-primary" onClick={saveUser} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
             </>
           )}
-        </form>
-      </Modal>
+        >
+          {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700 rounded-xl">{formError}</div>}
+          <form onSubmit={saveUser} className="space-y-3">
+            <div>
+              <label className="label">Nom</label>
+              <input className="input" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Prénom</label>
+              <input className="input" value={form.prenom} onChange={(e) => setForm({ ...form, prenom: e.target.value })} required />
+            </div>
+            <div>
+              <label className="label">Email</label>
+              <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label className="label">Téléphone</label>
+                <input className="input" value={form.numTel} onChange={(e) => setForm({ ...form, numTel: e.target.value })} />
+              </div>
+              <div>
+                <label className="label">Date de naissance</label>
+                <input type="date" className="input" value={form.dateNaissance} onChange={(e) => setForm({ ...form, dateNaissance: e.target.value })} />
+              </div>
+            </div>
+            <div>
+              <label className="label">Rôle</label>
+              <select className="input" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+                {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+            </div>
 
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Supprimer l’utilisateur"
-        message={toDelete ? `Confirmez la suppression de ${toDelete.prenom} ${toDelete.nom} (${toDelete.email}) ?` : ''}
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
-        onConfirm={confirmDelete}
-        onCancel={() => setConfirmOpen(false)}
-      />
+            {!editing && (
+              <>
+                <div>
+                  <label className="label">Mot de passe</label>
+                  <input
+                    type="password"
+                    className="input"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    placeholder="Au moins 8 caractères, 1 lettre et 1 chiffre"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label">Confirmer le mot de passe</label>
+                  <input
+                    type="password"
+                    className="input"
+                    value={form.confirmPassword}
+                    onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                    placeholder="Retapez le mot de passe"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-gray-500">Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre et un chiffre.</p>
+              </>
+            )}
+          </form>
+        </Modal>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Supprimer l’utilisateur"
+          message={toDelete ? `Confirmez la suppression de ${toDelete.prenom} ${toDelete.nom} (${toDelete.email}) ?` : ''}
+          confirmLabel="Supprimer"
+          cancelLabel="Annuler"
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      </div>
     </div>
   )
 }

@@ -1,33 +1,66 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# === OS files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# === IDE / Editors ===
+.idea/
 *.iml
+*.iws
 *.ipr
+out/
+compiler.xml
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# === Java / Build tools ===
+# Maven/Gradle outputs
+target/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+.gradle/
+.mvn/
+.settings/
+.classpath
+.project
+bin/
 
-### VS Code ###
-.vscode/
+# Spring Boot default log
+spring.log
+
+# === Node / Frontend ===
+node_modules/
+front/node_modules/
+# Common build outputs
+front/dist/
+front/build/
+dist/
+.cache/
+.next/
+.nuxt/
+.vite/
+coverage/
+
+# === Env files (keep examples) ===
+.env
+.env.*
+!.env.example
+!.env.template
+front/.env
+
+# === Logs ===
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Docker (runtime artifacts) ===
+*.pid
+*.seed
+*.pid.lock
+
+# === Misc ===
+*.swp
+*.swo
+*.tmp
+*.bak
