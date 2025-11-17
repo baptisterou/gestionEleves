@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { ChevronDown, ChevronRight, Users, Home, BookOpen, GraduationCap, BarChart } from 'lucide-react'
+import { ChevronDown, ChevronRight, Users, BookOpen, GraduationCap, School } from 'lucide-react'
 
 export default function AdminLayout() {
   const [open, setOpen] = useState(false)
@@ -23,7 +23,7 @@ export default function AdminLayout() {
               <MenuLink to="/admin/utilisateurs" label="Utilisateurs" icon={<Users size={16} />} />
               <MenuLink to="/admin/eleves" label="Élèves" icon={<GraduationCap size={16} />} />
               <MenuLink to="/admin/matieres" label="Matières" icon={<BookOpen size={16} />} />
-              <MenuLink to="/admin/stats" label="Statistiques" icon={<BarChart size={16} />} />
+              <MenuLink to="/admin/classes" label="Classes" icon={<School size={16} />} />
             </div>
           )}
         </nav>
