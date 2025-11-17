@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
-@ToString(exclude = {"enseignant"})
+@ToString(exclude = {"enseignements"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +31,9 @@ public class Classe {
     private String niveauClasse;
     private String anneeScolaire;
 
-    @ManyToOne
-    @JoinColumn(name = "id_enseignant")
-    private Utilisateur enseignant;
+    @OneToMany(mappedBy = "classe")
+    private List<Enseignement> enseignements;
+
+    @OneToMany(mappedBy = "classe")
+    private List<Parcours> parcours;
 }
