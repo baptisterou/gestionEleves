@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class EleveCreateRequest {
@@ -15,7 +15,7 @@ public class EleveCreateRequest {
     private String prenom;
     @NotNull
     @Past
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
     // Lier éventuellement à un utilisateur (responsable) existant
-    private Long utilisateurId;
+    private Long idUtilisateur;
 }

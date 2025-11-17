@@ -13,9 +13,9 @@ public class ClasseMapper {
         c.setNomClasse(req.getNomClasse());
         c.setNiveauClasse(req.getNiveauClasse());
         c.setAnneeScolaire(req.getAnneeScolaire());
-        if (req.getEnseignantId() != null) {
+        if (req.getIdEnseignant() != null) {
             Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getEnseignantId());
+            u.setIdUtilisateur(req.getIdEnseignant());
             c.setEnseignant(u);
         }
         return c;
@@ -25,9 +25,9 @@ public class ClasseMapper {
         if (req.getNomClasse() != null) target.setNomClasse(req.getNomClasse());
         if (req.getNiveauClasse() != null) target.setNiveauClasse(req.getNiveauClasse());
         if (req.getAnneeScolaire() != null) target.setAnneeScolaire(req.getAnneeScolaire());
-        if (req.getEnseignantId() != null) {
+        if (req.getIdEnseignant() != null) {
             Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getEnseignantId());
+            u.setIdUtilisateur(req.getIdEnseignant());
             target.setEnseignant(u);
         }
         return target;
@@ -39,7 +39,7 @@ public class ClasseMapper {
         dto.setNomClasse(c.getNomClasse());
         dto.setNiveauClasse(c.getNiveauClasse());
         dto.setAnneeScolaire(c.getAnneeScolaire());
-        if (c.getEnseignant() != null) dto.setEnseignantId(c.getEnseignant().getIdUtilisateur());
+        if (c.getEnseignant() != null) dto.setIdEnseignant(c.getEnseignant().getIdUtilisateur());
         return dto;
     }
 }

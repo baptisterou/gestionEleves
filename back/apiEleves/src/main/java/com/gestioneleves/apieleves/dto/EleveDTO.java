@@ -2,13 +2,13 @@ package com.gestioneleves.apieleves.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class EleveDTO {
     private Long idEleve;
     private String nom;
     private String prenom;
-    private Date dateNaissance;
-    private Long utilisateurId; // responsable id (optionnel)
+    private LocalDate dateNaissance;
+    private Long idUtilisateur; // responsable id (optionnel)
 }

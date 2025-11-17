@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,8 +26,7 @@ public class Note {
     @EqualsAndHashCode.Include
     private Long idNote;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateNote;
+    private LocalDate dateNote;
     private float coefNote;
     private float valeurNote;
 

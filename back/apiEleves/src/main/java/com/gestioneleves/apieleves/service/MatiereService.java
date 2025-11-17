@@ -1,7 +1,11 @@
 package com.gestioneleves.apieleves.service;
 
+import com.gestioneleves.apieleves.dto.MatiereCreateRequest;
+import com.gestioneleves.apieleves.dto.MatiereDTO;
+import com.gestioneleves.apieleves.dto.MatiereUpdateRequest;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.mapper.MatiereMapper;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +21,7 @@ import java.util.List;
  * Contient la logique métier relative aux opérations sur les matières
  */
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
+
 public class MatiereService {
 
     private final MatiereRepository matiereRepository;
@@ -26,6 +31,13 @@ public class MatiereService {
 
     public MatiereService(MatiereRepository matiereRepository) {
         this.matiereRepository = matiereRepository;
+    }
+
+    // Variante contrôleur-friendly
+    public MatiereDTO createMatiere(MatiereCreateRequest request) {
+        Matiere toSave = MatiereMapper.fromCreate(request);
+        Matiere saved = createMatiere(toSave);
+        return MatiereMapper.toDto(saved);
     }
 
     public Matiere createMatiere(Matiere matiere) {
@@ -38,6 +50,14 @@ public class MatiereService {
 
     public Page<Matiere> getAllMatieres(Pageable pageable) {
         return matiereRepository.findAll(pageable);
+    }
+
+    // Variante contrôleur-friendly
+    public MatiereDTO editMatiere(Long id, MatiereUpdateRequest request) {
+        Matiere current = getMatiereById(id);
+        Matiere updated = MatiereMapper.applyUpdate(current, request);
+        Matiere saved = editMatiere(id, updated);
+        return MatiereMapper.toDto(saved);
     }
 
     public Matiere editMatiere(Long id, Matiere matiere) {

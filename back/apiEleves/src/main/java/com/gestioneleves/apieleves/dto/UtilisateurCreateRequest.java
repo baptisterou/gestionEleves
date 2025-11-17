@@ -1,12 +1,13 @@
 package com.gestioneleves.apieleves.dto;
 
-import com.gestioneleves.apieleves.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Payload pour la création d'un utilisateur.
@@ -21,9 +22,9 @@ public class UtilisateurCreateRequest {
     public String email;
     @NotBlank @Size(min = 8)
     public String motDePasse;
-    @NotNull
-    public Date dateNaissance;
+    @NotNull @Past
+    public LocalDate dateNaissance;
     @NotBlank
+    @Pattern(regexp = "^[0-9+ .-]{8,20}$")
     public String numTel;
-    public Role role;
 }

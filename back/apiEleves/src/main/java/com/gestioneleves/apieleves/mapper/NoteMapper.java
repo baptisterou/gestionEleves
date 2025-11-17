@@ -8,6 +8,8 @@ import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Matiere;
 import com.gestioneleves.apieleves.entity.Note;
 
+import java.time.LocalDate;
+
 public class NoteMapper {
 
     public static Note fromCreate(NoteCreateRequest req) {
@@ -15,19 +17,19 @@ public class NoteMapper {
         n.setDateNote(req.getDateNote());
         n.setCoefNote(req.getCoefNote());
         n.setValeurNote(req.getValeurNote());
-        if (req.getEleveId() != null) {
+        if (req.getIdEleve() != null) {
             Eleve e = new Eleve();
-            e.setIdEleve(req.getEleveId());
+            e.setIdEleve(req.getIdEleve());
             n.setEleve(e);
         }
-        if (req.getMatiereId() != null) {
+        if (req.getIdMatiere() != null) {
             Matiere m = new Matiere();
-            m.setIdMatiere(req.getMatiereId());
+            m.setIdMatiere(req.getIdMatiere());
             n.setMatiere(m);
         }
-        if (req.getBulletinId() != null) {
+        if (req.getIdBulletin() != null) {
             Bulletin b = new Bulletin();
-            b.setIdBulletin(req.getBulletinId());
+            b.setIdBulletin(req.getIdBulletin());
             n.setBulletin(b);
         }
         return n;
@@ -37,19 +39,19 @@ public class NoteMapper {
         if (req.getDateNote() != null) target.setDateNote(req.getDateNote());
         if (req.getCoefNote() != null) target.setCoefNote(req.getCoefNote());
         if (req.getValeurNote() != null) target.setValeurNote(req.getValeurNote());
-        if (req.getEleveId() != null) {
+        if (req.getIdEleve() != null) {
             Eleve e = new Eleve();
-            e.setIdEleve(req.getEleveId());
+            e.setIdEleve(req.getIdEleve());
             target.setEleve(e);
         }
-        if (req.getMatiereId() != null) {
+        if (req.getIdMatiere() != null) {
             Matiere m = new Matiere();
-            m.setIdMatiere(req.getMatiereId());
+            m.setIdMatiere(req.getIdMatiere());
             target.setMatiere(m);
         }
-        if (req.getBulletinId() != null) {
+        if (req.getIdBulletin() != null) {
             Bulletin b = new Bulletin();
-            b.setIdBulletin(req.getBulletinId());
+            b.setIdBulletin(req.getIdBulletin());
             target.setBulletin(b);
         }
         return target;
@@ -61,9 +63,9 @@ public class NoteMapper {
         dto.setDateNote(n.getDateNote());
         dto.setCoefNote(n.getCoefNote());
         dto.setValeurNote(n.getValeurNote());
-        if (n.getEleve() != null) dto.setEleveId(n.getEleve().getIdEleve());
-        if (n.getMatiere() != null) dto.setMatiereId(n.getMatiere().getIdMatiere());
-        if (n.getBulletin() != null) dto.setBulletinId(n.getBulletin().getIdBulletin());
+        if (n.getEleve() != null) dto.setIdEleve(n.getEleve().getIdEleve());
+        if (n.getMatiere() != null) dto.setIdMatiere(n.getMatiere().getIdMatiere());
+        if (n.getBulletin() != null) dto.setIdBulletin(n.getBulletin().getIdBulletin());
         return dto;
     }
 }

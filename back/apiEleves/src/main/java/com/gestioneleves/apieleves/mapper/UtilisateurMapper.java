@@ -1,5 +1,7 @@
 package com.gestioneleves.apieleves.mapper;
 
+import com.gestioneleves.apieleves.dto.UtilisateurAdminCreateRequest;
+import com.gestioneleves.apieleves.dto.UtilisateurAdminDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurCreateRequest;
 import com.gestioneleves.apieleves.dto.UtilisateurDTO;
 import com.gestioneleves.apieleves.dto.UtilisateurUpdateRequest;
@@ -15,6 +17,20 @@ public final class UtilisateurMapper {
     public static UtilisateurDTO toDto(Utilisateur entity) {
         if (entity == null) return null;
         UtilisateurDTO dto = new UtilisateurDTO();
+        dto.idUtilisateur = entity.getIdUtilisateur();
+        dto.nom = entity.getNom();
+        dto.prenom = entity.getPrenom();
+        dto.email = entity.getEmail();
+        dto.numTel = entity.getNumTel();
+        dto.dateNaissance = entity.getDateNaissance();
+        // Expose role so that admin UI (and others if needed) can display it
+        dto.role = entity.getRole();
+        return dto;
+    }
+
+    public static UtilisateurAdminDTO toAdminDto(Utilisateur entity) {
+        if (entity == null) return null;
+        UtilisateurAdminDTO dto = new UtilisateurAdminDTO();
         dto.idUtilisateur = entity.getIdUtilisateur();
         dto.nom = entity.getNom();
         dto.prenom = entity.getPrenom();
@@ -39,7 +55,19 @@ public final class UtilisateurMapper {
         u.setMotDePasse(req.motDePasse);
         u.setDateNaissance(req.dateNaissance);
         u.setNumTel(req.numTel);
-        if (req.role != null) u.setRole(req.role);
+        return u;
+    }
+
+    public static Utilisateur fromAdminCreate(UtilisateurAdminCreateRequest req) {
+        if (req == null) return null;
+        Utilisateur u = new Utilisateur();
+        u.setNom(req.nom);
+        u.setPrenom(req.prenom);
+        u.setEmail(req.email);
+        u.setMotDePasse(req.motDePasse);
+        u.setDateNaissance(req.dateNaissance);
+        u.setNumTel(req.numTel);
+        u.setRole(req.role);
         return u;
     }
 
@@ -51,7 +79,6 @@ public final class UtilisateurMapper {
         if (req.motDePasse != null) target.setMotDePasse(req.motDePasse);
         if (req.dateNaissance != null) target.setDateNaissance(req.dateNaissance);
         if (req.numTel != null) target.setNumTel(req.numTel);
-        if (req.role != null) target.setRole(req.role);
     }
 
     public static Utilisateur fromUpdate(UtilisateurUpdateRequest req) {
@@ -63,7 +90,6 @@ public final class UtilisateurMapper {
         if (req.motDePasse != null) u.setMotDePasse(req.motDePasse);
         if (req.dateNaissance != null) u.setDateNaissance(req.dateNaissance);
         if (req.numTel != null) u.setNumTel(req.numTel);
-        if (req.role != null) u.setRole(req.role);
         return u;
     }
 }

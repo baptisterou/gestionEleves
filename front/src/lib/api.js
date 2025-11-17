@@ -70,12 +70,18 @@ export const api = {
 
   login: (email, password) => request('/auth/login', { method: 'POST', body: { email, password } }),
   me: () => request('/users/me'),
-
-
+  
+  
   listUsers: (params) => request('/api/utilisateur', { method: 'GET', body: params }),
   getUser: (id) => request(`/api/utilisateur/${id}`),
+  // Création générique (public/standard) – ne permet pas de définir le rôle
   createUser: (payload) => request('/api/utilisateur', { method: 'POST', body: payload }),
+  // Création ADMIN – permet de définir le rôle explicitement
+  createUserAdmin: (payload) => request('/api/utilisateur/admin', { method: 'POST', body: payload }),
+  // Mise à jour générique – ne change pas le rôle
   updateUser: (id, payload) => request(`/api/utilisateur/${id}`, { method: 'PUT', body: payload }),
+  // Changement de rôle (ADMIN uniquement)
+  updateUserRole: (id, payload) => request(`/api/utilisateur/${id}/role`, { method: 'PUT', body: payload }),
   deleteUser: (id) => request(`/api/utilisateur/${id}`, { method: 'DELETE' }),
 
   listEleves: (params) => request('/api/eleve', { method: 'GET', body: params }),
@@ -98,7 +104,7 @@ export const api = {
 
   listInscriptions: (params) => request('/api/inscription', { method: 'GET', body: params }),
   createInscription: (payload) => request('/api/inscription', { method: 'POST', body: payload }),
-  deleteInscription: (id) => request(`/api/inscription/${id}`, { method: 'DELETE' }),
+  deleteInscription: (eleveId, utilisateurId) => request(`/api/inscription/${eleveId}/${utilisateurId}`, { method: 'DELETE' }),
 
   listNotes: (params) => request('/api/note', { method: 'GET', body: params }),
   createNote: (payload) => request('/api/note', { method: 'POST', body: payload }),

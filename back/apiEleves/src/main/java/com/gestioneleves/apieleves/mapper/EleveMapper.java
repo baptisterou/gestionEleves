@@ -6,6 +6,8 @@ import com.gestioneleves.apieleves.dto.EleveUpdateRequest;
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.entity.Utilisateur;
 
+import java.time.LocalDate;
+
 public class EleveMapper {
 
     public static Eleve fromCreate(EleveCreateRequest req) {
@@ -13,9 +15,9 @@ public class EleveMapper {
         e.setNom(req.getNom());
         e.setPrenom(req.getPrenom());
         e.setDateNaissance(req.getDateNaissance());
-        if (req.getUtilisateurId() != null) {
+        if (req.getIdUtilisateur() != null) {
             Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getUtilisateurId());
+            u.setIdUtilisateur(req.getIdUtilisateur());
             e.setUtilisateur(u);
         }
         return e;
@@ -25,9 +27,9 @@ public class EleveMapper {
         if (req.getNom() != null) target.setNom(req.getNom());
         if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
         if (req.getDateNaissance() != null) target.setDateNaissance(req.getDateNaissance());
-        if (req.getUtilisateurId() != null) {
+        if (req.getIdUtilisateur() != null) {
             Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getUtilisateurId());
+            u.setIdUtilisateur(req.getIdUtilisateur());
             target.setUtilisateur(u);
         }
         return target;
@@ -40,7 +42,7 @@ public class EleveMapper {
         dto.setPrenom(e.getPrenom());
         dto.setDateNaissance(e.getDateNaissance());
         if (e.getUtilisateur() != null) {
-            dto.setUtilisateurId(e.getUtilisateur().getIdUtilisateur());
+            dto.setIdUtilisateur(e.getUtilisateur().getIdUtilisateur());
         }
         return dto;
     }

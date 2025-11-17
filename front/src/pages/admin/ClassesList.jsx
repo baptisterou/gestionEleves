@@ -15,15 +15,18 @@ export default function ClassesList() {
 
   const { show } = useToast()
 
-
   const [openModal, setOpenModal] = useState(false)
   const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ nom: '', niveau: '', annee: '' })
+  const [form, setForm] = useState({ nom: '', niveau: '', annee: '', idEnseignant: '' })
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
 
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [toDelete, setToDelete] = useState(null)
+
+  // Liste des enseignants pour le dropdown
+  const [enseignants, setEnseignants] = useState([])
+  const [loadingEnseignants, setLoadingEnseignants] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -38,15 +41,42 @@ export default function ClassesList() {
     }
   }
 
+  async function loadEnseignants() {
+    setLoadingEnseignants(true)
+    try {
+      const res = await api.listUsers({ page: 0, size: 1000 })
+      const list = res?.content || []
+      const onlyTeachers = list.filter(u => u.role === 'ENSEIGNANT')
+      setEnseignants(onlyTeachers.map(u => ({ id: u.idUtilisateur, label: `${u.prenom} ${u.nom}` })))
+    } catch (e) {
+      // silencieux
+    } finally {
+      setLoadingEnseignants(false)
+    }
+  }
+
   useEffect(() => {
     load()
   }, [page, size])
+
+  useEffect(() => {
+    loadEnseignants()
+  }, [])
 
   const columns = useMemo(() => ([
     { key: 'idClasse', header: 'ID' },
     { key: 'nomClasse', header: 'Nom', render: (v, row) => row.nom ?? row.nomClasse ?? '' },
     { key: 'niveauClasse', header: 'Niveau', render: (v, row) => row.niveau ?? row.niveauClasse ?? '' },
     { key: 'anneeScolaire', header: 'Année', render: (v, row) => row.anneeScolaire ?? row.annee ?? '' },
+    {
+      key: 'enseignant',
+      header: 'Enseignant',
+      render: (_v, row) => {
+        const id = row.idEnseignant ?? row.enseignant?.idUtilisateur
+        const opt = enseignants.find((e) => e.id === id)
+        return opt ? opt.label : (id ?? '')
+      },
+    },
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
@@ -59,7 +89,7 @@ export default function ClassesList() {
 
   function startCreate() {
     setEditing(null)
-    setForm({ nom: '', niveau: '', annee: '' })
+    setForm({ nom: '', niveau: '', annee: '', idEnseignant: '' })
     setFormError('')
     setOpenModal(true)
   }
@@ -69,7 +99,8 @@ export default function ClassesList() {
     setForm({
       nom: row.nom ?? row.nomClasse ?? '',
       niveau: row.niveau ?? row.niveauClasse ?? '',
-      annee: row.anneeScolaire ?? row.annee ?? ''
+      annee: row.anneeScolaire ?? row.annee ?? '',
+      idEnseignant: row.idEnseignant ? String(row.idEnseignant) : (row.enseignant?.idUtilisateur ? String(row.enseignant.idUtilisateur) : ''),
     })
     setFormError('')
     setOpenModal(true)
@@ -87,6 +118,7 @@ export default function ClassesList() {
     if (!/^\d{4}\/\d{4}$/.test(values.annee)) return "L'année doit être au format 2024/2025"
     const [a,b] = values.annee.split('/').map(Number)
     if (b !== a + 1) return "L'année doit être au format 2024/2025 (droite = gauche + 1)"
+    if (values.idEnseignant && !Number.isFinite(Number(values.idEnseignant))) return "L'identifiant enseignant doit être numérique"
     return ''
   }
 
@@ -103,6 +135,7 @@ export default function ClassesList() {
         nomClasse: form.nom.trim(),
         niveauClasse: form.niveau.trim(),
         anneeScolaire: form.annee.trim(),
+        ...(form.idEnseignant ? { idEnseignant: Number(form.idEnseignant) } : {}),
       }
       if (editing) {
         await api.updateClasse(editing.idClasse, payload)
@@ -196,6 +229,15 @@ export default function ClassesList() {
               required
             />
             <p className="mt-1 text-xs text-gray-500">Format: YYYY/YYYY+1 (ex: 2024/2025)</p>
+          </div>
+          <div>
+            <label className="label">Enseignant</label>
+            <select className="input" value={form.idEnseignant} onChange={(e) => setForm({ ...form, idEnseignant: e.target.value })} disabled={loadingEnseignants}>
+              <option value="">(Optionnel) Sélectionner un enseignant</option>
+              {enseignants.map(opt => (
+                <option key={opt.id} value={opt.id}>{opt.label}</option>
+              ))}
+            </select>
           </div>
         </form>
       </Modal>

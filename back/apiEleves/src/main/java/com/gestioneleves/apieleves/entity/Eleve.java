@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ public class Eleve {
     private Long idEleve;
     private String nom;
     private String prenom;
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
 
     /**
      * Relation One-to-Many avec l'entité Bulletin
@@ -47,10 +47,14 @@ public class Eleve {
 
     @OneToMany(mappedBy = "eleve")
     @JsonIgnore
-    private List<Inscrire> inscriptions = new ArrayList<>();
+    private List<Inscription> inscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "eleve")
     @JsonIgnore
     private List<Note> notes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
+    private List<Representation> representations = new ArrayList<>();
 
 }
