@@ -7,31 +7,46 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import { useToast } from '../../lib/useToast'
 import { api } from '../../lib/api'
 
+/*
+ * Composant pour afficher et gérer la liste des élèves
+ * Permet de créer, modifier, supprimer et rechercher des élèves
+ * Émet des événements pour mettre à jour les compteurs en temps réel
+ */
 export default function ElevesList() {
+  // États pour la pagination et la recherche
   const [page, setPage] = useState(0)
   const [size] = useState(Number(import.meta.env.VITE_PAGE_SIZE || 20))
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState('') // Terme de recherche
+  
+  // États pour la gestion des données
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState({ content: [], totalElements: 0, number: 0, size })
+  
+  // États pour le filtre par classe
   const [classe, setClasse] = useState('')
-  const [classes, setClasses] = useState([])
+  const [classes, setClasses] = useState([]) // Liste des classes disponibles
+  
+  // Hook pour afficher des notifications
   const { show } = useToast()
 
-
+  // États pour le modal de création/modification
   const [openModal, setOpenModal] = useState(false)
-  const [editing, setEditing] = useState(null)
+  const [editing, setEditing] = useState(null) // Élève en cours d'édition
   const [form, setForm] = useState({ nom: '', prenom: '', dateNaissance: '' })
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
 
+  // États pour la boîte de dialogue de confirmation
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [toDelete, setToDelete] = useState(null)
+  const [toDelete, setToDelete] = useState(null) // Élève à supprimer
 
+  // Fonction pour charger la liste des élèves depuis l'API
   async function load() {
     setLoading(true)
     setError('')
     try {
+      // Appel à l'API avec les filtres et la pagination
       const res = await api.listEleves({
         page,
         size,
@@ -47,6 +62,7 @@ export default function ElevesList() {
   }
 
 
+// Effet pour charger la liste des classes au montage du composant
 useEffect(() => {
   async function loadClasses() {
     try {
@@ -60,9 +76,10 @@ useEffect(() => {
   loadClasses();
 }, []);
 
-  useEffect(() => {
+// Effet pour recharger les élèves lorsque la pagination ou les filtres changent
+useEffect(() => {
     load()
-  }, [page, size, q])
+  }, [page, size, q, classe])
 
   const columns = useMemo(() => ([
     { key: 'idEleve', header: 'ID' },
@@ -79,6 +96,7 @@ useEffect(() => {
     }
   ]), [])
 
+  // Initialise le formulaire pour créer un nouvel élève
   function startCreate() {
     setEditing(null)
     setForm({ nom: '', prenom: '', dateNaissance: '' })
@@ -86,6 +104,7 @@ useEffect(() => {
     setOpenModal(true)
   }
 
+  // Prépare le formulaire pour modifier un élève existant
   function startEdit(row) {
     setEditing(row)
     setForm({
@@ -97,11 +116,13 @@ useEffect(() => {
     setOpenModal(true)
   }
 
+  // Prépare la suppression d'un élève
   function askDelete(row) {
     setToDelete(row)
     setConfirmOpen(true)
   }
 
+  // Valide les données du formulaire
   function validate(values) {
     if (!values.nom?.trim()) return 'Le nom est requis'
     if (!values.prenom?.trim()) return 'Le prénom est requis'
@@ -109,6 +130,7 @@ useEffect(() => {
     return ''
   }
 
+  // Sauvegarde un élève (création ou modification)
   async function saveEleve(e) {
     e?.preventDefault()
     const err = validate(form)
@@ -118,21 +140,26 @@ useEffect(() => {
     }
     setSaving(true)
     try {
+      // Préparation des données à envoyer
       const payload = {
         nom: form.nom.trim(),
         prenom: form.prenom.trim(),
         dateNaissance: form.dateNaissance || null,
       }
       if (editing) {
+        // Modification d'un élève existant
         await api.updateEleve(editing.idEleve, payload)
         show('Élève mis à jour', { type: 'success' })
       } else {
+        // Création d'un nouvel élève
         await api.createEleve(payload)
         show('Élève créé', { type: 'success' })
       }
       setOpenModal(false)
       setEditing(null)
       await load()
+      // Émission d'un événement pour mettre à jour les compteurs
+      window.dispatchEvent(new Event('eleves-updated'))
     } catch (e) {
       setFormError(e?.message || 'Erreur lors de la sauvegarde')
       show(e?.message || 'Erreur lors de la sauvegarde', { type: 'error' })
@@ -141,12 +168,15 @@ useEffect(() => {
     }
   }
 
+  // Confirme et exécute la suppression d'un élève
   async function confirmDelete() {
     if (!toDelete) return
     try {
       await api.deleteEleve(toDelete.idEleve)
       show('Élève supprimé', { type: 'success' })
       await load()
+      // Émission d'un événement pour mettre à jour les compteurs
+      window.dispatchEvent(new Event('eleves-updated'))
     } catch (e) {
       show(e?.message || 'Erreur lors de la suppression', { type: 'error' })
     } finally {
@@ -159,26 +189,34 @@ useEffect(() => {
     <div className="bg-white rounded-xl p-6 ">
       <div className="space-y-4">
 
+        {/* En-tête avec titre, description et filtres */}
         <header className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-lg font-semibold">Elèves</h1>
             <p className="text-sm text-gray-600">Liste des Elèves. Filtrez par classes si nécessaire.</p>
           </div>
+          {/* Filtre par classe et bouton d'ajout */}
           <div className="flex items-center gap-2 ">
             <label className="label">Classe</label>
             <select className="input w-40" value={classe} onChange={(e) => { setPage(0); setClasse(e.target.value) }}>
               <option value="">Tous</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
             </select>
-            <button className="btn btn-primary" onClick={startCreate}>
+            <div className="transition-transform duration-300 hover:scale-105">
+              <button className="btn btn-primary" onClick={startCreate}>
               <UserRoundPlus className="mr-2" />Nouveau
             </button>
           </div>
+            </div>
+
         </header>
 
+        {/* Indicateur de chargement */}
         {loading && <div className="text-sm text-gray-500">Chargement…</div>}
+        {/* Message d'erreur */}
         {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
+        {/* Tableau des élèves et pagination */}
         {!loading && !error && (
           <>
             <Table columns={columns} data={data?.content || []} keyField="idEleve" />
@@ -191,6 +229,7 @@ useEffect(() => {
           </>
         )}
 
+        {/* Modal pour créer ou modifier un élève */}
         <Modal
           open={openModal}
           onClose={() => { if (!saving) setOpenModal(false) }}
@@ -202,7 +241,9 @@ useEffect(() => {
             </>
           )}
         >
+          {/* Message d'erreur du formulaire */}
           {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
+          {/* Formulaire de création/modification */}
           <form onSubmit={saveEleve} className="space-y-3">
             <div>
               <label className="label">Nom</label>
@@ -219,6 +260,7 @@ useEffect(() => {
           </form>
         </Modal>
 
+        {/* Boîte de dialogue de confirmation de suppression */}
         <ConfirmDialog
           open={confirmOpen}
           title="Supprimer l’élève"

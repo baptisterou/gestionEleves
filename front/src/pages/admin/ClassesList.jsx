@@ -178,7 +178,8 @@ export default function ClassesList() {
             <h1 className="text-lg font-semibold">Classes</h1>
             <p className="text-sm text-gray-600">Liste des classes.</p>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
             <button className="btn btn-primary" onClick={startCreate}>
               <HousePlus className="mr-2" /> Nouveau
             </button>
