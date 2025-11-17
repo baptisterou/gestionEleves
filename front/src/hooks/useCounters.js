@@ -64,12 +64,12 @@ export function useCounters() {
     const handleClassesUpdate = () => setUpdateTrigger(prev => prev + 1);
     const handleMatieresUpdate = () => setUpdateTrigger(prev => prev + 1);
 
-    // Ajout des écouteurs d'événements
+    // Ajout des listeners d'événements
     window.addEventListener('eleves-updated', handleElevesUpdate);
     window.addEventListener('classes-updated', handleClassesUpdate);
     window.addEventListener('matieres-updated', handleMatieresUpdate);
 
-    // Nettoyage des écouteurs lors du démontage
+    // Nettoyage des listeners lors du démontage
     return () => {
       window.removeEventListener('eleves-updated', handleElevesUpdate);
       window.removeEventListener('classes-updated', handleClassesUpdate);
