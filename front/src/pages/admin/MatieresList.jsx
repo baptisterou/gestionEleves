@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { FolderPlus, Pencil, Trash2 } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
@@ -79,8 +80,8 @@ export default function MatieresList() {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-primary" onClick={() => startEdit(row)}>Éditer</button>
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button onClick={() => startEdit(row)}><Pencil className="text-gray-500"/></button>
+          <button onClick={() => askDelete(row)}><Trash2 className="text-red-600"/></button>
         </div>
       )
     }
@@ -160,15 +161,16 @@ export default function MatieresList() {
   }
 
   return (
-    <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Matières</h1>
-          <p className="text-sm text-gray-600">Liste des matières.</p>
-        </div>
-        <div className="flex items-center gap-2">
+    <div className="bg-white rounded-xl p-6 ">
+      <div className="space-y-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-lg font-semibold">Matières</h1>
+            <p className="text-sm text-gray-600">Liste des Matières.</p>
+          </div>
+        <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
           <button className="btn btn-primary" onClick={startCreate}>
-            Nouvelle matière
+            <FolderPlus  className="mr-2"/> Nouveau
           </button>
         </div>
       </header>
@@ -226,6 +228,7 @@ export default function MatieresList() {
         onConfirm={confirmDelete}
         onCancel={() => setConfirmOpen(false)}
       />
+    </div>
     </div>
   )
 }

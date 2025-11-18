@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { Trash2 } from 'lucide-react'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import { useToast } from '../../lib/useToast'
 import { api } from '../../lib/api'
+import { FilePlusCorner } from 'lucide-react'
 
 function isValidSchoolYear(value) {
   if (!/^\d{4}\/\d{4}$/.test(value)) return false
@@ -124,7 +126,7 @@ export default function Inscriptions() {
     {
       key: 'actions', header: 'Actions', accessor: (row) => row, render: (_v, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-red-600" onClick={() => askDelete(row)}>Supprimer</button>
+          <button onClick={() => askDelete(row)}><Trash2 className="text-red-600"/></button>
         </div>
       )
     }
@@ -185,81 +187,85 @@ export default function Inscriptions() {
   }
 
   return (
-    <div className="space-y-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Inscriptions</h1>
-          <p className="text-sm text-gray-600">Affectez des élèves aux classes pour une année scolaire (format 2024/2025).</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select className="input w-40" value={annee} onChange={(e) => { setPage(0); setAnnee(e.target.value) }}>
-            {schoolYears(5).map(y => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-          <button className="btn btn-primary" onClick={startCreate}>
-            Nouvelle inscription
-          </button>
-        </div>
-      </header>
-
-      {loading && <div className="text-sm text-gray-500">Chargement…</div>}
-      {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
-      {!loading && !error && (
-        <>
-          <Table columns={columns} data={data?.content || []} />
-          <Pagination
-            page={data?.number ?? page}
-            size={data?.size ?? size}
-            totalElements={data?.totalElements ?? 0}
-            onPageChange={(p) => setPage(p)}
-          />
-        </>
-      )}
-        
-      <Modal
-        open={openModal}
-        onClose={() => { if (!saving) setOpenModal(false) }}
-        title={'Créer une inscription'}
-        actions={(
-          <>
-            <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
-            <button className="btn btn-primary" onClick={saveInscription} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
-          </>
-        )}
-      >
-        {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
-        <form onSubmit={saveInscription} className="space-y-3">
+    <div className="bg-white rounded-xl p-6 ">
+      <div className="space-y-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <label className="label">Élève</label>
-            <select className="input" value={form.eleveId} onChange={(e) => setForm({ ...form, eleveId: e.target.value })} required>
-              <option value="">Sélectionner un élève</option>
-              {eleves.map(el => (
-                <option key={el.idEleve} value={el.idEleve}>{el.prenom} {el.nom} (#{el.idEleve})</option>
-              ))}
-            </select>
+            <h1 className="text-lg font-semibold">Inscriptions</h1>
+            <p className="text-sm text-gray-600">Affectez des élèves aux classes pour une année scolaire (format 2024/2025).</p>
           </div>
-          <div>
-            <label className="label">Année scolaire</label>
-            <select className="input" value={form.annee} onChange={(e) => setForm({ ...form, annee: e.target.value })} required>
+          <div className="flex items-center gap-2 ">
+            <select className="input w-40" value={annee} onChange={(e) => { setPage(0); setAnnee(e.target.value) }}>
               {schoolYears(5).map(y => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
+            <div className="transition-transform duration-300 hover:scale-105">
+            <button className="btn btn-primary" onClick={startCreate}>
+               <FilePlusCorner className="mr-2 "/> Nouveau
+            </button>
           </div>
-        </form>
-      </Modal>
-        
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Supprimer l’inscription"
-        message={toDelete ? `Confirmez la suppression de l’inscription #${toDelete.id ?? toDelete.idInscription ?? toDelete.idInscrire} ?` : ''}
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
-        onConfirm={confirmDelete}
-        onCancel={() => setConfirmOpen(false)}
-      />
+          </div>
+        </header>
+
+        {loading && <div className="text-sm text-gray-500">Chargement…</div>}
+        {error && <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+
+        {!loading && !error && (
+          <>
+            <Table columns={columns} data={data?.content || []} />
+            <Pagination
+              page={data?.number ?? page}
+              size={data?.size ?? size}
+              totalElements={data?.totalElements ?? 0}
+              onPageChange={(p) => setPage(p)}
+            />
+          </>
+        )}
+
+        <Modal
+          open={openModal}
+          onClose={() => { if (!saving) setOpenModal(false) }}
+          title={'Créer une inscription'}
+          actions={(
+            <>
+              <button className="btn btn-outline" onClick={() => setOpenModal(false)} disabled={saving}>Annuler</button>
+              <button className="btn btn-primary" onClick={saveInscription} disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+            </>
+          )}
+        >
+          {formError && <div className="mb-3 rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-700">{formError}</div>}
+          <form onSubmit={saveInscription} className="space-y-3">
+            <div>
+              <label className="label">Élève</label>
+              <select className="input" value={form.eleveId} onChange={(e) => setForm({ ...form, eleveId: e.target.value })} required>
+                <option value="">Sélectionner un élève</option>
+                {eleves.map(el => (
+                  <option key={el.idEleve} value={el.idEleve}>{el.prenom} {el.nom} (#{el.idEleve})</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="label">Année scolaire</label>
+              <select className="input" value={form.annee} onChange={(e) => setForm({ ...form, annee: e.target.value })} required>
+                {schoolYears(5).map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+            </div>
+          </form>
+        </Modal>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Supprimer l’inscription"
+          message={toDelete ? `Confirmez la suppression de l’inscription #${toDelete.id ?? toDelete.idInscription ?? toDelete.idInscrire} ?` : ''}
+          confirmLabel="Supprimer"
+          cancelLabel="Annuler"
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      </div>
     </div>
   )
 }

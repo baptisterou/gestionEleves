@@ -1,15 +1,14 @@
+/*
+ * Composant principal de l'application
+ * Définit toutes les routes et la structure de navigation
+ * Gère l'authentification et les autorisations par rôle
+ */
 import React from 'react'
 import { Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom'
+
+// Pages
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import Navbar from './components/Navbar'
-import { isAuthenticated } from './lib/auth'
-import { AuthProvider, useAuth } from './lib/useAuth'
-import { ToastProvider } from './lib/useToast'
-import RoleRoute from './components/RoleRoute'
-import AdminLayout from './layouts/AdminLayout'
-import TeacherLayout from './layouts/TeacherLayout'
-import GuardianLayout from './layouts/GuardianLayout'
 import AdminHome from './pages/admin/AdminHome'
 import UsersList from './pages/admin/UsersList'
 import ElevesList from './pages/admin/ElevesList'
@@ -24,6 +23,24 @@ import BulletinExport from './pages/responsable/BulletinExport'
 import GuardianNotes from './pages/responsable/GuardianNotes'
 import AdminStats from './pages/admin/AdminStats'
 
+// Composants
+import Navbar from './components/Navbar'
+import RoleRoute from './components/RoleRoute'
+
+// Layouts
+import AdminLayout from './layouts/AdminLayout'
+import TeacherLayout from './layouts/TeacherLayout'
+import GuardianLayout from './layouts/GuardianLayout'
+
+// Services et hooks
+import { isAuthenticated } from './lib/auth'
+import { AuthProvider, useAuth } from './lib/useAuth'
+import { ToastProvider } from './lib/useToast'
+
+/*
+ * Composant pour protéger les routes nécessitant une authentification
+ * Redirige vers la page de connexion si l'utilisateur n'est pas authentifié
+ */
 function ProtectedRoute({ children }) {
   const location = useLocation()
   if (!isAuthenticated()) {
@@ -32,15 +49,23 @@ function ProtectedRoute({ children }) {
   return children
 }
 
+/*
+ * Structure principale de l'application
+ * Affiche la barre de navigation si l'utilisateur est authentifié
+ * Définit toutes les routes de l'application
+ */
 function AppShell() {
   const authed = isAuthenticated()
   return (
     <div className="min-h-screen">
+      {/* Barre de navigation affichée uniquement si l'utilisateur est connecté */}
       {authed && <Navbar />}
       <main className="mx-auto max-w-6xl px-4 py-8">
         <Routes>
+          {/* Route de connexion */}
           <Route path="/login" element={<Login />} />
 
+          {/* Route du tableau de bord */}
           <Route
             path="/"
             element={
@@ -50,12 +75,13 @@ function AppShell() {
             }
           />
 
+          {/* Routes pour les administrateurs */}
           <Route
             path="/admin"
             element={
               <ProtectedRoute>
                 <RoleRoute allow={["ADMIN"]}>
-                  <AdminLayout />
+                  <Outlet />
                 </RoleRoute>
               </ProtectedRoute>
             }
@@ -69,6 +95,7 @@ function AppShell() {
             <Route path="stats" element={<AdminStats />} />
           </Route>
 
+          {/* Routes pour les enseignants */}
           <Route
             path="/enseignant"
             element={
@@ -83,6 +110,7 @@ function AppShell() {
             <Route path="notes" element={<TeacherNotes />} />
           </Route>
 
+          {/* Routes pour les responsables légaux */}
           <Route
             path="/responsable"
             element={
@@ -98,6 +126,7 @@ function AppShell() {
             <Route path="bulletins" element={<BulletinExport />} />
           </Route>
 
+          {/* Route par défaut - redirige selon l'état d'authentification */}
           <Route path="*" element={<Navigate to={authed ? '/' : '/login'} replace />} />
         </Routes>
       </main>
@@ -105,6 +134,10 @@ function AppShell() {
   )
 }
 
+/*
+ * Composant racine de l'application
+ * Initialise les providers pour l'authentification et les notifications
+ */
 export default function App() {
   return (
     <ToastProvider>
