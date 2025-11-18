@@ -37,7 +37,7 @@ export default function Navbar() {
             <p className="font-medium">{user.prenom} {user.nom}</p>
             <p className="text-xs uppercase tracking-wide text-[#0638FF]">{user.role}</p>
             <hr className="my-2 h-0.5 bg-text-gray-700" />
-            <div class="hover:scale-110 transition-transform">
+            <div className="hover:scale-110 transition-transform">
               <button
                 className="btn text-sm text-[#C80000] flex items-center gap-2"
                 onClick={logout}>
