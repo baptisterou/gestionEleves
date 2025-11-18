@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -35,14 +34,14 @@ public class Eleve {
     private String prenom;
     private LocalDate dateNaissance;
 
-    /**
-     * Relation One-to-Many avec l'entité Bulletin
-     * Un élève peut avoir plusieurs bulletins (un par trimestre)
-     * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
-     */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_utilisateur")
-    private Utilisateur utilisateur;
+//    /**
+//     * Relation One-to-Many avec l'entité Bulletin
+//     * Un élève peut avoir plusieurs bulletins (un par trimestre)
+//     * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
+//     */
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "id_utilisateur")
+//    private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
     private List<Inscription> inscriptions = new ArrayList<>();

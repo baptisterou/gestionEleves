@@ -1,12 +1,8 @@
 package com.gestioneleves.apieleves.controller;
 
-import com.gestioneleves.apieleves.dto.InscriptionCreateRequest;
-import com.gestioneleves.apieleves.dto.InscriptionDTO;
 import com.gestioneleves.apieleves.dto.RepresentationCreateRequest;
 import com.gestioneleves.apieleves.dto.RepresentationDTO;
-import com.gestioneleves.apieleves.mapper.InscriptionMapper;
 import com.gestioneleves.apieleves.mapper.RepresentationMapper;
-import com.gestioneleves.apieleves.service.InscriptionService;
 import com.gestioneleves.apieleves.service.RepresentationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

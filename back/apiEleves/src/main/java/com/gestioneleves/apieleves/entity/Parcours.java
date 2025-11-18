@@ -1,11 +1,10 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "representation")
+@Table(name = "parcours")
 @Getter
 @Setter
 @ToString(exclude = {"eleve", "classe"})
