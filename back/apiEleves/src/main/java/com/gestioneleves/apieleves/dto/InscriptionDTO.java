@@ -6,8 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class InscriptionDTO {
-    private Long idInscription;
+    private Long eleveId;
+    private Long utilisateurId;
     private LocalDate dateInscrip;
-    private Long idEleve;
-    private Long idUtilisateur;
 }

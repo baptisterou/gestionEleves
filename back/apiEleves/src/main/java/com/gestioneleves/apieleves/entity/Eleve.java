@@ -42,17 +42,15 @@ public class Eleve {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
+    //@JsonManagedReference
     private Utilisateur utilisateur;
 
     @OneToMany(mappedBy = "eleve")
-    private List<Inscription> inscriptions = new ArrayList<>();
+    @JsonIgnore
+    private List<Inscrire> inscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "eleve")
+    @JsonIgnore
     private List<Note> notes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "eleve")
-    private List<Representation> representations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "eleve")
-    private List<Parcours> parcours = new ArrayList<>();
 }

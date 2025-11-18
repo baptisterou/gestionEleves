@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Data
 public class InscriptionCreateRequest {
     @NotNull
-    private Long idEleve;
+    private Long eleveId;
     @NotNull
-    private Long idUtilisateur;
+    private Long utilisateurId;
 
     @PastOrPresent
     private LocalDate dateInscrip; // optionnel

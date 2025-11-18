@@ -7,7 +7,6 @@ import com.gestioneleves.apieleves.entity.Bulletin;
 import com.gestioneleves.apieleves.mapper.BulletinMapper;
 import com.gestioneleves.apieleves.repository.BulletinRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.List;
  * Contient la logique métier relative aux opérations sur les bulletins
  */
 @Service // Indique que cette classe est un service Spring (gérée comme un bean)
-@Transactional
 public class BulletinService {
 
     private final BulletinRepository bulletinRepository;

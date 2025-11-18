@@ -3,10 +3,9 @@ package com.gestioneleves.apieleves.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Getter
 @Setter
-@ToString(exclude = {"matiere", "classe", "enseignant"})
+@ToString(exclude = {"matiere", "classe", "utilisateur"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +25,5 @@ public class Enseignement {
 
     @ManyToOne
     @JoinColumn(name = "id_utilisateur")
-    private Utilisateur enseignant;
+    private Utilisateur utilisateur;
 }

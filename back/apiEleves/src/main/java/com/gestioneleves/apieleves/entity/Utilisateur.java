@@ -26,6 +26,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "utilisateur")
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,7 @@ public class Utilisateur implements UserDetails {
     @Column(name="email",unique = true, length = 100, nullable = false)
     private String email;
     @Column(name="mot_de_passe", nullable = false)
+    @JsonIgnore
     private String motDePasse;
     @Column(name="date_naissance", nullable = false)
     private LocalDate dateNaissance;
@@ -55,17 +57,20 @@ public class Utilisateur implements UserDetails {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "utilisateur")
+    @JsonIgnore
     private List<Eleve> eleves = new ArrayList<>();
 
-    @OneToMany(mappedBy = "utilisateur")
-    private List<Inscription> inscriptions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "utilisateur")
-    private List<Representation> representations = new ArrayList<>();
+    @OneToMany(mappedBy = "enseignant")
+    @JsonIgnore
+    private List<Classe> classesEnseignant = new ArrayList<>();
 
     @OneToMany(mappedBy = "enseignant")
-    private List<Enseignement> enseignements = new ArrayList<>();
+    @JsonIgnore
+    private List<Matiere> matieresEnseignant = new ArrayList<>();
 
+    @OneToMany(mappedBy = "utilisateur")
+    @JsonIgnore
+    private List<Inscrire> inscriptionEffectuees = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

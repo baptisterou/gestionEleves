@@ -9,7 +9,6 @@ import com.gestioneleves.apieleves.mapper.ClasseMapper;
 import com.gestioneleves.apieleves.repository.ClasseRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Transactional
 public class ClasseService {
 
     private final ClasseRepository classeRepository;
@@ -71,6 +69,13 @@ public class ClasseService {
         }
         if (classe.getAnneeScolaire() != null) {
             existing.setAnneeScolaire(classe.getAnneeScolaire());
+        }
+
+        // Mise à jour de l'objet lié
+        if (classe.getEnseignant().getIdUtilisateur() != null) {
+            Utilisateur enseignant = utilisateurRepository.findById(classe.getEnseignant().getIdUtilisateur())
+                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + classe.getEnseignant().getIdUtilisateur()));
+            existing.setEnseignant(enseignant);
         }
 
         return classeRepository.save(existing);
