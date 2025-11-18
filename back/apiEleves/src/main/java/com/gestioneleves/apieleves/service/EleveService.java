@@ -9,7 +9,6 @@ import com.gestioneleves.apieleves.mapper.EleveMapper;
 import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -122,6 +121,13 @@ public class EleveService {
         }
         if (eleve.getDateNaissance() != null) {
             existing.setDateNaissance(eleve.getDateNaissance());
+        }
+
+        // Mise à jour de l'objet lié
+        if (eleve.getUtilisateur() != null && eleve.getUtilisateur().getIdUtilisateur() != null) {
+            Utilisateur representant = utilisateurRepository.findById(eleve.getUtilisateur().getIdUtilisateur())
+                    .orElseThrow(() -> new EntityNotFoundException("Enseignant introuvable : " + eleve.getUtilisateur().getIdUtilisateur()));
+            existing.setUtilisateur(representant);
         }
 
         // Sauvegarde et retour
