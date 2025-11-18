@@ -25,7 +25,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity // Indique que cette classe est une entité JPA
 @Table(name = "matiere") // Spécifie le nom de la table en base de données
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Matiere {
 
     /**
@@ -42,10 +41,9 @@ public class Matiere {
      */
     private String intituleMatiere;
 
-    @ManyToOne
-    @JoinColumn(name = "id_enseignant")
-    private Utilisateur enseignant;
-
     @OneToMany(mappedBy = "matiere")
     private List<Note> notes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "matiere")
+    private List<Enseignement> enseignements = new ArrayList<>();
 }

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @Entity
 @Table(name = "bulletin")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Bulletin {
 
     @Id

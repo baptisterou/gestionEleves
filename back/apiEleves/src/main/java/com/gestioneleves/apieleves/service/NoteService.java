@@ -13,12 +13,14 @@ import com.gestioneleves.apieleves.repository.EleveRepository;
 import com.gestioneleves.apieleves.repository.MatiereRepository;
 import com.gestioneleves.apieleves.repository.NoteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class NoteService {
 
     private final NoteRepository noteRepository;
