@@ -16,6 +16,7 @@ import java.util.List;
  * Entité JPA représentant un élève dans le système
  * Correspond à la table "eleve" en base de données
  */
+//Même annotations que l'entité Bulletin, s'y référencé pour des détails
 @Getter
 @Setter
 @ToString(exclude = {"utilisateur", "inscriptions", "notes"})
@@ -26,32 +27,40 @@ import java.util.List;
 @Table(name = "eleve")
 public class Eleve {
     
-    @Id // Marque ce champ comme clé primaire
+    @Id // Clé primaire
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrément par la base de données
     @EqualsAndHashCode.Include
     private Long idEleve;
-    private String nom;
-    private String prenom;
-    private LocalDate dateNaissance;
 
-//    /**
-//     * Relation One-to-Many avec l'entité Bulletin
-//     * Un élève peut avoir plusieurs bulletins (un par trimestre)
-//     * mappedBy = "eleve" indique que la relation est gérée par l'attribut "eleve" dans Bulletin
-//     */
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "id_utilisateur")
-//    private Utilisateur utilisateur;
+    private String nom;           // Nom de l'élève
+    private String prenom;        // Prénom de l'élève
+    private LocalDate dateNaissance; // Date de naissance de l'élève
 
+    /**
+     * Liste des inscriptions de l'élève.
+     * Relation One-to-Many : un élève peut avoir plusieurs inscriptions à des classes ou activités.
+     */
     @OneToMany(mappedBy = "eleve")
     private List<Inscription> inscriptions = new ArrayList<>();
 
+    /**
+     * Liste des notes de l'élève.
+     * Relation One-to-Many : un élève peut avoir plusieurs notes dans différents bulletins/matières.
+     */
     @OneToMany(mappedBy = "eleve")
     private List<Note> notes = new ArrayList<>();
 
+    /**
+     * Liste des représentants des élèves.
+     * Relation One-to-Many : un élève peut être associé à plusieurs représentants.
+     */
     @OneToMany(mappedBy = "eleve")
     private List<Representation> representations = new ArrayList<>();
 
+    /**
+     * Liste des parcours de l'élève (ex : parcours scolaire ou pédagogique).
+     * Relation One-to-Many : un élève peut avoir plusieurs parcours.
+     */
     @OneToMany(mappedBy = "eleve")
     private List<Parcours> parcours = new ArrayList<>();
 }
