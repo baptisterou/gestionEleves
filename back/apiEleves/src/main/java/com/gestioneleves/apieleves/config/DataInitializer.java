@@ -10,10 +10,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
+/**
+ * Configuration responsable de l'initialisation de données au démarrage de l'application.
+ *
+ * Actuellement, crée un compte administrateur par défaut si aucun utilisateur avec l'email
+ * "admin@admin.com" n'existe. Les identifiants sont affichés en console afin de faciliter
+ * les tests en environnement de développement.
+ *
+ * Attention: ne pas utiliser ces identifiants en production. Préférez une stratégie
+ * de provisionnement sécurisée (migrations, variables d'environnement, vault, etc.).
+ */
 @Configuration
 public class DataInitializer {
 
     @Bean
+    /**
+     * Runner d'initialisation exécuté au démarrage de l'application.
+     *
+     * @param utilisateurRepository accès aux utilisateurs
+     * @param passwordEncoder encodeur de mots de passe
+     * @return une lambda qui crée l'administrateur par défaut si nécessaire
+     */
     public CommandLineRunner initAdminUser(UtilisateurRepository utilisateurRepository,
                                            PasswordEncoder passwordEncoder) {
         return args -> {

@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 

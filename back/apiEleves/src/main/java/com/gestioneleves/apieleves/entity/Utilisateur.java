@@ -1,6 +1,5 @@
 package com.gestioneleves.apieleves.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,8 +53,8 @@ public class Utilisateur implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "utilisateur")
-    private List<Eleve> eleves = new ArrayList<>();
+//    @OneToMany(mappedBy = "utilisateur")
+//    private List<Eleve> eleves = new ArrayList<>();
 
     @OneToMany(mappedBy = "utilisateur")
     private List<Inscription> inscriptions = new ArrayList<>();

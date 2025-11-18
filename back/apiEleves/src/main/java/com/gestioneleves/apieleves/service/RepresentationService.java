@@ -16,6 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service métier pour la gestion des {@code Representation} (lien Responsable ↔ Élève).
+ *
+ * Responsabilités:
+ * - Lister, créer, modifier et supprimer des représentations
+ * - Gérer les associations avec {@link Eleve} et {@link Utilisateur}
+ * - Exposer des variantes orientées contrôleur (entrée requête/DTO, sortie DTO)
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link org.springframework.transaction.annotation.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si la représentation/élève/utilisateur est introuvable
+ */
 @Service
 @Transactional
 public class RepresentationService {
@@ -32,18 +46,28 @@ public class RepresentationService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    /**
+     * Récupère toutes les représentations (non paginé).
+     */
     public List<Representation> getAllRepresentations(){ return representationRepository.findAll(); }
 
-    // Variante contrôleur-friendly
+    /**
+     * Crée une représentation à partir d'une requête et retourne un DTO.
+     */
     public RepresentationDTO createRepresentation(RepresentationCreateRequest request){
         Representation toSave = RepresentationMapper.fromCreate(request);
         Representation saved = createRepresentation(toSave);
         return RepresentationMapper.toDto(saved);
     }
 
+    /**
+     * Persiste une représentation.
+     */
     public Representation createRepresentation(Representation representation){ return representationRepository.save(representation); }
 
-    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    /**
+     * Met à jour partiellement une représentation et retourne un DTO.
+     */
     public RepresentationDTO editRepresentation(Long id, RepresentationDTO request) {
         Representation current = getRepresentationById(id);
         Representation updatedEntity = RepresentationMapper.applyUpdate(current, request);
@@ -51,6 +75,11 @@ public class RepresentationService {
         return RepresentationMapper.toDto(saved);
     }
 
+    /**
+     * Applique une mise à jour partielle à une représentation existante.
+     *
+     * @throws EntityNotFoundException si la représentation/élève/utilisateur n'existe pas
+     */
     public Representation editRepresentation(Long id, Representation representation){
         // Récupération ou exception si non trouvé
         Representation existing = representationRepository.findById(id)
@@ -75,6 +104,9 @@ public class RepresentationService {
         //Sauvegarde et retour
         return representationRepository.save(existing); }
 
+    /**
+     * Supprime une représentation par identifiant.
+     */
     public void deleteRepresentation(Long id){
         if (!representationRepository.existsById(id)) {
             throw new EntityNotFoundException("Representation introuvable:" + id);
@@ -82,6 +114,9 @@ public class RepresentationService {
         representationRepository.deleteById(id);
     }
 
+    /**
+     * Récupère une représentation par identifiant.
+     */
     public Representation getRepresentationById(Long id){
         return representationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Representation introuvable: " + id));

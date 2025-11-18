@@ -18,6 +18,22 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * Service métier pour la gestion des {@code Utilisateur}.
+ *
+ * Responsabilités:
+ * - Créer des utilisateurs (standard et via ADMIN avec rôle explicite)
+ * - Lister/paginer les utilisateurs
+ * - Modifier les informations d'un utilisateur et changer son rôle (ADMIN-only)
+ * - Garantir l'unicité/normalisation de l'email et l'encodage des mots de passe
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link org.springframework.transaction.annotation.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si l'utilisateur n'existe pas
+ * - {@link IllegalArgumentException} en cas d'email déjà utilisé ou de données invalides
+ */
 @Service
 @Transactional
 public class UtilisateurService {
@@ -30,22 +46,36 @@ public class UtilisateurService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Récupère tous les utilisateurs (non paginé).
+     */
     public List<Utilisateur> getAllUtilisateurs(){
         return utilisateurRepository.findAll();
     }
 
+    /**
+     * Récupère les utilisateurs paginés.
+     */
     public Page<Utilisateur> getAllUtilisateurs(Pageable pageable){
         return utilisateurRepository.findAll(pageable);
     }
 
-    // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
+    /**
+     * Crée un utilisateur standard à partir d'une requête et retourne un DTO.
+     *
+     * Le rôle est forcé côté service à RESPONSABLE par sécurité.
+     */
     public UtilisateurDTO createUtilisateur(UtilisateurCreateRequest request) {
         Utilisateur toSave = UtilisateurMapper.fromCreate(request);
         Utilisateur saved = createUtilisateur(toSave); // réutilise la logique existante
         return UtilisateurMapper.toDto(saved);
     }
 
-    // Création ADMIN: permet de spécifier le rôle explicitement
+    /**
+     * Création ADMIN permettant de spécifier le rôle explicitement.
+     *
+     * Valide l'unicité de l'email et encode le mot de passe si fourni.
+     */
     public UtilisateurDTO createUtilisateurAsAdmin(UtilisateurAdminCreateRequest request) {
         Utilisateur toSave = UtilisateurMapper.fromAdminCreate(request);
         // normaliser email
@@ -64,6 +94,9 @@ public class UtilisateurService {
         return UtilisateurMapper.toDto(saved);
     }
 
+    /**
+     * Persiste un utilisateur standard après normalisation et validations de base.
+     */
     public Utilisateur createUtilisateur (Utilisateur utilisateur){
         // normaliser email
         if (utilisateur.getEmail() != null) {
@@ -82,7 +115,9 @@ public class UtilisateurService {
         return utilisateurRepository.save(utilisateur);
     }
 
-    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    /**
+     * Met à jour partiellement un utilisateur via DTO de mise à jour et retourne un DTO.
+     */
     public UtilisateurDTO modifierUtilisateur(Long id, UtilisateurUpdateRequest request) {
         // Construire un "partial" à partir de la request et réutiliser la logique existante
         Utilisateur part = UtilisateurMapper.fromUpdate(request);
@@ -90,6 +125,12 @@ public class UtilisateurService {
         return UtilisateurMapper.toDto(updated);
     }
 
+    /**
+     * Applique une mise à jour partielle à une entité utilisateur.
+     *
+     * @throws EntityNotFoundException si l'utilisateur n'existe pas
+     * @throws IllegalArgumentException si l'email est déjà utilisé par un autre
+     */
     public Utilisateur modifierUtilisateur(Long id, Utilisateur utilisateur){
         // Récupération ou exception si non trouvé
         Utilisateur existing = utilisateurRepository.findById(id)
@@ -122,7 +163,9 @@ public class UtilisateurService {
         return utilisateurRepository.save(existing);
     }
 
-    // Changement de rôle ADMIN-only
+    /**
+     * Change le rôle d'un utilisateur (ADMIN uniquement).
+     */
     public UtilisateurDTO updateRole(Long id, UtilisateurRoleUpdateRequest request) {
         Utilisateur existing = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable : " + id));
@@ -131,6 +174,9 @@ public class UtilisateurService {
         return UtilisateurMapper.toDto(saved);
     }
 
+    /**
+     * Supprime un utilisateur par identifiant.
+     */
     public void supprimerUtilisateur(Long id){
         if (!utilisateurRepository.existsById(id)) {
             throw new EntityNotFoundException("Utilisateur introuvable: " + id);
@@ -138,6 +184,9 @@ public class UtilisateurService {
         utilisateurRepository.deleteById(id);
     }
 
+    /**
+     * Récupère un utilisateur par identifiant.
+     */
     public Utilisateur getUtilisateurById(Long id){
         return utilisateurRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable: " + id));

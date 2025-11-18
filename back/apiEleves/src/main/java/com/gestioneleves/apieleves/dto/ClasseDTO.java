@@ -8,5 +8,4 @@ public class ClasseDTO {
     private String nomClasse;
     private String niveauClasse;
     private String anneeScolaire;
-    private Long idEnseignant;
 }

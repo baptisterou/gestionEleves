@@ -16,10 +16,21 @@ import java.time.Year;
 import java.util.List;
 
 /**
- * Service pour la gestion des bulletins
- * Contient la logique métier relative aux opérations sur les bulletins
+ * Service métier pour la gestion des {@code Bulletin}.
+ *
+ * Responsabilités:
+ * - Créer, lister, mettre à jour et supprimer des bulletins
+ * - Appliquer des validations métier (trimestre, année)
+ * - Orchestrer la pagination et le mapping DTO
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link jakarta.transaction.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si le bulletin n'existe pas
+ * - {@link IllegalArgumentException} en cas de données invalides (trimestre/année)
  */
-@Service // Indique que cette classe est un service Spring (gérée comme un bean)
+@Service
 @Transactional
 public class BulletinService {
 
@@ -29,7 +40,12 @@ public class BulletinService {
         this.bulletinRepository = bulletinRepository;
     }
 
-    // Variante contrôleur-friendly
+    /**
+     * Crée un bulletin à partir d'une requête de création et retourne un DTO.
+     *
+     * @param request données de création
+     * @return bulletin créé sous forme de {@link BulletinDTO}
+     */
     public BulletinDTO createBulletin(BulletinCreateRequest request) {
         Bulletin toSave = BulletinMapper.fromCreate(request);
         Bulletin saved = createBulletin(toSave);
@@ -37,22 +53,33 @@ public class BulletinService {
     }
 
     /**
-     * Création d'un bulletin avec validation métier
+     * Persiste un nouveau bulletin après validation métier (trimestre/année).
+     *
+     * @param bulletin entité à sauvegarder
+     * @return entité sauvegardée
      */
     public Bulletin createBulletin(Bulletin bulletin) {
         validateBulletinData(bulletin);
         return bulletinRepository.save(bulletin);
     }
 
+    /**
+     * Récupère tous les bulletins (non paginé).
+     */
     public List<Bulletin> getAllBulletins() {
          return bulletinRepository.findAll();
     }
 
+    /**
+     * Récupère les bulletins paginés.
+     */
     public Page<Bulletin> getAllBulletins(Pageable pageable) {
         return bulletinRepository.findAll(pageable);
     }
 
-    // Variante contrôleur-friendly
+    /**
+     * Met à jour partiellement un bulletin et retourne un DTO.
+     */
     public BulletinDTO editBulletin(Long id, BulletinUpdateRequest request) {
         Bulletin current = getBulletinById(id);
         Bulletin updated = BulletinMapper.applyUpdate(current, request);
@@ -60,6 +87,11 @@ public class BulletinService {
         return BulletinMapper.toDto(saved);
     }
 
+    /**
+     * Applique une mise à jour partielle sur un bulletin existant.
+     *
+     * @throws EntityNotFoundException si le bulletin n'existe pas
+     */
     public Bulletin editBulletin(Long id, Bulletin bulletin){
         Bulletin entite = bulletinRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable: " + id));
@@ -78,11 +110,19 @@ public class BulletinService {
         return bulletinRepository.save(entite);
     }
 
+    /**
+     * Récupère un bulletin par identifiant.
+     */
     public Bulletin getBulletinById(Long id){
         return bulletinRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bulletin introuvable: " + id));
     }
 
+    /**
+     * Supprime un bulletin par identifiant.
+     *
+     * @throws EntityNotFoundException si le bulletin n'existe pas
+     */
     public void deleteBulletin(Long idBulletin) {
         if (!bulletinRepository.existsById(idBulletin)) {
             throw new EntityNotFoundException("Bulletin introuvable: " + idBulletin);
@@ -90,17 +130,26 @@ public class BulletinService {
         bulletinRepository.deleteById(idBulletin);
     }
 
+    /**
+     * Valide les données du bulletin (trimestre/année).
+     */
     private void validateBulletinData(Bulletin b) {
         validateTrimestre(b.getTrimestreBulletin());
         validateAnnee(b.getAnneeBulletin());
     }
 
+    /**
+     * Vérifie que le trimestre est dans {1,2,3}.
+     */
     private void validateTrimestre(int trimestre) {
         if (trimestre < 1 || trimestre > 3) {
             throw new IllegalArgumentException("Le trimestre doit être dans {1,2,3}");
         }
     }
 
+    /**
+     * Vérifie que l'année est l'année courante ou suivante.
+     */
     private void validateAnnee(int annee) {
         int currentYear = Year.now().getValue();
         if (annee != currentYear && annee != currentYear + 1) {

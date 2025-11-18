@@ -19,6 +19,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service métier pour la gestion des {@code Note}.
+ *
+ * Responsabilités:
+ * - Créer, lire, mettre à jour et supprimer des notes
+ * - Valider les contraintes métier (bornes de valeur, coefficient)
+ * - Gérer les associations avec {@link Bulletin}, {@link Eleve} et {@link Matiere}
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link jakarta.transaction.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si une ressource liée est introuvable
+ * - {@link IllegalArgumentException} pour les validations métier
+ */
 @Service
 @Transactional
 public class NoteService {
@@ -36,23 +51,45 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
+    /**
+     * Crée une note à partir d'une requête de création et retourne un DTO.
+     *
+     * @param request données de création (champs requis)
+     * @return la note créée sous forme de {@link NoteDTO}
+     */
     public NoteDTO createNote(NoteCreateRequest request){
         Note toSave = NoteMapper.fromCreate(request);
         Note saved = createNote(toSave);
         return NoteMapper.toDto(saved);
     }
 
+    /**
+     * Récupère toutes les notes (non paginé).
+     *
+     * @return liste de notes
+     */
     public List<Note> getAllNotes(){
         return noteRepository.findAll();
     }
 
+    /**
+     * Persiste une nouvelle note après validation métier.
+     *
+     * @param note entité à sauvegarder
+     * @return entité sauvegardée
+     */
     public Note createNote (Note note){
         validateNote(note);
         return noteRepository.save(note);
     }
 
-    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    /**
+     * Met à jour partiellement une note et retourne un DTO.
+     *
+     * @param id identifiant de la note à modifier
+     * @param request champs à mettre à jour
+     * @return la note mise à jour sous forme de {@link NoteDTO}
+     */
     public NoteDTO editNote(Long id, NoteUpdateRequest request){
         Note current = getNoteById(id);
         Note updated = NoteMapper.applyUpdate(current, request);
@@ -60,6 +97,14 @@ public class NoteService {
         return NoteMapper.toDto(saved);
     }
 
+    /**
+     * Applique une mise à jour partielle à une note existante et la persiste.
+     *
+     * @param id identifiant
+     * @param note valeurs à appliquer (champs non nuls et valides)
+     * @return entité sauvegardée
+     * @throws EntityNotFoundException si la note ou une ressource liée n'existe pas
+     */
     public Note editNote(Long id, Note note){
         // Récupération ou exception si non trouvé
         Note existing = noteRepository.findById(id)
@@ -99,6 +144,12 @@ public class NoteService {
         return noteRepository.save(existing);
     }
 
+    /**
+     * Supprime une note par identifiant.
+     *
+     * @param id identifiant de la note
+     * @throws EntityNotFoundException si la note n'existe pas
+     */
     public void deleteNote(Long id){
         if (!noteRepository.existsById(id)) {
             throw new EntityNotFoundException("Note introuvable: " + id);
@@ -106,11 +157,24 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
+    /**
+     * Récupère une note par identifiant.
+     *
+     * @param id identifiant recherché
+     * @return entité trouvée
+     * @throws EntityNotFoundException si aucune note ne correspond
+     */
     public Note getNoteById(Long id){
         return noteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Note introuvable: " + id));
     }
 
+    /**
+     * Valide les règles métier d'une note.
+     *
+     * @param n note à valider
+     * @throws IllegalArgumentException si une règle est violée
+     */
     private void validateNote(Note n) {
         if (n.getCoefNote() <= 0) {
             throw new IllegalArgumentException("Le coefficient doit être > 0");
