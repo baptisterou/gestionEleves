@@ -34,8 +34,39 @@ public class InscriptionService {
 
     // Variante contrôleur-friendly
     public InscriptionDTO createInscription(InscriptionCreateRequest request){
-        Inscription toSave = InscriptionMapper.fromCreate(request);
-        Inscription saved = createInscription(toSave);
+        // Création d'une nouvelle inscription avec les entités complètes
+        Inscription inscription = new Inscription();
+
+        // Récupération de l'élève complet
+        Eleve eleve = eleveRepository.findById(request.getIdEleve())
+                .orElseThrow(() -> new EntityNotFoundException("Élève introuvable : " + request.getIdEleve()));
+        inscription.setEleve(eleve);
+
+        // Récupération de l'utilisateur complet
+        Utilisateur utilisateur = utilisateurRepository.findById(request.getIdUtilisateur())
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable : " + request.getIdUtilisateur()));
+        inscription.setUtilisateur(utilisateur);
+
+        // Date d'inscription (optionnelle)
+        if (request.getDateInscrip() != null) {
+            inscription.setDateInscrip(request.getDateInscrip());
+        }
+
+        // Sauvegarde de l'inscription
+        Inscription saved = createInscription(inscription);
+
+        // Mise à jour des relations bidirectionnelles après sauvegarde pour éviter les problèmes de validation
+        if (!eleve.getInscriptions().contains(saved)) {
+            eleve.getInscriptions().add(saved);
+        }
+        if (!utilisateur.getInscriptions().contains(saved)) {
+            utilisateur.getInscriptions().add(saved);
+        }
+
+        // Sauvegarde des entités mises à jour
+        eleveRepository.save(eleve);
+        utilisateurRepository.save(utilisateur);
+
         return InscriptionMapper.toDto(saved);
     }
 
@@ -60,29 +91,88 @@ public class InscriptionService {
         }
 
         // Mise à jour de l'élève lié (si fourni)
+        Eleve oldEleve = existing.getEleve();
         if (inscription.getEleve() != null && inscription.getEleve().getIdEleve() != null) {
-            Eleve eleve = eleveRepository.findById(inscription.getEleve().getIdEleve())
+            Eleve newEleve = eleveRepository.findById(inscription.getEleve().getIdEleve())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "Élève introuvable : " + inscription.getEleve().getIdEleve()));
-            existing.setEleve(eleve);
+
+            // Gestion de la relation bidirectionnelle
+            if (oldEleve != null && !oldEleve.getIdEleve().equals(newEleve.getIdEleve())) {
+                oldEleve.getInscriptions().remove(existing);
+                eleveRepository.save(oldEleve);
+            }
+            if (!newEleve.getInscriptions().contains(existing)) {
+                newEleve.getInscriptions().add(existing);
+            }
+            existing.setEleve(newEleve);
+            eleveRepository.save(newEleve);
         }
 
         // Mise à jour de l'utilisateur lié (si fourni)
+        Utilisateur oldUtilisateur = existing.getUtilisateur();
         if (inscription.getUtilisateur() != null && inscription.getUtilisateur().getIdUtilisateur() != null) {
-            Utilisateur utilisateur = utilisateurRepository.findById(inscription.getUtilisateur().getIdUtilisateur())
+            Utilisateur newUtilisateur = utilisateurRepository.findById(inscription.getUtilisateur().getIdUtilisateur())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "Utilisateur introuvable : " + inscription.getUtilisateur().getIdUtilisateur()));
-            existing.setUtilisateur(utilisateur);
+
+            // Gestion de la relation bidirectionnelle
+            if (oldUtilisateur != null && !oldUtilisateur.getIdUtilisateur().equals(newUtilisateur.getIdUtilisateur())) {
+                oldUtilisateur.getInscriptions().remove(existing);
+                utilisateurRepository.save(oldUtilisateur);
+            }
+            if (!newUtilisateur.getInscriptions().contains(existing)) {
+                newUtilisateur.getInscriptions().add(existing);
+            }
+            existing.setUtilisateur(newUtilisateur);
+            utilisateurRepository.save(newUtilisateur);
         }
 
         //Sauvegarde et retour
-        return inscriptionRepository.save(existing); }
+        return inscriptionRepository.save(existing);
+    }
 
     public void deleteInscription(Long id){
-        if (!inscriptionRepository.existsById(id)) {
-            throw new EntityNotFoundException("Inscription introuvable:" + id);
+        Inscription inscription = inscriptionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Inscription introuvable: " + id));
+
+        // Gestion des relations bidirectionnelles avant suppression
+        Eleve eleve = inscription.getEleve();
+        if (eleve != null && eleve.getInscriptions() != null) {
+            eleve.getInscriptions().remove(inscription);
+            eleveRepository.save(eleve);
         }
-        inscriptionRepository.deleteById(id);
+
+        Utilisateur utilisateur = inscription.getUtilisateur();
+        if (utilisateur != null && utilisateur.getInscriptions() != null) {
+            utilisateur.getInscriptions().remove(inscription);
+            utilisateurRepository.save(utilisateur);
+        }
+
+        // Suppression de l'inscription
+        inscriptionRepository.delete(inscription);
+    }
+
+    // Supprimer toutes les inscriptions d'un élève
+    public void deleteAllInscriptionsForEleve(Eleve eleve) {
+        List<Inscription> inscriptions = inscriptionRepository.findByEleve(eleve);
+        for (Inscription inscription : inscriptions) {
+            // Gestion des relations bidirectionnelles avant suppression
+            Utilisateur utilisateur = inscription.getUtilisateur();
+            if (utilisateur != null && utilisateur.getInscriptions() != null) {
+                utilisateur.getInscriptions().remove(inscription);
+                utilisateurRepository.save(utilisateur);
+            }
+
+            // Suppression de l'inscription
+            inscriptionRepository.delete(inscription);
+        }
+
+        // Vider la liste des inscriptions de l'élève
+        if (eleve.getInscriptions() != null) {
+            eleve.getInscriptions().clear();
+            eleveRepository.save(eleve);
+        }
     }
 
     public Inscription getInscriptionById(Long id){

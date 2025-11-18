@@ -2,6 +2,7 @@ package com.gestioneleves.apieleves.service;
 
 import com.gestioneleves.apieleves.entity.Eleve;
 import com.gestioneleves.apieleves.repository.EleveRepository;
+import com.gestioneleves.apieleves.repository.InscriptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,16 @@ import static org.mockito.Mockito.*;
 public class EleveServiceTest {
 
     private EleveRepository repository;
+    private InscriptionRepository inscriptionRepository;
+    private InscriptionService inscriptionService;
     private EleveService service;
 
     @BeforeEach
     void setup() {
         repository = Mockito.mock(EleveRepository.class);
-        service = new EleveService(repository);
+        inscriptionRepository = Mockito.mock(InscriptionRepository.class);
+        inscriptionService = Mockito.mock(InscriptionService.class);
+        service = new EleveService(repository, inscriptionRepository, inscriptionService);
     }
 
     @Test
@@ -51,7 +56,7 @@ public class EleveServiceTest {
         patch.setNom("New"); // only change nom
         Eleve saved = service.editEleve(10L, patch);
         assertEquals("New", saved.getNom());
-        assertEquals("Name", saved.getPrenom()); // unchanged
+        assertEquals("Name", saved.getPrenom());
     }
 
     @Test
@@ -62,7 +67,7 @@ public class EleveServiceTest {
 
     @Test
     void deleteEleve_throws_whenNotExists() {
-        when(repository.existsById(77L)).thenReturn(false);
+        when(repository.findById(77L)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> service.deleteEleve(77L));
     }
 

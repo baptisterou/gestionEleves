@@ -4,9 +4,10 @@ import com.gestioneleves.apieleves.dto.EleveCreateRequest;
 import com.gestioneleves.apieleves.dto.EleveDTO;
 import com.gestioneleves.apieleves.dto.EleveUpdateRequest;
 import com.gestioneleves.apieleves.entity.Eleve;
-import com.gestioneleves.apieleves.entity.Utilisateur;
+import com.gestioneleves.apieleves.entity.Inscription;
 import com.gestioneleves.apieleves.mapper.EleveMapper;
 import com.gestioneleves.apieleves.repository.EleveRepository;
+import com.gestioneleves.apieleves.repository.InscriptionRepository;
 import com.gestioneleves.apieleves.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -26,12 +27,16 @@ import java.util.List;
 public class EleveService {
 
     private final EleveRepository eleveRepository;
+    private final InscriptionRepository inscriptionRepository;
+    private final InscriptionService inscriptionService;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    public EleveService(EleveRepository eleveRepository) {
+    public EleveService(EleveRepository eleveRepository, InscriptionRepository inscriptionRepository, InscriptionService inscriptionService) {
         this.eleveRepository = eleveRepository;
+        this.inscriptionRepository = inscriptionRepository;
+        this.inscriptionService = inscriptionService;
     }
 
     // Variante contrôleur-friendly: le service accepte la request et renvoie le DTO
@@ -87,9 +92,17 @@ public class EleveService {
     }
 
     public void deleteEleve(Long idEleve) {
-        if (!eleveRepository.existsById(idEleve)) {
-            throw new EntityNotFoundException("Eleve introuvable: " + idEleve);
+        Eleve eleve = eleveRepository.findById(idEleve)
+                .orElseThrow(() -> new EntityNotFoundException("Eleve introuvable: " + idEleve));
+
+        // Récupération des inscriptions pour suppression via le service dédié
+        List<Inscription> inscriptions = inscriptionRepository.findByEleve(eleve);
+        for (Inscription inscription : inscriptions) {
+            // Utiliser le repository pour supprimer directement (plus efficace)
+            inscriptionRepository.delete(inscription);
         }
-        eleveRepository.deleteById(idEleve);
+
+        // Puis suppression de l'élève
+        eleveRepository.delete(eleve);
     }
 }
