@@ -11,21 +11,11 @@ public class MatiereMapper {
     public static Matiere fromCreate(MatiereCreateRequest req) {
         Matiere m = new Matiere();
         m.setIntituleMatiere(req.getIntituleMatiere());
-        if (req.getIdEnseignant() != null) {
-            Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getIdEnseignant());
-            m.setEnseignant(u);
-        }
         return m;
     }
 
     public static Matiere applyUpdate(Matiere target, MatiereUpdateRequest req) {
         if (req.getIntituleMatiere() != null) target.setIntituleMatiere(req.getIntituleMatiere());
-        if (req.getIdEnseignant() != null) {
-            Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getIdEnseignant());
-            target.setEnseignant(u);
-        }
         return target;
     }
 
@@ -33,7 +23,6 @@ public class MatiereMapper {
         MatiereDTO dto = new MatiereDTO();
         dto.setIdMatiere(m.getIdMatiere());
         dto.setIntituleMatiere(m.getIntituleMatiere());
-        if (m.getEnseignant() != null) dto.setIdEnseignant(m.getEnseignant().getIdUtilisateur());
         return dto;
     }
 }
