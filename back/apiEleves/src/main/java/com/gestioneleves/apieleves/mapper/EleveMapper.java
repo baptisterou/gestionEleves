@@ -15,11 +15,6 @@ public class EleveMapper {
         e.setNom(req.getNom());
         e.setPrenom(req.getPrenom());
         e.setDateNaissance(req.getDateNaissance());
-        if (req.getIdUtilisateur() != null) {
-            Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getIdUtilisateur());
-            e.setUtilisateur(u);
-        }
         return e;
     }
 
@@ -27,11 +22,6 @@ public class EleveMapper {
         if (req.getNom() != null) target.setNom(req.getNom());
         if (req.getPrenom() != null) target.setPrenom(req.getPrenom());
         if (req.getDateNaissance() != null) target.setDateNaissance(req.getDateNaissance());
-        if (req.getIdUtilisateur() != null) {
-            Utilisateur u = new Utilisateur();
-            u.setIdUtilisateur(req.getIdUtilisateur());
-            target.setUtilisateur(u);
-        }
         return target;
     }
 
@@ -41,9 +31,6 @@ public class EleveMapper {
         dto.setNom(e.getNom());
         dto.setPrenom(e.getPrenom());
         dto.setDateNaissance(e.getDateNaissance());
-        if (e.getUtilisateur() != null) {
-            dto.setIdUtilisateur(e.getUtilisateur().getIdUtilisateur());
-        }
         return dto;
     }
 }

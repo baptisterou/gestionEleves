@@ -7,6 +7,4 @@ import lombok.Data;
 public class MatiereCreateRequest {
     @NotBlank
     private String intituleMatiere;
-    // optionnel: rattacher à un enseignant existant
-    private Long idEnseignant;
 }
