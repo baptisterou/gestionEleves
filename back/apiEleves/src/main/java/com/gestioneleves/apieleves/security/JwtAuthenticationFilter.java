@@ -17,6 +17,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+/**
+ * Filtre Spring Security exécuté une fois par requête pour traiter l'authentification JWT.
+ *
+ * Responsabilités:
+ * - Extraire le jeton JWT de l'en-tête Authorization (schéma Bearer)
+ * - Valider le token et charger l'utilisateur associé
+ * - Peupler le SecurityContext si le token est valide
+ *
+ * Remarques:
+ * - Si l'en-tête est absent/incorrect, le filtre laisse passer la requête sans authentifier.
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -27,6 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Tente d'authentifier la requête courante à partir d'un JWT.
+     *
+     * @param request  requête HTTP entrante
+     * @param response réponse HTTP
+     * @param filterChain chaîne de filtres suivante
+     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,

@@ -14,9 +14,24 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
+/**
+ * Entry point Spring Security qui renvoie une réponse JSON standardisée en cas d'absence
+ * d'authentification (401 Unauthorized).
+ *
+ * Objectif: uniformiser le format d'erreur côté clients.
+ * Corps typique:
+ * {
+ *   "error": "UNAUTHORIZED",
+ *   "message": "...",
+ *   "path": "/url"
+ * }
+ */
 public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Ecrit une réponse 401 JSON lorsque l'utilisateur n'est pas authentifié.
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

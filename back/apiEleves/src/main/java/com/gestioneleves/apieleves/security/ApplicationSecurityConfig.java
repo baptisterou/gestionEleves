@@ -26,6 +26,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration Spring Security principale de l'API.
+ *
+ * Points clés:
+ * - Authentification stateless par JWT (voir {@link JwtAuthenticationFilter} et {@link JwtService})
+ * - Gestion centralisée des erreurs d'authentification/autorisations en JSON
+ *   via {@link JsonAuthenticationEntryPoint} et {@link JsonAccessDeniedHandler}
+ * - Règles d'autorisation par ressource HTTP et rôle (ADMIN/ENSEIGNANT/RESPONSABLE)
+ * - CORS activé et configuré pour les frontends de développement
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -66,11 +76,22 @@ public class ApplicationSecurityConfig {
     }
 
     @Bean
+    /**
+     * Expose l'AuthenticationManager fourni par Spring pour les endpoints d'authentification.
+     */
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
+    /**
+     * Chaîne de filtres de sécurité:
+     * - CSRF désactivé (API stateless)
+     * - CORS activé
+     * - Sessions sans état
+     * - Règles d'autorisations par endpoint
+     * - Filtre JWT avant l'authentification standard
+     */
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -144,6 +165,9 @@ public class ApplicationSecurityConfig {
     }
 
     @Bean
+    /**
+     * Source de configuration CORS utilisée par Spring Security.
+     */
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(

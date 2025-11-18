@@ -15,6 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service métier pour la gestion des {@code Parcours}.
+ *
+ * Responsabilités:
+ * - Lister, créer, modifier et supprimer des parcours
+ * - Gérer les associations avec {@link Eleve} et {@link Classe}
+ * - Exposer des variantes orientées contrôleur (entrée requête/DTO, sortie DTO)
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link org.springframework.transaction.annotation.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si le parcours/élève/classe est introuvable
+ */
 @Service
 @Transactional
 public class ParcoursService {
@@ -29,18 +43,28 @@ public class ParcoursService {
         this.classeRepository = classeRepository;
     }
 
+    /**
+     * Récupère tous les parcours (non paginé).
+     */
     public List<Parcours> getAllParcours(){ return parcoursRepository.findAll(); }
 
-    // Variante contrôleur-friendly
+    /**
+     * Crée un parcours à partir d'une requête de création et retourne un DTO.
+     */
     public ParcoursDTO createParcours(ParcoursCreateRequest request){
         Parcours toSave = ParcoursMapper.fromCreate(request);
         Parcours saved = createParcours(toSave);
         return ParcoursMapper.toDto(saved);
     }
 
+    /**
+     * Persiste une entité parcours.
+     */
     public Parcours createParcours(Parcours parcours){ return parcoursRepository.save(parcours); }
 
-    // Variante contrôleur-friendly: update avec request en entrée et DTO en sortie
+    /**
+     * Met à jour partiellement un parcours et retourne un DTO.
+     */
     public ParcoursDTO editParcours(Long id, ParcoursDTO request) {
         Parcours current = getParcoursById(id);
         Parcours updatedEntity = ParcoursMapper.applyUpdate(current, request);
@@ -48,6 +72,11 @@ public class ParcoursService {
         return ParcoursMapper.toDto(saved);
     }
 
+    /**
+     * Applique une mise à jour partielle à un parcours existant.
+     *
+     * @throws EntityNotFoundException si le parcours/élève/classe n'existe pas
+     */
     public Parcours editParcours(Long id, Parcours parcours){
         // Récupération ou exception si non trouvé
         Parcours existing = parcoursRepository.findById(id)
@@ -72,6 +101,9 @@ public class ParcoursService {
         //Sauvegarde et retour
         return parcoursRepository.save(existing); }
 
+    /**
+     * Supprime un parcours par identifiant.
+     */
     public void deleteParcours(Long id){
         if (!parcoursRepository.existsById(id)) {
             throw new EntityNotFoundException("Parcours introuvable:" + id);
@@ -79,6 +111,9 @@ public class ParcoursService {
         parcoursRepository.deleteById(id);
     }
 
+    /**
+     * Récupère un parcours par identifiant.
+     */
     public Parcours getParcoursById(Long id){
         return parcoursRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Parcours introuvable: " + id));

@@ -14,9 +14,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
+/**
+ * Handler Spring Security qui renvoie une réponse JSON standardisée en cas d'accès interdit (403).
+ *
+ * Objectif: fournir un format d'erreur homogène pour les clients front-end.
+ * Corps typique:
+ * {
+ *   "error": "FORBIDDEN",
+ *   "message": "...",
+ *   "path": "/url"
+ * }
+ */
 public class JsonAccessDeniedHandler implements AccessDeniedHandler {
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Ecrit une réponse 403 JSON lorsque l'utilisateur est authentifié mais non autorisé.
+     */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

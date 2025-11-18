@@ -17,6 +17,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service métier pour la gestion des {@code Classe}.
+ *
+ * Responsabilités:
+ * - Créer, lister, mettre à jour et supprimer des classes
+ * - Appliquer des mises à jour partielles
+ * - Gérer la pagination et le mapping DTO lorsque nécessaire
+ *
+ * Transactions:
+ * - Toutes les méthodes s'exécutent dans un contexte transactionnel (classe annotée {@link jakarta.transaction.Transactional}).
+ *
+ * Exceptions:
+ * - {@link jakarta.persistence.EntityNotFoundException} si la classe n'existe pas
+ */
 @Service
 @Transactional
 public class ClasseService {
@@ -30,26 +44,42 @@ public class ClasseService {
         this.classeRepository = classeRepository;
     }
 
-    // Variante contrôleur-friendly
+    /**
+     * Crée une classe à partir d'une requête de création et retourne un DTO.
+     *
+     * @param request données de création
+     * @return la classe créée sous forme de DTO
+     */
     public ClasseDTO createClasse(ClasseCreateRequest request) {
         Classe toSave = ClasseMapper.fromCreate(request);
         Classe saved = createClasse(toSave);
         return ClasseMapper.toDto(saved);
     }
 
+    /**
+     * Persiste une nouvelle entité classe.
+     */
     public Classe createClasse(Classe classe) {
         return classeRepository.save(classe);
     }
 
+    /**
+     * Retourne toutes les classes (non paginé).
+     */
     public List<Classe> getAllClasses() {
         return classeRepository.findAll();
     }
 
+    /**
+     * Retourne les classes paginées.
+     */
     public Page<Classe> getAllClasses(Pageable pageable) {
         return classeRepository.findAll(pageable);
     }
 
-    // Variante contrôleur-friendly
+    /**
+     * Met à jour partiellement une classe et retourne un DTO.
+     */
     public ClasseDTO editClasse(Long id, ClasseUpdateRequest request) {
         Classe current = getClasseById(id);
         Classe updated = ClasseMapper.applyUpdate(current, request);
@@ -57,6 +87,11 @@ public class ClasseService {
         return ClasseMapper.toDto(saved);
     }
 
+    /**
+     * Applique une mise à jour partielle à une classe existante.
+     *
+     * @throws EntityNotFoundException si la classe n'existe pas
+     */
     public Classe editClasse(Long id, Classe classe){
         // Récupération ou exception si non trouvé
         Classe existing = classeRepository.findById(id)
@@ -76,11 +111,19 @@ public class ClasseService {
         return classeRepository.save(existing);
     }
 
+    /**
+     * Récupère une classe par identifiant.
+     */
     public Classe getClasseById(Long id){
         return classeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Classe introuvable: " + id));
     }
 
+    /**
+     * Supprime une classe par identifiant.
+     *
+     * @throws EntityNotFoundException si la classe n'existe pas
+     */
     public void deleteClasse (Long id_classe) {
         if (!classeRepository.existsById(id_classe)) {
             throw new EntityNotFoundException("Classe introuvable: " + id_classe);

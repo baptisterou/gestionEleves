@@ -17,6 +17,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Contrôleur d'authentification exposant les endpoints de création de compte et de connexion.
+ *
+ * Endpoints:
+ * - POST /auth/signup : inscription d'un utilisateur (crée un compte avec le rôle RESPONSABLE par défaut)
+ * - POST /auth/login  : authentification et délivrance d'un jeton JWT
+ *
+ * Sécurité:
+ * - Ces endpoints sont publics (voir {@link com.gestioneleves.apieleves.security.ApplicationSecurityConfig}).
+ * - Le jeton JWT retourné doit être fourni via l'en-tête Authorization: Bearer <token> pour les appels protégés.
+ */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -27,6 +38,16 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    /**
+     * Inscription d'un nouvel utilisateur et génération d'un JWT.
+     *
+     * Remarques sécurité:
+     * - Le rôle envoyé n'est pas pris en compte: le rôle est forcé à {@link com.gestioneleves.apieleves.entity.Role#RESPONSABLE}.
+     * - En cas d'email déjà existant, retourne 400 Bad Request (corps vide).
+     *
+     * @param request données d'inscription validées
+     * @return un {@link AuthResponse} contenant le token JWT
+     */
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest request) {
         if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -46,6 +67,13 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
+    /**
+     * Authentifie un utilisateur existant et génère un JWT.
+     *
+     * @param request email et mot de passe
+     * @return un {@link AuthResponse} contenant le token JWT si l'authentification réussit
+     * @throws UsernameNotFoundException en cas d'échec d'authentification
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
